@@ -11,7 +11,7 @@ export default function HomePage() {
   return (
     <>
       <Navbar active="home" />
-      <main className="flex-grow">
+      <main className="grow">
         <HeroSection />
         <StatsSection />
         <IntroSection />
