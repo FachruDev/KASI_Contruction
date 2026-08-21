@@ -6,10 +6,10 @@ import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 export default function FaqPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-on-background antialiased">
-      <Navbar active="faq" variant="faq" />
+      <Navbar active="faq" />
       <FaqContent />
-      <WhatsAppFab variant="faq" />
-      <Footer variant="faq" />
+      <WhatsAppFab />
+      <Footer />
     </div>
   );
 }

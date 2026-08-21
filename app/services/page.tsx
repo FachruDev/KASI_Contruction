@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function ServicesPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-on-background antialiased">
-      <Navbar active="services" variant="services" />
+      <Navbar active="services" />
 
       <main className="mx-auto w-full max-w-7xl flex-grow px-4 py-16 sm:px-8">
         <ServiceHeader />
@@ -21,8 +21,8 @@ export default function ServicesPage() {
         <ServiceCta />
       </main>
 
-      <WhatsAppFab variant="simple" />
-      <Footer variant="services" />
+      <WhatsAppFab />
+      <Footer />
     </div>
   );
 }

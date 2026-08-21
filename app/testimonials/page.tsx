@@ -7,15 +7,15 @@ import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 export default function TestimonialsPage() {
   return (
     <div className="bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container">
-      <Navbar active="testimonials" variant="testimonials" />
+      <Navbar active="testimonials" />
 
       <main className="w-full">
         <TestimonialsHero />
         <TestimonialsGrid />
       </main>
 
-      <Footer variant="testimonials" />
-      <WhatsAppFab variant="testimonials" />
+      <Footer />
+      <WhatsAppFab />
     </div>
   );
 }

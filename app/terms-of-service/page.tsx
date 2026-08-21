@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function TermsOfServicePage() {
   return (
     <div className="flex min-h-screen flex-col bg-background font-body text-on-surface">
-      <Navbar variant="terms" />
+      <Navbar />
       <TermsContent />
       <LegalFooter active="terms" />
     </div>

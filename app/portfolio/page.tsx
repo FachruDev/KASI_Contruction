@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function PortfolioPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container">
-      <Navbar active="portfolio" variant="portfolio" />
+      <Navbar active="portfolio" />
 
       <main className="flex-grow">
         <PortfolioHero />
@@ -21,8 +21,8 @@ export default function PortfolioPage() {
         <PortfolioCta />
       </main>
 
-      <WhatsAppFab variant="portfolio" />
-      <Footer variant="portfolio" />
+      <WhatsAppFab />
+      <Footer />
     </div>
   );
 }

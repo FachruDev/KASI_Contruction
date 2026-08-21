@@ -8,14 +8,14 @@ import { LoadMoreArticles } from "@/components/articles/LoadMoreArticles";
 export default function ArticlesPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background font-body text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container">
-      <Navbar variant="articles" />
+      <Navbar />
       <main className="mx-auto max-w-7xl px-4 pt-32 pb-24 sm:px-6 lg:px-8">
         <ArticlesHeader />
         <FeaturedArticle />
         <ArticlesGrid />
         <LoadMoreArticles />
       </main>
-      <Footer variant="articles" />
+      <Footer />
     </div>
   );
 }
