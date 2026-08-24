@@ -57,20 +57,7 @@ export function ContactInfo() {
       </div>
 
       <div className="relative h-64 overflow-hidden rounded-xl bg-surface-container shadow-xs">
-        <Image
-          alt="A warm map view showing the Pacific Northwest region around Portland, Oregon."
-          className="object-cover"
-          fill
-          sizes="(min-width: 1024px) 544px, 100vw"
-          src={MAP_IMAGE}
-          unoptimized
-        />
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="flex items-center gap-2 rounded-full border border-outline-variant/30 bg-surface/80 px-4 py-2 text-sm font-bold text-primary backdrop-blur">
-            <MaterialIcon className="text-base">pin_drop</MaterialIcon>
-            Lokasi Kami
-          </div>
-        </div>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d115450.87145564539!2d106.815021!3d-6.5244088!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa49178e0b914f503%3A0x7c84bd8b82250d61!2sJasa%20Pengaspalan%20Bogor!5e1!3m2!1sid!2sid!4v1787557793233!5m2!1sid!2sid" width="600" height="450" loading="lazy" referrerPolicy="strict-origin-when-cross-origin"></iframe>
       </div>
     </div>
   );

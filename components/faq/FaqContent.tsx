@@ -5,7 +5,7 @@ import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { FAQ_SECTIONS } from "@/data/faq";
 
 const FAQ_IMAGE =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBLYMn0BiduW_89EfuwCk3SBG6l58UvqwAMH8mTL2GSRkZDpxlSEJTgW4vPSQv3sO6UbpMlvvgk7hn9t2wuXAyxeixFqvPs4hDNc7gjWlXSxjFuZbaDjz2vZLQicsG-mdlnR1cLNCaumLqWiOAo7s90HS_YYu2SrE5lCD49m72fQLZnOW5GCT_vRZSudLk0OWaCjwIsBglPjNpddWmWCOjTY-mhPRSJTJCtIUJ8SAvRg9wjT6Uj4se9";
+  "/assets/images/faq/faq1.jpeg";
 
 export function FaqContent() {
   return (
