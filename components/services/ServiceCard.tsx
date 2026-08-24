@@ -17,9 +17,9 @@ export function ServiceCard({ service }: { service: ServiceItem }) {
         />
       </div>
 
-      <div className="flex flex-grow flex-col p-6">
+      <div className="flex grow flex-col p-6">
         <h3 className="mb-2 font-headline text-2xl text-primary">{service.title}</h3>
-        <p className="mb-4 flex-grow text-on-surface-variant">{service.description}</p>
+        <p className="mb-4 grow text-on-surface-variant">{service.description}</p>
 
         <div className="mb-4">
           <h4 className="mb-2 text-sm font-bold uppercase tracking-wider text-tertiary">
@@ -39,20 +39,20 @@ export function ServiceCard({ service }: { service: ServiceItem }) {
 
         <div className="mb-6">
           <span className="mb-2 inline-block rounded-full bg-secondary-container px-2 py-1 text-xs text-on-secondary-container">
-            Ideal for: {service.idealFor}
+            Cocok Untuk: {service.idealFor}
           </span>
         </div>
 
         <div className="mt-auto">
           <div className="mb-4 text-lg font-bold text-on-surface">
-            From {service.price}
+            Mulai {service.price}
             <span className="text-sm font-normal text-on-surface-variant">/m²</span>
           </div>
           <Link
             className="block w-full rounded-[12px] border border-primary bg-surface px-4 py-3 text-center font-label font-bold text-primary transition-colors hover:bg-primary hover:text-on-primary"
             href="/contact"
           >
-            Discuss Your Project
+            Diskusikan proyek Anda
           </Link>
         </div>
       </div>
