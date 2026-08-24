@@ -12,11 +12,10 @@ export function FaqContent() {
     <main className="mx-auto w-full max-w-4xl flex-grow px-6 py-16 md:py-24">
       <header className="mb-16 text-center">
         <h1 className="mb-4 font-headline text-4xl font-bold text-on-background md:text-5xl">
-          Frequently Asked Questions
+          Pertanyaan yang Sering Ditanyakan
         </h1>
         <p className="mx-auto max-w-2xl font-body text-lg text-on-surface-variant">
-          Everything you need to know about our paving services, pricing, and processes. If you
-          have a question that isn&apos;t answered here, feel free to reach out.
+          Temukan jawaban seputar layanan pengaspalan, harga, proses pengerjaan, dan area layanan KASI. Jika masih ada yang ingin Anda tanyakan, tim kami siap membantu.
         </p>
       </header>
 
@@ -49,16 +48,16 @@ export function FaqContent() {
               <MaterialIcon className="text-3xl" filled>support_agent</MaterialIcon>
             </div>
             <h3 className="mb-2 font-headline text-xl font-bold text-on-secondary-container">
-              Still have questions?
+              Punya Pertanyaan?
             </h3>
             <p className="mb-6 font-body text-sm text-on-secondary-container/80">
-              Our paving experts are ready to help you with detailed, personalized answers.
+              Konsultasikan kebutuhan pengaspalan Anda langsung dengan tim KASI.
             </p>
             <Link
               className="block w-full rounded-xl bg-primary px-6 py-3 font-label font-semibold text-on-primary transition-colors duration-200 hover:bg-primary-fixed hover:text-on-primary-fixed"
               href="/contact"
             >
-              Contact Support
+              Hubungi Kami
             </Link>
           </div>
         </aside>
