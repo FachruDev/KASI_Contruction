@@ -1,10 +1,10 @@
 export const PORTFOLIO_FILTERS = [
-  "All",
-  "Residential",
-  "Parking",
-  "Industrial",
-  "Commercial",
-  "Road Repair",
+  "Semua",
+  "Jalan & Akses",
+  "Perumahan",
+  "Area Parkir",
+  "Kawasan Usaha",
+  "Industri",
 ] as const;
 
 export type PortfolioProject = {

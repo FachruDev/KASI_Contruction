@@ -15,7 +15,7 @@ export function PortfolioGallery() {
           className="rounded-full border-2 border-primary bg-transparent px-8 py-3 font-bold text-primary transition-colors duration-200 hover:bg-primary-container/20"
           type="button"
         >
-          Load More Projects
+          Muat lebih banyak
         </button>
       </div>
     </section>

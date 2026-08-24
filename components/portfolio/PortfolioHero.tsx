@@ -4,12 +4,10 @@ export function PortfolioHero() {
   return (
     <section className="mx-auto max-w-7xl px-6 py-16 text-center md:px-12">
       <h1 className="mb-6 font-headline text-4xl font-bold text-on-background md:text-5xl lg:text-6xl">
-        Our Craft in Focus
+        Hasil Pekerjaan Kami
       </h1>
       <p className="mx-auto mb-12 max-w-3xl font-body text-lg text-on-surface-variant md:text-xl">
-        Explore our gallery of completed projects. From serene residential driveways to robust
-        commercial parking structures, we build foundations designed to last, blending structural
-        integrity with natural aesthetics.
+        Lihat berbagai pekerjaan pengaspalan yang telah kami kerjakan. Setiap proyek dikerjakan dengan memperhatikan kondisi lokasi, kebutuhan penggunaan, dan kualitas hasil akhir.
       </p>
 
       <div className="mb-16 flex flex-wrap justify-center gap-3">
