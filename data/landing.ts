@@ -4,27 +4,27 @@ export const LANDING_IMAGES = {
 } as const;
 
 export const LANDING_STATS = [
-  { value: "25+", label: "Years of Experience" },
-  { value: "10k+", label: "Happy Clients" },
-  { value: "100%", label: "Quality Guarantee" },
+  { value: "10+", label: "Tahun Pengalaman" },
+  { value: "1k+", label: "Klien Puas" },
+  { value: "100%", label: "Garansi Kualitas" },
 ] as const;
 
 export const LANDING_HIGHLIGHTS = {
   expertCrews: {
     icon: "engineering",
-    title: "Expert Crews",
+    title: "Dikerjakan Tenaga Ahli",
     description:
-      "Our teams bring decades of hands-on experience, ensuring precision and care in every pour and roll.",
+      "Tim berpengalaman siap menangani pekerjaan pengaspalan dengan proses yang terencana dan hasil yang rapi.",
   },
   qualityMaterials: {
     icon: "layers",
-    title: "Quality Materials",
+    title: "Material Berkualitas",
     description:
-      "We source only the most resilient, environmentally conscious aggregates and asphalt.",
+      "Pemilihan material yang tepat menjadi kunci jalan yang kuat dan tahan lama. Kami menyesuaikannya dengan kebutuhan setiap proyek.",
   },
   transparentPricing: {
     icon: "request_quote",
-    title: "Transparent Pricing",
-    description: "Honest quotes with no hidden fees, grounded in integrity.",
+    title: "Penawaran Jelas",
+    description: "Dapatkan estimasi biaya yang transparan berdasarkan kebutuhan dan kondisi lokasi, tanpa biaya tersembunyi.",
   },
 } as const;

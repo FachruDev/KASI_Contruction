@@ -102,7 +102,7 @@ export function Navbar({ active }: NavbarProps) {
             onClick={closeMenu}
             className="shrink-0 font-headline text-xl font-bold text-primary sm:text-2xl"
           >
-            Terra Paving
+            KASI
           </Link>
 
           {/* Desktop Navigation */}
@@ -136,7 +136,7 @@ export function Navbar({ active }: NavbarProps) {
               href="/contact"
               className="rounded-full bg-primary px-6 py-2.5 font-bold text-on-primary transition-all duration-150 hover:scale-95 hover:opacity-80"
             >
-              Get a Quote
+              Hubungi Kami
             </Link>
           </div>
 

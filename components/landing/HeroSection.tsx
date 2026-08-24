@@ -2,38 +2,43 @@ import Image from "next/image";
 import Link from "next/link";
 import { LANDING_IMAGES } from "@/data/landing";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import { createWhatsAppUrl } from "@/lib/whatsapp";
 
 export function HeroSection() {
+  const whatsAppUrl = createWhatsAppUrl();
+
   return (
     <section className="relative mx-auto max-w-7xl overflow-hidden px-8 pt-12 pb-24">
       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
         <div className="z-10 space-y-8 lg:col-span-5">
           <h1 className="font-headline text-5xl leading-tight font-bold tracking-tight text-on-background md:text-6xl">
-            Professional Road Paving Solutions Built to Last
+            Jasa Pengaspalan Profesional Jabodetabek
           </h1>
           <p className="max-w-lg font-body text-xl text-on-surface-variant">
-            Reliable asphalt construction for residential, commercial, and industrial projects. Rooted in quality,
-            grounded in trust.
+            Solusi pengaspalan untuk jalan lingkungan, perumahan, hingga kebutuhan industri. 
+            KASI - Kaum Aspal Solusi Indonesia hadir dengan pengerjaan yang rapi, material berkualitas, dan proses kerja yang dapat dipercaya.
           </p>
           <div className="flex flex-col gap-4 pt-4 sm:flex-row">
             <Link
               className="flex items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-center font-bold text-on-primary transition-opacity hover:opacity-80"
               href="/contact"
             >
-              Get a Free Quote
+              Hubungi Kami
               <MaterialIcon>arrow_forward</MaterialIcon>
             </Link>
             <Link
               className="flex items-center justify-center gap-2 rounded-xl border border-primary bg-surface-bright px-8 py-4 text-center font-bold text-primary transition-colors hover:bg-surface-container-low"
-              href="/contact"
+              href={whatsAppUrl}
+              rel="noopener noreferrer"
+              target="_blank"
             >
               <MaterialIcon>chat</MaterialIcon>
-              Chat on WhatsApp
+              Chat via WhatsApp
             </Link>
           </div>
         </div>
 
-        <div className="soft-shadow relative h-[500px] w-full overflow-hidden rounded-[2rem] lg:col-span-7 lg:h-[650px]">
+        <div className="soft-shadow relative h-125 w-full overflow-hidden rounded-4xl lg:col-span-7 lg:h-162.5">
           <Image
             alt=""
             className="object-cover"
@@ -49,8 +54,8 @@ export function HeroSection() {
                 <MaterialIcon filled>verified</MaterialIcon>
               </div>
               <div>
-                <p className="font-headline text-2xl font-bold text-on-background">500+</p>
-                <p className="font-body text-sm text-on-surface-variant">Projects Completed</p>
+                <p className="font-headline text-2xl font-bold text-on-background">100+</p>
+                <p className="font-body text-sm text-on-surface-variant">Proyek selesai</p>
               </div>
             </div>
           </div>

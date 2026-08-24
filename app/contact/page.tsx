@@ -9,7 +9,7 @@ export default function ContactPage() {
       <Navbar active="contact" />
       <ContactContent />
       <Footer />
-      <WhatsAppFab href="https://wa.me/15551234567" />
+      <WhatsAppFab />
     </div>
   );
 }
