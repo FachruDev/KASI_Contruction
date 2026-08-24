@@ -9,7 +9,7 @@ const FAQ_IMAGE =
 
 export function FaqContent() {
   return (
-    <main className="mx-auto w-full max-w-4xl flex-grow px-6 py-16 md:py-24">
+    <main className="mx-auto w-full max-w-4xl grow px-6 py-16 md:py-24">
       <header className="mb-16 text-center">
         <h1 className="mb-4 font-headline text-4xl font-bold text-on-background md:text-5xl">
           Pertanyaan yang Sering Ditanyakan

@@ -8,16 +8,16 @@ export function ContactInfo() {
   return (
     <div className="flex flex-col gap-10">
       <div className="rounded-xl border border-outline-variant/20 bg-surface-container-low p-8">
-        <h3 className="mb-6 font-headline text-2xl font-semibold text-on-background">Contact Information</h3>
+        <h3 className="mb-6 font-headline text-2xl font-semibold text-on-background">Informasi Kontak Kami</h3>
         <ul className="space-y-6">
           <li className="flex items-start gap-4">
             <div className="shrink-0 rounded-full bg-primary-container p-3 text-on-primary-container">
               <MaterialIcon filled>chat</MaterialIcon>
             </div>
             <div>
-              <p className="mb-1 text-sm font-bold text-on-surface-variant">WhatsApp / Phone</p>
-              <p className="text-lg text-on-background">+1 (555) 123-4567</p>
-              <p className="mt-1 text-sm text-outline">Available for quick estimates via photo.</p>
+              <p className="mb-1 text-sm font-bold text-on-surface-variant">WhatsApp / Telepon</p>
+              <p className="text-lg text-on-background">+62 821 - 2392 - 7180</p>
+              <p className="mt-1 text-sm text-outline">Respon cepat, hubungi no kami</p>
             </div>
           </li>
 
@@ -27,7 +27,7 @@ export function ContactInfo() {
             </div>
             <div>
               <p className="mb-1 text-sm font-bold text-on-surface-variant">Email</p>
-              <p className="text-lg text-on-background">hello@terrapaving.com</p>
+              <p className="text-lg text-on-background">customerservice@kasi.com</p>
             </div>
           </li>
 
@@ -36,8 +36,9 @@ export function ContactInfo() {
               <MaterialIcon filled>business</MaterialIcon>
             </div>
             <div>
-              <p className="mb-1 text-sm font-bold text-on-surface-variant">Headquarters</p>
-              <p className="text-lg text-on-background">42 Earthway Blvd, Suite 100<br />Portland, OR 97201</p>
+              <p className="mb-1 text-sm font-bold text-on-surface-variant">Lokasi</p>
+              <p className="text-lg text-on-background">
+                Jl. H Appandi kp. Kaum Pandak RT 002/01, Kabupaten Bogor, Jawa Barat <br />No.rumah 49, 16913</p>
             </div>
           </li>
 
@@ -46,10 +47,10 @@ export function ContactInfo() {
               <MaterialIcon filled>schedule</MaterialIcon>
             </div>
             <div>
-              <p className="mb-1 text-sm font-bold text-on-surface-variant">Business Hours</p>
-              <p className="text-on-background">Monday - Friday: 7:00 AM - 6:00 PM</p>
-              <p className="text-on-background">Saturday: 8:00 AM - 2:00 PM</p>
-              <p className="text-outline">Sunday: Closed</p>
+              <p className="mb-1 text-sm font-bold text-on-surface-variant">Jam Kerja</p>
+              <p className="text-on-background">Senin - Jummat: 7:00 AM - 7:00 PM</p>
+              <p className="text-on-background">Sabtu: 8:00 AM - 7:00 PM</p>
+              <p className="text-outline">Minggu: Tutup</p>
             </div>
           </li>
         </ul>
@@ -67,7 +68,7 @@ export function ContactInfo() {
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           <div className="flex items-center gap-2 rounded-full border border-outline-variant/30 bg-surface/80 px-4 py-2 text-sm font-bold text-primary backdrop-blur">
             <MaterialIcon className="text-base">pin_drop</MaterialIcon>
-            Map View
+            Lokasi Kami
           </div>
         </div>
       </div>
