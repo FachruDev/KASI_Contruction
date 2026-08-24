@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ArticleDetailHeader } from "@/components/articles/ArticleDetailHeader";
 import { AsphaltDrainageContent } from "@/components/articles/AsphaltDrainageContent";
 import { ArticleShare } from "@/components/articles/ArticleShare";
 import { ArticleDetailCta } from "@/components/articles/ArticleDetailCta";
+
+export const metadata: Metadata = {
+  title: "Pentingnya Drainase Aspal yang Tepat",
+  description:
+    "Pelajari mengapa drainase yang baik penting untuk daya tahan permukaan aspal dan kualitas hasil pengaspalan jangka panjang.",
+};
 
 export default function AsphaltDrainageArticlePage() {
   return (

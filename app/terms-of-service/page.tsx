@@ -4,7 +4,8 @@ import { TermsContent } from "@/components/legal/TermsContent";
 import { Navbar } from "@/components/layout/Navbar";
 
 export const metadata: Metadata = {
-  title: "Terms of Service - Terra Paving",
+  title: "Syarat dan Ketentuan",
+  description: "Syarat dan ketentuan penggunaan website serta layanan pengaspalan KASI.",
 };
 
 export default function TermsOfServicePage() {

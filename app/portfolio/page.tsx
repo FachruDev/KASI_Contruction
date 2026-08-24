@@ -7,7 +7,9 @@ import { PortfolioHero } from "@/components/portfolio/PortfolioHero";
 import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 
 export const metadata: Metadata = {
-  title: "Portfolio - Terra Paving",
+  title: "Portfolio Proyek Pengaspalan Jabodetabek",
+  description:
+    "Lihat portfolio proyek pengaspalan KASI untuk kebutuhan jalan, perumahan, komersial, dan industri di wilayah Jabodetabek.",
 };
 
 export default function PortfolioPage() {

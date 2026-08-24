@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Literata, Nunito_Sans } from "next/font/google";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 const literata = Literata({
@@ -16,13 +17,33 @@ const nunitoSans = Nunito_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Terra Paving - Professional Road Paving",
-  description: "Reliable asphalt construction for residential, commercial, and industrial projects.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "KASI | Jasa Pengaspalan Profesional Jabodetabek",
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "KASI | Jasa Pengaspalan Profesional Jabodetabek",
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    locale: "id_ID",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "KASI | Jasa Pengaspalan Profesional Jabodetabek",
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en" className="light">
+    <html lang="id" className="light">
       <head>
         <link href="https://fonts.googleapis.com" rel="preconnect" />
         <link href="https://fonts.gstatic.com" rel="preconnect" crossOrigin="anonymous" />

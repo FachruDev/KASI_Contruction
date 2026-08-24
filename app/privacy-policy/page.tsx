@@ -4,7 +4,8 @@ import { PrivacyHeader } from "@/components/legal/PrivacyHeader";
 import { PrivacyPolicyContent } from "@/components/legal/PrivacyPolicyContent";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy - Terra Paving",
+  title: "Kebijakan Privasi",
+  description: "Kebijakan privasi KASI terkait penggunaan data dan informasi pengunjung website.",
 };
 
 export default function PrivacyPolicyPage() {

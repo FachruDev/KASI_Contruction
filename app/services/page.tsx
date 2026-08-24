@@ -7,7 +7,9 @@ import { ServicesGrid } from "@/components/services/ServicesGrid";
 import { ServiceCta } from "@/components/services/ServiceCta";
 
 export const metadata: Metadata = {
-  title: "Our Services - Terra Paving",
+  title: "Jasa Pengaspalan & Aspal Hotmix Jabodetabek",
+  description:
+    "Layanan pengaspalan KASI untuk jalan lingkungan, perumahan, area komersial, industri, perbaikan permukaan, dan aspal hotmix di Jabodetabek.",
 };
 
 export default function ServicesPage() {
