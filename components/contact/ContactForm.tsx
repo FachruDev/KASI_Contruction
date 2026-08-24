@@ -90,7 +90,7 @@ export function ContactForm() {
           className="mt-4 w-full rounded-xl bg-primary py-4 font-label text-lg font-bold text-on-primary shadow-[0_4px_14px_rgba(74,124,89,0.3)] transition-opacity hover:opacity-90"
           type="submit"
         >
-          Ajukan Penawaran
+          Ajukan Permintaan
         </button>
       </form>
     </div>
