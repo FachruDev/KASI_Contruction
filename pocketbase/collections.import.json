@@ -1,0 +1,357 @@
+[
+  {
+    "id": "siteprofile0001",
+    "name": "site_profile",
+    "type": "base",
+    "listRule": "is_active = true",
+    "viewRule": "is_active = true",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "company_name", "type": "text", "required": true, "max": 120 },
+      { "name": "site_title", "type": "text", "required": true, "max": 160 },
+      { "name": "site_description", "type": "text", "required": true, "max": 320 },
+      { "name": "logo", "type": "file", "maxSelect": 1, "maxSize": 5242880, "mimeTypes": ["image/jpeg", "image/png", "image/svg+xml", "image/webp"], "thumbs": [] },
+      { "name": "favicon", "type": "file", "maxSelect": 1, "maxSize": 1048576, "mimeTypes": ["image/x-icon", "image/png", "image/svg+xml"], "thumbs": [] },
+      { "name": "seo_image", "type": "file", "maxSelect": 1, "maxSize": 5242880, "mimeTypes": ["image/jpeg", "image/png", "image/webp"], "thumbs": [] },
+      { "name": "footer_subtitle", "type": "text", "max": 320 },
+      { "name": "copyright", "type": "text", "max": 200 },
+      { "name": "is_active", "type": "bool" }
+    ],
+    "indexes": []
+  },
+  {
+    "id": "contactinfo0000",
+    "name": "contact_info",
+    "type": "base",
+    "listRule": "is_active = true",
+    "viewRule": "is_active = true",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "whatsapp_phone", "type": "text", "required": true, "max": 30 },
+      { "name": "phone", "type": "text", "max": 30 },
+      { "name": "email", "type": "email", "max": 255 },
+      { "name": "address", "type": "text", "max": 1000 },
+      { "name": "maps_embed_url", "type": "url", "max": 2000 },
+      { "name": "whatsapp_message", "type": "text", "max": 1000 },
+      { "name": "is_active", "type": "bool" }
+    ],
+    "indexes": []
+  },
+  {
+    "id": "businesshours01",
+    "name": "business_hours",
+    "type": "base",
+    "listRule": "is_active = true",
+    "viewRule": "is_active = true",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "day_label", "type": "text", "required": true, "max": 80 },
+      { "name": "open_time", "type": "text", "max": 10 },
+      { "name": "close_time", "type": "text", "max": 10 },
+      { "name": "is_active", "type": "bool" },
+      { "name": "sort_order", "type": "number", "onlyInt": true, "min": 0, "max": 999 }
+    ],
+    "indexes": []
+  },
+  {
+    "id": "homehero0000001",
+    "name": "home_hero",
+    "type": "base",
+    "listRule": "status = 'published'",
+    "viewRule": "status = 'published'",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "eyebrow", "type": "text", "max": 120 },
+      { "name": "title", "type": "text", "required": true, "max": 200 },
+      { "name": "subtitle", "type": "text", "required": true, "max": 600 },
+      { "name": "image", "type": "file", "required": true, "maxSelect": 1, "maxSize": 10485760, "mimeTypes": ["image/jpeg", "image/png", "image/webp"], "thumbs": [] },
+      { "name": "image_alt", "type": "text", "required": true, "max": 200 },
+      { "name": "cta_label", "type": "text", "max": 80 },
+      { "name": "cta_message", "type": "text", "max": 1000 },
+      { "name": "status", "type": "select", "required": true, "maxSelect": 1, "values": ["draft", "published"] }
+    ],
+    "indexes": []
+  },
+  {
+    "id": "homestats000001",
+    "name": "home_stats",
+    "type": "base",
+    "listRule": "is_active = true",
+    "viewRule": "is_active = true",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "value", "type": "text", "required": true, "max": 40 },
+      { "name": "label", "type": "text", "required": true, "max": 120 },
+      { "name": "is_active", "type": "bool" },
+      { "name": "sort_order", "type": "number", "onlyInt": true, "min": 0, "max": 999 }
+    ],
+    "indexes": []
+  },
+  {
+    "id": "homefeatures001",
+    "name": "home_features",
+    "type": "base",
+    "listRule": "is_active = true",
+    "viewRule": "is_active = true",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "icon", "type": "text", "max": 80 },
+      { "name": "title", "type": "text", "required": true, "max": 160 },
+      { "name": "description", "type": "text", "required": true, "max": 600 },
+      { "name": "is_active", "type": "bool" },
+      { "name": "sort_order", "type": "number", "onlyInt": true, "min": 0, "max": 999 }
+    ],
+    "indexes": []
+  },
+  {
+    "id": "homecta00000001",
+    "name": "home_cta",
+    "type": "base",
+    "listRule": "status = 'published'",
+    "viewRule": "status = 'published'",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "title", "type": "text", "required": true, "max": 200 },
+      { "name": "subtitle", "type": "text", "max": 600 },
+      { "name": "cta_label", "type": "text", "max": 80 },
+      { "name": "cta_message", "type": "text", "max": 1000 },
+      { "name": "status", "type": "select", "required": true, "maxSelect": 1, "values": ["draft", "published"] }
+    ],
+    "indexes": []
+  },
+  {
+    "id": "services0000000",
+    "name": "services",
+    "type": "base",
+    "listRule": "status = 'published'",
+    "viewRule": "status = 'published'",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "title", "type": "text", "required": true, "max": 160 },
+      { "name": "slug", "type": "text", "required": true, "max": 160, "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      { "name": "description", "type": "text", "required": true, "max": 1200 },
+      { "name": "image", "type": "file", "required": true, "maxSelect": 1, "maxSize": 10485760, "mimeTypes": ["image/jpeg", "image/png", "image/webp"], "thumbs": [] },
+      { "name": "image_alt", "type": "text", "required": true, "max": 200 },
+      { "name": "ideal_for", "type": "text", "max": 500 },
+      { "name": "price", "type": "number", "min": 0, "max": 999999999999 },
+      { "name": "price_unit", "type": "select", "maxSelect": 1, "values": ["m2", "project", "request_quote"] },
+      { "name": "is_recommended", "type": "bool" },
+      { "name": "status", "type": "select", "required": true, "maxSelect": 1, "values": ["draft", "published"] },
+      { "name": "sort_order", "type": "number", "onlyInt": true, "min": 0, "max": 999 }
+    ],
+    "indexes": ["CREATE UNIQUE INDEX idx_services_slug ON services (slug)"]
+  },
+  {
+    "id": "servicebenef000",
+    "name": "service_benefits",
+    "type": "base",
+    "listRule": "service.status = 'published' && is_active = true",
+    "viewRule": "service.status = 'published' && is_active = true",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "service", "type": "relation", "required": true, "maxSelect": 1, "collectionId": "services0000000", "cascadeDelete": true },
+      { "name": "title", "type": "text", "required": true, "max": 300 },
+      { "name": "is_active", "type": "bool" },
+      { "name": "sort_order", "type": "number", "onlyInt": true, "min": 0, "max": 999 }
+    ],
+    "indexes": []
+  },
+  {
+    "id": "portfoliocats01",
+    "name": "portfolio_categories",
+    "type": "base",
+    "listRule": "is_active = true",
+    "viewRule": "is_active = true",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "title", "type": "text", "required": true, "max": 120 },
+      { "name": "slug", "type": "text", "required": true, "max": 160, "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      { "name": "is_active", "type": "bool" },
+      { "name": "sort_order", "type": "number", "onlyInt": true, "min": 0, "max": 999 }
+    ],
+    "indexes": ["CREATE UNIQUE INDEX idx_portfolio_categories_slug ON portfolio_categories (slug)"]
+  },
+  {
+    "id": "portfolios00001",
+    "name": "portfolios",
+    "type": "base",
+    "listRule": "status = 'published'",
+    "viewRule": "status = 'published'",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "category", "type": "relation", "required": true, "maxSelect": 1, "collectionId": "portfoliocats01", "cascadeDelete": false },
+      { "name": "title", "type": "text", "required": true, "max": 200 },
+      { "name": "slug", "type": "text", "required": true, "max": 160, "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      { "name": "subtitle", "type": "text", "max": 500 },
+      { "name": "description", "type": "editor", "maxSize": 0 },
+      { "name": "cover_image", "type": "file", "required": true, "maxSelect": 1, "maxSize": 10485760, "mimeTypes": ["image/jpeg", "image/png", "image/webp"], "thumbs": [] },
+      { "name": "cover_image_alt", "type": "text", "required": true, "max": 200 },
+      { "name": "gallery", "type": "file", "maxSelect": 20, "maxSize": 10485760, "mimeTypes": ["image/jpeg", "image/png", "image/webp"], "thumbs": [] },
+      { "name": "before_image", "type": "file", "maxSelect": 1, "maxSize": 10485760, "mimeTypes": ["image/jpeg", "image/png", "image/webp"], "thumbs": [] },
+      { "name": "after_image", "type": "file", "maxSelect": 1, "maxSize": 10485760, "mimeTypes": ["image/jpeg", "image/png", "image/webp"], "thumbs": [] },
+      { "name": "location", "type": "text", "max": 200 },
+      { "name": "area_m2", "type": "number", "min": 0, "max": 999999999 },
+      { "name": "year", "type": "number", "onlyInt": true, "min": 1900, "max": 2100 },
+      { "name": "is_featured", "type": "bool" },
+      { "name": "status", "type": "select", "required": true, "maxSelect": 1, "values": ["draft", "published"] },
+      { "name": "sort_order", "type": "number", "onlyInt": true, "min": 0, "max": 999 }
+    ],
+    "indexes": ["CREATE UNIQUE INDEX idx_portfolios_slug ON portfolios (slug)"]
+  },
+  {
+    "id": "testimonials000",
+    "name": "testimonials",
+    "type": "base",
+    "listRule": "is_active = true",
+    "viewRule": "is_active = true",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "name", "type": "text", "required": true, "max": 120 },
+      { "name": "company_name", "type": "text", "max": 160 },
+      { "name": "service_label", "type": "text", "max": 160 },
+      { "name": "rating", "type": "select", "required": true, "maxSelect": 1, "values": ["1", "2", "3", "4", "5"] },
+      { "name": "message", "type": "text", "max": 2000 },
+      { "name": "profile_image", "type": "file", "maxSelect": 1, "maxSize": 5242880, "mimeTypes": ["image/jpeg", "image/png", "image/webp"], "thumbs": [] },
+      { "name": "testimonial_image", "type": "file", "maxSelect": 1, "maxSize": 10485760, "mimeTypes": ["image/jpeg", "image/png", "image/webp"], "thumbs": [] },
+      { "name": "is_active", "type": "bool" },
+      { "name": "sort_order", "type": "number", "onlyInt": true, "min": 0, "max": 999 }
+    ],
+    "indexes": []
+  },
+  {
+    "id": "faqcategories01",
+    "name": "faq_categories",
+    "type": "base",
+    "listRule": "is_active = true",
+    "viewRule": "is_active = true",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "title", "type": "text", "required": true, "max": 160 },
+      { "name": "is_active", "type": "bool" },
+      { "name": "sort_order", "type": "number", "onlyInt": true, "min": 0, "max": 999 }
+    ],
+    "indexes": []
+  },
+  {
+    "id": "faqs00000000001",
+    "name": "faqs",
+    "type": "base",
+    "listRule": "category.is_active = true && is_active = true",
+    "viewRule": "category.is_active = true && is_active = true",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "category", "type": "relation", "required": true, "maxSelect": 1, "collectionId": "faqcategories01", "cascadeDelete": false },
+      { "name": "title", "type": "text", "required": true, "max": 300 },
+      { "name": "description", "type": "editor", "required": true, "maxSize": 0 },
+      { "name": "is_active", "type": "bool" },
+      { "name": "sort_order", "type": "number", "onlyInt": true, "min": 0, "max": 999 }
+    ],
+    "indexes": []
+  },
+  {
+    "id": "articlecats0000",
+    "name": "article_categories",
+    "type": "base",
+    "listRule": "is_active = true",
+    "viewRule": "is_active = true",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "title", "type": "text", "required": true, "max": 120 },
+      { "name": "slug", "type": "text", "required": true, "max": 160, "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      { "name": "is_active", "type": "bool" },
+      { "name": "sort_order", "type": "number", "onlyInt": true, "min": 0, "max": 999 }
+    ],
+    "indexes": ["CREATE UNIQUE INDEX idx_article_categories_slug ON article_categories (slug)"]
+  },
+  {
+    "id": "articles0000000",
+    "name": "articles",
+    "type": "base",
+    "listRule": "status = 'published'",
+    "viewRule": "status = 'published'",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "category", "type": "relation", "maxSelect": 1, "collectionId": "articlecats0000", "cascadeDelete": false },
+      { "name": "title", "type": "text", "required": true, "max": 200 },
+      { "name": "slug", "type": "text", "required": true, "max": 160, "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      { "name": "excerpt", "type": "text", "required": true, "max": 500 },
+      { "name": "content", "type": "editor", "required": true, "maxSize": 0 },
+      { "name": "cover_image", "type": "file", "maxSelect": 1, "maxSize": 10485760, "mimeTypes": ["image/jpeg", "image/png", "image/webp"], "thumbs": [] },
+      { "name": "cover_image_alt", "type": "text", "max": 200 },
+      { "name": "published_at", "type": "date" },
+      { "name": "is_featured", "type": "bool" },
+      { "name": "status", "type": "select", "required": true, "maxSelect": 1, "values": ["draft", "published"] }
+    ],
+    "indexes": ["CREATE UNIQUE INDEX idx_articles_slug ON articles (slug)"]
+  },
+  {
+    "id": "legalpages00001",
+    "name": "legal_pages",
+    "type": "base",
+    "listRule": "status = 'published'",
+    "viewRule": "status = 'published'",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "title", "type": "text", "required": true, "max": 160 },
+      { "name": "slug", "type": "text", "required": true, "max": 160, "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      { "name": "content", "type": "editor", "required": true, "maxSize": 0 },
+      { "name": "status", "type": "select", "required": true, "maxSelect": 1, "values": ["draft", "published"] }
+    ],
+    "indexes": ["CREATE UNIQUE INDEX idx_legal_pages_slug ON legal_pages (slug)"]
+  },
+  {
+    "id": "inquiries000000",
+    "name": "inquiries",
+    "type": "base",
+    "listRule": null,
+    "viewRule": null,
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "fields": [
+      { "name": "name", "type": "text", "required": true, "max": 160 },
+      { "name": "phone", "type": "text", "required": true, "max": 30 },
+      { "name": "location", "type": "text", "required": true, "max": 300 },
+      { "name": "requirement", "type": "select", "required": true, "maxSelect": 1, "values": ["road", "housing", "parking", "commercial", "industrial", "repair", "other"] },
+      { "name": "area_m2", "type": "number", "min": 0, "max": 999999999 },
+      { "name": "detail", "type": "text", "max": 3000 },
+      { "name": "status", "type": "select", "required": true, "maxSelect": 1, "values": ["new", "contacted", "quoted", "closed", "spam"] },
+      { "name": "source_url", "type": "url", "max": 2000 }
+    ],
+    "indexes": []
+  }
+]
