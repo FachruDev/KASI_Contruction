@@ -5,6 +5,7 @@ import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 import { ServiceHeader } from "@/components/services/ServiceHeader";
 import { ServicesGrid } from "@/components/services/ServicesGrid";
 import { ServiceCta } from "@/components/services/ServiceCta";
+import { getServices } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Jasa Pengaspalan & Aspal Hotmix Jabodetabek",
@@ -12,14 +13,15 @@ export const metadata: Metadata = {
     "Layanan pengaspalan KASI untuk jalan lingkungan, perumahan, area komersial, industri, perbaikan permukaan, dan aspal hotmix di Jabodetabek.",
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await getServices();
   return (
     <div className="flex min-h-screen flex-col bg-background text-on-background antialiased">
       <Navbar active="services" />
 
       <main className="mx-auto w-full max-w-7xl flex-grow px-4 py-16 sm:px-8">
         <ServiceHeader />
-        <ServicesGrid />
+        <ServicesGrid services={services} />
         <ServiceCta />
       </main>
 

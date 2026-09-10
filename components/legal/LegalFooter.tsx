@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { MAIN_NAV_ITEMS } from "@/data/navigation";
+import { useSiteConfig } from "@/components/cms/SiteConfigProvider";
 
 const legalItems = [
   { label: "Privacy Policy", href: "/privacy-policy", key: "privacy" },
@@ -12,6 +15,7 @@ type LegalFooterProps = {
 };
 
 export function LegalFooter({ active }: LegalFooterProps) {
+  const site = useSiteConfig();
   const links = [...legalItems, ...MAIN_NAV_ITEMS];
 
   if (active === "privacy") {
@@ -23,7 +27,7 @@ export function LegalFooter({ active }: LegalFooterProps) {
             className="flex items-center gap-2 font-headline text-xl font-bold text-primary dark:text-primary-fixed-dim"
           >
             <MaterialIcon filled>landscape</MaterialIcon>
-            Terra Paving
+            {site.companyName}
           </Link>
 
           <nav className="flex flex-wrap justify-center gap-x-6 gap-y-3 font-body text-sm leading-relaxed text-on-surface-variant dark:text-surface-variant">
@@ -46,7 +50,7 @@ export function LegalFooter({ active }: LegalFooterProps) {
           </nav>
 
           <div className="font-body text-sm leading-relaxed text-on-surface-variant opacity-80 dark:text-surface-variant">
-            © 2024 Terra Paving. Rooted in Quality.
+            {site.copyright}
           </div>
         </div>
       </footer>
@@ -58,9 +62,9 @@ export function LegalFooter({ active }: LegalFooterProps) {
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between space-y-6 px-8 py-12 font-body text-sm leading-relaxed text-on-surface-variant dark:text-surface-variant md:flex-row md:space-y-0">
         <div className="flex flex-col items-center space-y-2 md:items-start">
           <Link href="/" className="font-headline text-xl font-bold text-primary dark:text-primary-fixed-dim">
-            Terra Paving
+            {site.companyName}
           </Link>
-          <span>© 2024 Terra Paving. Rooted in Quality.</span>
+          <span>{site.copyright}</span>
         </div>
 
         <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 md:justify-end">

@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { FOOTER_LEGAL_ITEMS, FOOTER_NAV_ITEMS } from "@/data/navigation";
+import { useSiteConfig } from "@/components/cms/SiteConfigProvider";
 
 function FooterLinkList({
   title,
@@ -25,13 +28,14 @@ function FooterLinkList({
 }
 
 export function Footer() {
+  const site = useSiteConfig();
   return (
     <footer className="mt-auto w-full rounded-t-xl bg-surface-container-highest">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-8 py-16 md:grid-cols-4">
         <div className="space-y-4">
-          <span className="font-headline text-xl font-semibold text-on-surface">Terra Paving</span>
+          <span className="font-headline text-xl font-semibold text-on-surface">{site.companyName}</span>
           <p className="mt-4 font-body text-sm text-on-surface-variant">
-            Grounded paving solutions for a durable future.
+            {site.footerSubtitle}
           </p>
         </div>
 
@@ -39,7 +43,7 @@ export function Footer() {
         <FooterLinkList items={FOOTER_NAV_ITEMS} title="Navigation" />
 
         <div className="border-t border-outline-variant/30 pt-8 text-center font-body text-sm text-on-surface-variant md:col-span-4 md:text-left">
-          © 2024 Terra Paving &amp; Asphalt Construction. All rights reserved.
+          {site.copyright}
         </div>
       </div>
     </footer>

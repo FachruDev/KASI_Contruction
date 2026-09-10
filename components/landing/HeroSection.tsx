@@ -1,22 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
-import { LANDING_IMAGES } from "@/data/landing";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
-import { createWhatsAppUrl } from "@/lib/whatsapp";
+import { createWhatsAppUrl, type HomeData, type SiteConfig } from "@/lib/cms";
 
-export function HeroSection() {
-  const whatsAppUrl = createWhatsAppUrl();
+export function HeroSection({ hero, site }: { hero: HomeData["hero"]; site: SiteConfig }) {
+  const whatsAppUrl = createWhatsAppUrl(site.whatsappPhone, hero.ctaMessage || site.whatsappMessage);
 
   return (
     <section className="relative mx-auto max-w-7xl overflow-hidden px-8 pt-12 pb-24">
       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
         <div className="z-10 space-y-8 lg:col-span-5">
           <h1 className="font-headline text-5xl leading-tight font-bold tracking-tight text-on-background md:text-6xl">
-            Jasa Pengaspalan Profesional Jabodetabek
+            {hero.title}
           </h1>
           <p className="max-w-lg font-body text-xl text-on-surface-variant">
-            Solusi pengaspalan untuk jalan lingkungan, perumahan, hingga kebutuhan industri. 
-            KASI - Kaum Aspal Solusi Indonesia hadir dengan pengerjaan yang rapi, material berkualitas, dan proses kerja yang dapat dipercaya.
+            {hero.subtitle}
           </p>
           <div className="flex flex-col gap-4 pt-4 sm:flex-row">
             <Link
@@ -40,13 +38,13 @@ export function HeroSection() {
 
         <div className="soft-shadow relative h-125 w-full overflow-hidden rounded-4xl lg:col-span-7 lg:h-162.5">
           <Image
-            alt=""
+            alt={hero.imageAlt}
             className="object-cover"
             fill
             priority
             unoptimized
             sizes="(min-width: 1024px) 58vw, 100vw"
-            src={LANDING_IMAGES.hero}
+            src={hero.image}
           />
           <div className="soft-shadow absolute bottom-8 left-8 max-w-xs rounded-xl border border-surface-container-highest bg-surface-bright/95 p-6 backdrop-blur-sm">
             <div className="flex items-center gap-4">

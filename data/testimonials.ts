@@ -1,7 +1,7 @@
 export type Testimonial = {
   name: string;
   service: string;
-  rating: 4.5 | 5;
+  rating: number;
   quote: string;
   avatar?: {
     src: string;

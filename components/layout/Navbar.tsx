@@ -5,12 +5,14 @@ import Link from "next/link";
 
 import { MAIN_NAV_ITEMS, type NavKey } from "@/data/navigation";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import { useSiteConfig } from "@/components/cms/SiteConfigProvider";
 
 interface NavbarProps {
   active?: NavKey;
 }
 
 export function Navbar({ active }: NavbarProps) {
+  const site = useSiteConfig();
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(true);
 
@@ -102,7 +104,7 @@ export function Navbar({ active }: NavbarProps) {
             onClick={closeMenu}
             className="shrink-0 font-headline text-xl font-bold text-primary sm:text-2xl"
           >
-            KASI
+            {site.companyName}
           </Link>
 
           {/* Desktop Navigation */}

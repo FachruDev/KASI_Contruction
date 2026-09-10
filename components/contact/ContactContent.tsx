@@ -1,7 +1,8 @@
 import { ContactForm } from "@/components/contact/ContactForm";
 import { ContactInfo } from "@/components/contact/ContactInfo";
+import type { SiteConfig } from "@/lib/cms";
 
-export function ContactContent() {
+export function ContactContent({ site }: { site: SiteConfig }) {
   return (
     <main className="mx-auto w-full max-w-7xl grow px-4 py-16 sm:px-6 lg:px-8">
       <div className="mb-16 text-center">
@@ -16,7 +17,7 @@ export function ContactContent() {
 
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-24">
         <ContactForm />
-        <ContactInfo />
+        <ContactInfo site={site} />
       </div>
     </main>
   );

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Literata, Nunito_Sans } from "next/font/google";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
+import { SiteConfigProvider } from "@/components/cms/SiteConfigProvider";
+import { getSiteConfig } from "@/lib/cms";
 import "./globals.css";
 
 const literata = Literata({
@@ -16,32 +18,21 @@ const nunitoSans = Nunito_Sans({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: "KASI | Jasa Pengaspalan Profesional Jabodetabek",
-    template: `%s | ${SITE_NAME}`,
-  },
-  description: SITE_DESCRIPTION,
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    title: "KASI | Jasa Pengaspalan Profesional Jabodetabek",
-    description: SITE_DESCRIPTION,
-    url: SITE_URL,
-    siteName: SITE_NAME,
-    locale: "id_ID",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "KASI | Jasa Pengaspalan Profesional Jabodetabek",
-    description: SITE_DESCRIPTION,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const site = await getSiteConfig();
 
-export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: { default: site.siteTitle, template: `%s | ${site.companyName || SITE_NAME}` },
+    description: site.siteDescription || SITE_DESCRIPTION,
+    alternates: { canonical: "/" },
+    openGraph: { title: site.siteTitle, description: site.siteDescription, url: SITE_URL, siteName: site.companyName, locale: "id_ID", type: "website" },
+    twitter: { card: "summary_large_image", title: site.siteTitle, description: site.siteDescription },
+  };
+}
+
+export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+  const site = await getSiteConfig();
   return (
     <html lang="id" className="light">
       <head>
@@ -53,7 +44,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         />
       </head>
       <body className={`${literata.variable} ${nunitoSans.variable} flex min-h-screen flex-col bg-background text-on-background`}>
-        {children}
+        <SiteConfigProvider config={site}>{children}</SiteConfigProvider>
       </body>
     </html>
   );

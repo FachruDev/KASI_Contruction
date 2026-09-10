@@ -2,12 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaqAccordion } from "@/components/faq/FaqAccordion";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
-import { FAQ_SECTIONS } from "@/data/faq";
+import type { FaqSection } from "@/data/faq";
 
 const FAQ_IMAGE =
   "/assets/images/faq/faq1.jpeg";
 
-export function FaqContent() {
+export function FaqContent({ sections }: { sections: FaqSection[] }) {
   return (
     <main className="mx-auto w-full max-w-4xl grow px-6 py-16 md:py-24">
       <header className="mb-16 text-center">
@@ -21,7 +21,7 @@ export function FaqContent() {
 
       <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-12">
         <div className="space-y-12 md:col-span-8">
-          {FAQ_SECTIONS.map((section) => (
+          {sections.map((section) => (
             <section key={section.title}>
               <h2 className="mb-6 border-b border-surface-container-highest pb-2 font-headline text-2xl font-semibold text-primary">
                 {section.title}

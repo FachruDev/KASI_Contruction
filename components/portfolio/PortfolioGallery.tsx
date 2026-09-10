@@ -1,11 +1,11 @@
-import { PORTFOLIO_PROJECTS } from "@/data/portfolio";
 import { ProjectCard } from "@/components/portfolio/ProjectCard";
+import type { PortfolioProject } from "@/data/portfolio";
 
-export function PortfolioGallery() {
+export function PortfolioGallery({ projects }: { projects: readonly PortfolioProject[] }) {
   return (
     <section className="mx-auto max-w-7xl px-6 pb-24 md:px-12">
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {PORTFOLIO_PROJECTS.map((project) => (
+        {projects.map((project) => (
           <ProjectCard key={project.title} project={project} />
         ))}
       </div>

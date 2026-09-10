@@ -1,8 +1,9 @@
-import { LANDING_HIGHLIGHTS, LANDING_IMAGES } from "@/data/landing";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import type { HomeData } from "@/lib/cms";
 
-export function HighlightsSection() {
-  const { expertCrews, qualityMaterials, transparentPricing } = LANDING_HIGHLIGHTS;
+export function HighlightsSection({ features }: { features: HomeData["features"] }) {
+  const [expertCrews, qualityMaterials, transparentPricing] = features;
+  if (!expertCrews || !qualityMaterials || !transparentPricing) return null;
 
   return (
     <section className="mx-auto max-w-7xl px-8 py-16">
@@ -32,7 +33,7 @@ export function HighlightsSection() {
           <div
             aria-hidden="true"
             className="absolute inset-0 h-full w-full bg-cover bg-center opacity-40"
-            style={{ backgroundImage: `url('${LANDING_IMAGES.future}')` }}
+            style={{ backgroundImage: "url('/assets/images/landing/landing2.jpeg')" }}
           />
           <div className="absolute inset-0 bg-linear-to-t from-surface to-transparent" />
           <div className="absolute bottom-0 left-0 z-10 w-full p-10">

@@ -1,6 +1,6 @@
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 
-export function TestimonialRating({ rating }: { rating: 4.5 | 5 }) {
+export function TestimonialRating({ rating }: { rating: number }) {
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating % 1 !== 0;
 
