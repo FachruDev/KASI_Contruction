@@ -26,7 +26,7 @@ export function ProjectCard({ project }: { project: PortfolioProject }) {
 
         <div className="flex flex-col justify-center p-8 md:w-2/5">
           <ProjectTags categories={project.categories} year={project.year} />
-          <h2 className="mb-2 font-headline text-2xl font-bold text-on-background">{project.title}</h2>
+          <h2 className="mb-2 text-2xl font-bold text-on-background">{project.title}</h2>
           {project.location ? (
             <div className="mb-4 flex items-center gap-1 text-sm text-on-surface-variant">
               <MaterialIcon className="text-[16px]">location_on</MaterialIcon>
@@ -65,7 +65,7 @@ export function ProjectCard({ project }: { project: PortfolioProject }) {
         </div>
         <div className="flex flex-col justify-center bg-surface-container-low p-8 md:w-1/2">
           <ProjectTags categories={project.categories} />
-          <h2 className="mb-2 font-headline text-2xl font-bold text-on-background">{project.title}</h2>
+          <h2 className="mb-2 text-2xl font-bold text-on-background">{project.title}</h2>
           {project.location ? (
             <div className="mb-4 flex items-center gap-1 text-sm text-on-surface-variant">
               <MaterialIcon className="text-[16px]">location_on</MaterialIcon>

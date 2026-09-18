@@ -1,7 +1,7 @@
 export function TestimonialsHero() {
   return (
     <section className="mx-auto max-w-7xl px-8 py-20 text-center">
-      <h1 className="mb-6 font-headline text-5xl text-on-background md:text-6xl">
+      <h1 className="text-5xl leading-tight font-bold tracking-tight text-primary md:text-6xl mb-6">
         Apa Kata Pelanggan Kami
       </h1>
       <p className="mx-auto max-w-2xl text-xl text-on-surface-variant">

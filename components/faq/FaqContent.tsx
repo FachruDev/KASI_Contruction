@@ -11,10 +11,10 @@ export function FaqContent({ sections }: { sections: FaqSection[] }) {
   return (
     <main className="mx-auto w-full max-w-4xl grow px-6 py-16 md:py-24">
       <header className="mb-16 text-center">
-        <h1 className="mb-4 font-headline text-4xl font-bold text-on-background md:text-5xl">
+        <h1 className="text-5xl leading-tight font-bold tracking-tight text-primary md:text-6xl mb-4">
           Pertanyaan yang Sering Ditanyakan
         </h1>
-        <p className="mx-auto max-w-2xl font-body text-lg text-on-surface-variant">
+        <p className="mx-auto max-w-2xl text-lg text-on-surface-variant">
           Temukan jawaban seputar layanan pengaspalan, harga, proses pengerjaan, dan area layanan KASI. Jika masih ada yang ingin Anda tanyakan, tim kami siap membantu.
         </p>
       </header>
@@ -23,7 +23,7 @@ export function FaqContent({ sections }: { sections: FaqSection[] }) {
         <div className="space-y-12 md:col-span-8">
           {sections.map((section) => (
             <section key={section.title}>
-              <h2 className="mb-6 border-b border-surface-container-highest pb-2 font-headline text-2xl font-semibold text-primary">
+              <h2 className="mb-6 border-b border-surface-container-highest pb-2 text-2xl font-semibold text-primary">
                 {section.title}
               </h2>
               <FaqAccordion items={section.items} />
@@ -47,14 +47,14 @@ export function FaqContent({ sections }: { sections: FaqSection[] }) {
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-surface-bright text-primary">
               <MaterialIcon className="text-3xl" filled>support_agent</MaterialIcon>
             </div>
-            <h3 className="mb-2 font-headline text-xl font-bold text-on-secondary-container">
+            <h3 className="mb-2 text-xl font-bold text-on-secondary-container">
               Punya Pertanyaan?
             </h3>
-            <p className="mb-6 font-body text-sm text-on-secondary-container/80">
+            <p className="mb-6 text-sm text-on-secondary-container/80">
               Konsultasikan kebutuhan pengaspalan Anda langsung dengan tim KASI.
             </p>
             <Link
-              className="block w-full rounded-xl bg-primary px-6 py-3 font-label font-semibold text-on-primary transition-colors duration-200 hover:bg-primary-fixed hover:text-on-primary-fixed"
+              className="block w-full rounded-xl bg-primary px-6 py-3 font-label font-semibold text-on-primary transition-colors duration-20 hover:bg-primary/70"
               href="/contact"
             >
               Hubungi Kami

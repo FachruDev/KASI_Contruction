@@ -6,9 +6,9 @@ export function ContactContent({ site }: { site: SiteConfig }) {
   return (
     <main className="mx-auto w-full max-w-7xl grow px-4 py-16 sm:px-6 lg:px-8">
       <div className="mb-16 text-center">
-        <h1 className="mb-4 text-balance font-headline text-5xl font-bold text-on-background">
-          Konsultasikan Kebutuhan
-          <br/>Pengaspalan Anda
+        <h1 className="text-5xl leading-tight font-bold tracking-tight text-primary md:text-6xl mb-4">
+          Konsultasikan Kebutuhan <br />
+          Pengaspalan Anda
         </h1>
         <p className="mx-auto max-w-3xl text-lg text-on-surface-variant">
           Punya rencana pengaspalan untuk jalan, area parkir, perumahan, atau kawasan usaha? Ceritakan kebutuhan proyek Anda kepada KASI dan dapatkan informasi serta penawaran yang sesuai untuk wilayah Jabodetabek.

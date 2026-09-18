@@ -22,7 +22,7 @@ export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
         )}
 
         <div>
-          <h3 className="font-headline text-lg font-bold text-on-surface">{testimonial.name}</h3>
+          <h3 className="text-lg font-bold text-on-surface">{testimonial.name}</h3>
           <p className="text-sm text-tertiary">{testimonial.service}</p>
         </div>
       </div>

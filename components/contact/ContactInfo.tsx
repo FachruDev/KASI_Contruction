@@ -5,7 +5,7 @@ export function ContactInfo({ site }: { site: SiteConfig }) {
   return (
     <div className="flex flex-col gap-10">
       <div className="rounded-xl border border-outline-variant/20 bg-surface-container-low p-8">
-        <h3 className="mb-6 font-headline text-2xl font-semibold text-on-background">Informasi Kontak Kami</h3>
+        <h3 className="mb-6 text-2xl font-semibold text-primary">Informasi Kontak Kami</h3>
         <ul className="space-y-6">
           <li className="flex items-start gap-4">
             <div className="shrink-0 rounded-full bg-primary-container p-3 text-on-primary-container">

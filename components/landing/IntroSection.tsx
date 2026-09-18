@@ -1,7 +1,7 @@
 export function IntroSection() {
   return (
     <section className="mx-auto max-w-4xl space-y-8 px-8 py-24 text-center">
-      <h2 className="font-headline text-3xl font-bold text-on-background md:text-5xl">
+      <h2 className="text-3xl font-bold text-primary md:text-5xl">
         Kualitas Pekerjaan yang Menjadi Prioritas Kami
       </h2>
       <p className="font-body text-xl leading-relaxed text-on-surface-variant">

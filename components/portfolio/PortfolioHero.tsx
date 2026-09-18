@@ -2,10 +2,10 @@
 export function PortfolioHero({ filters }: { filters: readonly string[] }) {
   return (
     <section className="mx-auto max-w-7xl px-6 py-16 text-center md:px-12">
-      <h1 className="mb-6 font-headline text-4xl font-bold text-on-background md:text-5xl lg:text-6xl">
+      <h1 className="mb-6 text-4xl font-bold text-primary md:text-5xl lg:text-6xl">
         Hasil Pekerjaan Kami
       </h1>
-      <p className="mx-auto mb-12 max-w-3xl font-body text-lg text-on-surface-variant md:text-xl">
+      <p className="mx-auto mb-12 max-w-3xl text-lg text-on-surface-variant md:text-xl">
         Lihat berbagai pekerjaan pengaspalan yang telah kami kerjakan. Setiap proyek dikerjakan dengan memperhatikan kondisi lokasi, kebutuhan penggunaan, dan kualitas hasil akhir.
       </p>
 

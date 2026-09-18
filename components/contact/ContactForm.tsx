@@ -10,7 +10,7 @@ export function ContactForm() {
 
   return (
     <div className="rounded-xl border border-outline-variant/30 bg-surface-bright p-8 shadow-[0_4px_20px_rgba(46,50,48,0.06)] sm:p-12">
-      <h2 className="mb-8 font-headline text-3xl font-semibold text-primary">Hubungi Kami</h2>
+      <h2 className="mb-8 text-3xl font-semibold text-primary">Hubungi Kami</h2>
       <form
         className="space-y-6"
         onSubmit={async (event: FormEvent<HTMLFormElement>) => {

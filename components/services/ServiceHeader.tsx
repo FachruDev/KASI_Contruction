@@ -1,7 +1,7 @@
 export function ServiceHeader() {
   return (
     <header className="mx-auto mb-16 max-w-3xl text-center">
-      <h1 className="mb-6 font-headline text-4xl text-primary md:text-5xl">
+      <h1 className="mb-6 font-bold text-4xl text-primary md:text-6xl">
         Layanan Pengaspalan
       </h1>
       <p className="mb-8 text-lg text-on-surface-variant">

@@ -1,20 +1,20 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Literata, Nunito_Sans } from "next/font/google";
+import { Manrope, Sora } from "next/font/google";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
 import { SiteConfigProvider } from "@/components/cms/SiteConfigProvider";
 import { getSiteConfig } from "@/lib/cms";
 import "./globals.css";
 
-const literata = Literata({
+const sora = Sora({
   subsets: ["latin"],
-  variable: "--font-literata",
+  variable: "--font-Inter",
   display: "swap",
 });
 
-const nunitoSans = Nunito_Sans({
+const manrope = Manrope({
   subsets: ["latin"],
-  variable: "--font-nunito-sans",
+  variable: "--font-Montserrat",
   display: "swap",
 });
 
@@ -44,7 +44,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           rel="stylesheet"
         />
       </head>
-      <body className={`${literata.variable} ${nunitoSans.variable} flex min-h-screen flex-col bg-background text-on-background`}>
+      <body className={`${sora.variable} ${manrope.variable} flex min-h-screen flex-col bg-background text-on-background`}>
         <SiteConfigProvider config={site}>{children}</SiteConfigProvider>
       </body>
     </html>

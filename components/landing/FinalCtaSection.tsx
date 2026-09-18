@@ -8,8 +8,8 @@ export function FinalCtaSection({ cta, site }: { cta: HomeData["cta"]; site: Sit
   return (
     <section className="px-8 py-24">
       <div className="soft-shadow mx-auto flex max-w-5xl flex-col items-center rounded-[3rem] bg-surface-container-highest p-12 text-center md:p-20">
-        <h2 className="mb-6 font-headline text-3xl font-bold text-on-background md:text-5xl">{cta.title}</h2>
-        <p className="mb-10 max-w-2xl font-body text-lg text-on-surface-variant">
+        <h2 className="mb-6 text-3xl font-bold text-on-background md:text-5xl">{cta.title}</h2>
+        <p className="mb-10 max-w-2xl text-lg text-on-surface-variant">
           {cta.subtitle}
         </p>
         <Link

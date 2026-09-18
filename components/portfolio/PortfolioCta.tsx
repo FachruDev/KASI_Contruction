@@ -3,12 +3,12 @@ import { MaterialIcon } from "@/components/ui/MaterialIcon";
 
 export function PortfolioCta() {
   return (
-    <section className="bg-surface-container-high px-6 py-20">
+    <section className="bg-surface-container-highest px-6 py-20">
       <div className="mx-auto max-w-4xl text-center">
-        <h2 className="mb-6 font-headline text-3xl font-bold text-on-background md:text-4xl">
+        <h2 className="mb-6 text-3xl font-bold text-on-background md:text-4xl">
           Punya Proyek Pengaspalan? Mari Diskusikan.
         </h2>
-        <p className="mx-auto mb-8 max-w-2xl font-body text-lg text-on-surface-variant">
+        <p className="mx-auto mb-8 max-w-2xl text-lg text-on-surface-variant">
           Ceritakan kebutuhan dan kondisi lokasi Anda kepada tim KASI. Kami siap membantu memberikan solusi pengaspalan yang sesuai untuk proyek Anda di Jabodetabek.
         </p>
         <Link

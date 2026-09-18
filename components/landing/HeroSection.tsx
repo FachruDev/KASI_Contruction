@@ -11,7 +11,7 @@ export function HeroSection({ hero, site }: { hero: HomeData["hero"]; site: Site
       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
         <div className="z-10 space-y-8 lg:col-span-5">
           {hero.eyebrow ? <p className="font-label text-sm font-bold tracking-widest text-tertiary uppercase">{hero.eyebrow}</p> : null}
-          <h1 className="font-headline text-5xl leading-tight font-bold tracking-tight text-on-background md:text-6xl">
+          <h1 className="text-5xl leading-tight font-bold tracking-tight text-primary md:text-6xl">
             {hero.title}
           </h1>
           <p className="max-w-lg font-body text-xl text-on-surface-variant">

@@ -2,8 +2,8 @@ import Link from "next/link";
 
 export function ServiceCta() {
   return (
-    <section className="mx-auto max-w-4xl rounded-xl bg-surface-container-low p-12 text-center shadow-xs">
-      <h2 className="mb-4 font-headline text-3xl text-primary">
+    <section className="mx-auto max-w-4xl rounded-xl bg-surface-container-highest p-12 text-center shadow-xs">
+      <h2 className="mb-6 text-1xl font-bold text-on-background md:text-3xl">
         Ready to Start Your Paving Project?
       </h2>
       <p className="mx-auto mb-8 max-w-2xl text-on-surface-variant">

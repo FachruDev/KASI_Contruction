@@ -27,7 +27,7 @@ export function FaqAccordion({ items }: FaqAccordionProps) {
               onClick={() => setOpenIndex(isOpen ? null : index)}
               type="button"
             >
-              <span className="pr-4 font-body text-lg font-bold text-on-background">
+              <span className="pr-4 text-lg font-bold text-on-background">
                 {item.question}
               </span>
               <MaterialIcon
@@ -43,7 +43,7 @@ export function FaqAccordion({ items }: FaqAccordionProps) {
               }`}
             >
               <div className="overflow-hidden">
-                <div className="px-6 pt-2 pb-5 font-body text-on-surface-variant">{item.answer}</div>
+                <div className="px-6 pt-2 pb-5 text-on-surface-variant">{item.answer}</div>
               </div>
             </div>
           </div>

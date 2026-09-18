@@ -18,7 +18,7 @@ export function ServiceCard({ service }: { service: ServiceItem }) {
       </div>
 
       <div className="flex grow flex-col p-6">
-        <h3 className="mb-2 font-headline text-2xl text-primary">{service.title}</h3>
+        <h3 className="mb-2 font-medium text-2xl text-primary">{service.title}</h3>
         <p className="mb-4 grow text-on-surface-variant">{service.description}</p>
 
         <div className="mb-4">
