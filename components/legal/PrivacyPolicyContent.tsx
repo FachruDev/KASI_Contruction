@@ -1,6 +1,10 @@
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import type { CmsLegalPage } from "@/lib/cms";
 
-export function PrivacyPolicyContent() {
+export function PrivacyPolicyContent({ page }: { page?: CmsLegalPage | null }) {
+  if (page) {
+    return <main className="mx-auto w-full max-w-4xl flex-grow px-6 py-16 md:py-24"><div className="mb-16 space-y-4 text-center"><h1 className="font-headline text-4xl font-bold text-on-surface md:text-5xl">{page.title}</h1><div className="mx-auto mt-6 h-1 w-24 rounded-full bg-primary opacity-80" /></div><article className="cms-rich-content rounded-xl bg-surface-container-lowest p-8 text-lg leading-relaxed text-on-surface-variant shadow-[0_4px_20px_rgba(46,50,48,0.06)] md:p-12" dangerouslySetInnerHTML={{ __html: page.content }} /></main>;
+  }
   return (
     <main className="mx-auto w-full max-w-4xl flex-grow px-6 py-16 md:py-24">
       <div className="mb-16 space-y-4 text-center">

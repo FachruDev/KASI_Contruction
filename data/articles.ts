@@ -21,6 +21,7 @@ export const FEATURED_ARTICLE = {
     "https://lh3.googleusercontent.com/aida-public/AB6AXuBeehloDy4_IS1QepTWhRJmxM1w0iEcyRpkV0QBzAtlMcu1z20THwL3cnAZpZWhAWOZaIuaphqYiDJLCslfjbDV6pRvWcoAA_BJ50ebAGIVobKgrZg4ojEmwtPV2MieTTLwD4-9bpsymH0mHutZ9eBKOOUa9fPmTGtAyHRFeDrNBHcMNWe0YvpJXUMNlknBXLIISv8H-5Kia-giWissb4hW6d3rj1u1au1O0OWhv5Rraa-nQROY66fK",
   imageAlt:
     "A newly paved asphalt road winding through a lush green forest during warm golden-hour light.",
+  tone: "tertiary",
   href: "#",
 } as const;
 

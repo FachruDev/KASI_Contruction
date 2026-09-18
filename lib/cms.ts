@@ -4,6 +4,7 @@ import { PORTFOLIO_FILTERS, PORTFOLIO_PROJECTS, type PortfolioProject } from "@/
 import { FAQ_SECTIONS, type FaqSection } from "@/data/faq";
 import { TESTIMONIALS, type Testimonial } from "@/data/testimonials";
 import { LANDING_HIGHLIGHTS, LANDING_IMAGES, LANDING_STATS } from "@/data/landing";
+import { ARTICLE_CARDS, FEATURED_ARTICLE, type ArticleCard } from "@/data/articles";
 
 const POCKETBASE_URL = (process.env.POCKETBASE_URL ?? "https://kasiservices.ryucode.site").replace(/\/$/, "");
 const REVALIDATE_SECONDS = 60;
@@ -75,6 +76,9 @@ export type SiteConfig = {
   siteDescription: string;
   footerSubtitle: string;
   copyright: string;
+  logoUrl?: string;
+  faviconUrl?: string;
+  seoImageUrl?: string;
   whatsappPhone: string;
   whatsappMessage: string;
   email: string;
@@ -116,6 +120,9 @@ export const getSiteConfig = cache(async (): Promise<SiteConfig> => {
     siteDescription: text(profile, "site_description", fallbackSiteConfig.siteDescription),
     footerSubtitle: text(profile, "footer_subtitle", fallbackSiteConfig.footerSubtitle),
     copyright: text(profile, "copyright", fallbackSiteConfig.copyright),
+    logoUrl: fileUrl(profile, "logo"),
+    faviconUrl: fileUrl(profile, "favicon"),
+    seoImageUrl: fileUrl(profile, "seo_image"),
     whatsappPhone: text(contact, "whatsapp_phone", fallbackSiteConfig.whatsappPhone),
     whatsappMessage: text(contact, "whatsapp_message", fallbackSiteConfig.whatsappMessage),
     email: text(contact, "email", fallbackSiteConfig.email),
@@ -132,10 +139,10 @@ export const getSiteConfig = cache(async (): Promise<SiteConfig> => {
 });
 
 export type HomeData = {
-  hero: { title: string; subtitle: string; image: string; imageAlt: string; ctaMessage: string };
+  hero: { eyebrow: string; title: string; subtitle: string; image: string; imageAlt: string; ctaLabel: string; ctaMessage: string };
   stats: Array<{ value: string; label: string }>;
   features: Array<{ icon: string; title: string; description: string }>;
-  cta: { title: string; subtitle: string; ctaMessage: string };
+  cta: { title: string; subtitle: string; ctaLabel: string; ctaMessage: string };
 };
 
 export const getHomeData = cache(async (): Promise<HomeData> => {
@@ -150,10 +157,12 @@ export const getHomeData = cache(async (): Promise<HomeData> => {
 
   return {
     hero: {
+      eyebrow: text(hero, "eyebrow"),
       title: text(hero, "title", "Jasa Pengaspalan Profesional Jabodetabek"),
       subtitle: text(hero, "subtitle", "Solusi pengaspalan untuk jalan lingkungan, perumahan, hingga kebutuhan industri. KASI - Kaum Aspal Solusi Indonesia hadir dengan pengerjaan yang rapi, material berkualitas, dan proses kerja yang dapat dipercaya."),
       image: fileUrl(hero, "image", LANDING_IMAGES.hero) ?? LANDING_IMAGES.hero,
       imageAlt: text(hero, "image_alt", "Pekerjaan pengaspalan KASI"),
+      ctaLabel: text(hero, "cta_label", "Konsultasi Gratis"),
       ctaMessage: text(hero, "cta_message", fallbackSiteConfig.whatsappMessage),
     },
     stats: stats.length ? stats.map((item) => ({ value: text(item, "value"), label: text(item, "label") })) : [...LANDING_STATS],
@@ -163,6 +172,7 @@ export const getHomeData = cache(async (): Promise<HomeData> => {
     cta: {
       title: text(cta, "title", "Siap Mulai Proyek Pengaspalan Anda?"),
       subtitle: text(cta, "subtitle", "Ceritakan kebutuhan pengaspalan Anda kepada kami. Tim KASI siap membantu memberikan konsultasi yang sesuai dengan kebutuhan proyek Anda."),
+      ctaLabel: text(cta, "cta_label", "Konsultasi via WhatsApp"),
       ctaMessage: text(cta, "cta_message", fallbackSiteConfig.whatsappMessage),
     },
   };
@@ -253,6 +263,90 @@ export const getTestimonials = cache(async (): Promise<readonly Testimonial[]> =
       : undefined,
   }));
 });
+
+export type CmsArticle = {
+  title: string;
+  slug: string;
+  category: string;
+  excerpt: string;
+  content: string;
+  image?: string;
+  imageAlt: string;
+  publishedAt?: string;
+  featured: boolean;
+};
+
+function articleCategory(article: PocketBaseRecord) {
+  const category = article.expand?.category;
+  const categoryRecord = Array.isArray(category) ? category[0] : category;
+  return text(categoryRecord, "title", "Artikel");
+}
+
+function toCmsArticle(article: PocketBaseRecord): CmsArticle {
+  return {
+    title: text(article, "title"),
+    slug: text(article, "slug"),
+    category: articleCategory(article),
+    excerpt: text(article, "excerpt"),
+    content: text(article, "content"),
+    image: fileUrl(article, "cover_image"),
+    imageAlt: text(article, "cover_image_alt", text(article, "title")),
+    publishedAt: text(article, "published_at") || undefined,
+    featured: bool(article, "is_featured"),
+  };
+}
+
+function formatDate(value?: string) {
+  if (!value) return undefined;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? undefined
+    : new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric" }).format(date);
+}
+
+function toArticleCard(article: CmsArticle, index: number): ArticleCard {
+  const tones: ArticleCard["tone"][] = ["primary", "tertiary", "secondary"];
+  return {
+    title: article.title,
+    category: article.category,
+    description: article.excerpt,
+    image: article.image,
+    imageAlt: article.imageAlt,
+    tone: tones[index % tones.length],
+    href: `/articles/${article.slug}`,
+  };
+}
+
+export const getArticles = cache(async (): Promise<{ featured: ArticleCard; articles: readonly ArticleCard[] }> => {
+  const records = await listRecords<PocketBaseRecord>("articles", "&sort=-published_at&expand=category");
+  if (!records.length) return { featured: FEATURED_ARTICLE, articles: ARTICLE_CARDS };
+
+  const articles = records.map(toCmsArticle);
+  const featuredIndex = articles.findIndex((article) => article.featured);
+  const selectedIndex = featuredIndex >= 0 ? featuredIndex : 0;
+  const featured = toArticleCard(articles[selectedIndex], selectedIndex);
+
+  return {
+    featured,
+    articles: articles.filter((_, index) => index !== selectedIndex).map(toArticleCard),
+  };
+});
+
+export const getArticleBySlug = cache(async (slug: string): Promise<CmsArticle | null> => {
+  const records = await listRecords<PocketBaseRecord>("articles", `&filter=${encodeURIComponent(`slug = \"${slug.replace(/\"/g, "\\\\\"")}\"`)}&expand=category`);
+  const article = firstRecord(records);
+  return article ? toCmsArticle(article) : null;
+});
+
+export type CmsLegalPage = { title: string; slug: string; content: string };
+
+export const getLegalPage = cache(async (slug: string): Promise<CmsLegalPage | null> => {
+  const records = await listRecords<PocketBaseRecord>("legal_pages", `&filter=${encodeURIComponent(`slug = \"${slug.replace(/\"/g, "\\\\\"")}\"`)}`);
+  const page = firstRecord(records);
+  return page ? { title: text(page, "title"), slug: text(page, "slug"), content: text(page, "content") } : null;
+});
+
+export { formatDate };
 
 export function createWhatsAppUrl(phone: string, message: string) {
   const normalizedPhone = phone.replace(/\D/g, "").replace(/^0/, "62");

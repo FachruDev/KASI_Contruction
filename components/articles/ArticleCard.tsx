@@ -30,7 +30,7 @@ export function ArticleCard({ article }: { article: ArticleCardData }) {
               aria-hidden="true"
               className="absolute inset-0 opacity-20"
               style={{
-                backgroundImage: "radial-gradient(#705c30 1px, transparent 1px)",
+                backgroundImage: "radial-gradient(#ad4300 1px, transparent 1px)",
                 backgroundSize: "20px 20px",
               }}
             />

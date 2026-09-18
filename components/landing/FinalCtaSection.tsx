@@ -18,7 +18,7 @@ export function FinalCtaSection({ cta, site }: { cta: HomeData["cta"]; site: Sit
           target="_blank"
           rel="noopener noreferrer"
         >
-          Konsultasikan Proyek Anda
+          {cta.ctaLabel}
           <MaterialIcon>arrow_forward</MaterialIcon>
         </Link>
       </div>

@@ -25,8 +25,9 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(SITE_URL),
     title: { default: site.siteTitle, template: `%s | ${site.companyName || SITE_NAME}` },
     description: site.siteDescription || SITE_DESCRIPTION,
+    icons: site.faviconUrl ? { icon: site.faviconUrl } : undefined,
     alternates: { canonical: "/" },
-    openGraph: { title: site.siteTitle, description: site.siteDescription, url: SITE_URL, siteName: site.companyName, locale: "id_ID", type: "website" },
+    openGraph: { title: site.siteTitle, description: site.siteDescription, url: SITE_URL, siteName: site.companyName, locale: "id_ID", type: "website", images: site.seoImageUrl ? [site.seoImageUrl] : undefined },
     twitter: { card: "summary_large_image", title: site.siteTitle, description: site.siteDescription },
   };
 }

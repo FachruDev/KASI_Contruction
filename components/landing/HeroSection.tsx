@@ -10,6 +10,7 @@ export function HeroSection({ hero, site }: { hero: HomeData["hero"]; site: Site
     <section className="relative mx-auto max-w-7xl overflow-hidden px-8 pt-12 pb-24">
       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
         <div className="z-10 space-y-8 lg:col-span-5">
+          {hero.eyebrow ? <p className="font-label text-sm font-bold tracking-widest text-tertiary uppercase">{hero.eyebrow}</p> : null}
           <h1 className="font-headline text-5xl leading-tight font-bold tracking-tight text-on-background md:text-6xl">
             {hero.title}
           </h1>
@@ -21,7 +22,7 @@ export function HeroSection({ hero, site }: { hero: HomeData["hero"]; site: Site
               className="flex items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 text-center font-bold text-on-primary transition-opacity hover:opacity-80"
               href="/contact"
             >
-              Hubungi Kami
+              {hero.ctaLabel}
               <MaterialIcon>arrow_forward</MaterialIcon>
             </Link>
             <Link

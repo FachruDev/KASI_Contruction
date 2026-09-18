@@ -2,17 +2,19 @@ import type { Metadata } from "next";
 import { LegalFooter } from "@/components/legal/LegalFooter";
 import { PrivacyHeader } from "@/components/legal/PrivacyHeader";
 import { PrivacyPolicyContent } from "@/components/legal/PrivacyPolicyContent";
+import { getLegalPage } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Kebijakan Privasi",
   description: "Kebijakan privasi KASI terkait penggunaan data dan informasi pengunjung website.",
 };
 
-export default function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage() {
+  const page = await getLegalPage("privacy-policy");
   return (
     <div className="flex min-h-screen flex-col bg-background font-body text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container">
       <PrivacyHeader />
-      <PrivacyPolicyContent />
+      <PrivacyPolicyContent page={page} />
       <LegalFooter active="privacy" />
     </div>
   );

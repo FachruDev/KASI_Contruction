@@ -1,7 +1,11 @@
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { TERMS_SECTIONS } from "@/data/legal";
+import type { CmsLegalPage } from "@/lib/cms";
 
-export function TermsContent() {
+export function TermsContent({ page }: { page?: CmsLegalPage | null }) {
+  if (page) {
+    return <main className="mx-auto w-full max-w-4xl flex-grow px-8 pt-32 pb-24"><div className="mb-16 max-w-3xl"><h1 className="mb-6 font-headline text-4xl leading-tight font-bold text-primary md:text-5xl">{page.title}</h1></div><article className="cms-rich-content text-lg leading-relaxed text-on-surface-variant" dangerouslySetInnerHTML={{ __html: page.content }} /></main>;
+  }
   return (
     <main className="mx-auto w-full max-w-7xl flex-grow px-8 pt-32 pb-24">
       <div className="mb-16 max-w-3xl">

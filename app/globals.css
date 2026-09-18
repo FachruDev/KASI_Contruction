@@ -1,53 +1,54 @@
 @import "tailwindcss";
 
 @theme {
-  --color-surface-container-low: #f5f1ea;
-  --color-outline: #74796e;
-  --color-on-secondary-fixed: #1e1a13;
-  --color-on-tertiary-fixed-variant: #554020;
-  --color-on-secondary-fixed-variant: #4a4538;
-  --color-surface-bright: #faf6f0;
-  --color-on-primary-container: #d8f0de;
-  --color-secondary-container: #f0e8db;
-  --color-primary-container: #78a886;
-  --color-on-background: #2e3230;
-  --color-outline-variant: #c4c8bc;
-  --color-error: #b83230;
-  --color-surface-container: #f0ece4;
-  --color-surface-dim: #dbd7cf;
+  --color-surface-container-low: #f8f9f9;
+  --color-outline: #717575;
+  --color-on-secondary-fixed: #151616;
+  --color-on-tertiary-fixed-variant: #7d2d00;
+  --color-on-secondary-fixed-variant: #343737;
+  --color-surface-bright: #ffffff;
+  --color-on-primary-container: #572000;
+  --color-secondary-container: #FCF1D0;
+  --color-primary-container: #ffd3b4;
+  --color-on-background: #0a0a0a;
+  --color-outline-variant: #c3c7c7;
+  --color-error: #ba1a1a;
+  --color-surface-container: #eef0f0;
+  --color-surface-dim: #d9dddd;
   --color-on-primary: #ffffff;
   --color-on-tertiary: #ffffff;
-  --color-primary: #4a7c59;
-  --color-tertiary: #705c30;
-  --color-inverse-surface: #2e3230;
+  --color-primary: #fb6701;
+  --color-tertiary: #ad4300;
+  --color-inverse-surface: #0a0a0a;
   --color-on-error-container: #690005;
-  --color-secondary: #6b6358;
-  --color-on-primary-fixed-variant: #2a6038;
-  --color-inverse-primary: #8ecf9e;
-  --color-on-surface-variant: #4a4e4a;
-  --color-secondary-fixed-dim: #d4ccbf;
-  --color-on-primary-fixed: #002110;
-  --color-secondary-fixed: #f0e8db;
+  --color-secondary: #484c4c;
+  --color-on-primary-fixed-variant: #8d3500;
+  --color-inverse-primary: #ffb784;
+  --color-on-surface-variant: #4b4f4f;
+  --color-secondary-fixed-dim: #c7cbcb;
+  --color-on-primary-fixed: #351000;
+  --color-secondary-fixed: #e3e6e6;
   --color-on-error: #ffffff;
-  --color-inverse-on-surface: #f5f0e8;
-  --color-on-secondary-container: #5e5548;
-  --color-surface-container-highest: #e4e0d8;
-  --color-tertiary-fixed: #f8e0a8;
-  --color-on-surface: #2e3230;
-  --color-surface: #faf6f0;
-  --color-tertiary-container: #c4a66a;
-  --color-surface-tint: #4a7c59;
-  --color-tertiary-fixed-dim: #dcc48e;
-  --color-surface-variant: #e4e0d8;
+  --color-inverse-on-surface: #f1f3f3;
+  --color-on-secondary-container: #343737;
+  --color-surface-container-highest: #EAE0CF;
+  --color-tertiary-fixed: #ffd8c2;
+  --color-on-surface: #0a0a0a;
+  --color-surface: #f1f3f3;
+  --color-tertiary-container: #ffb784;
+  --color-surface-tint: #fb6701;
+  --color-tertiary-fixed-dim: #ffb784;
+  --color-surface-variant: #e1e5e5;
   --color-error-container: #ffdad8;
   --color-surface-container-lowest: #ffffff;
-  --color-surface-container-high: #eae6de;
-  --color-on-tertiary-fixed: #221a05;
-  --color-primary-fixed: #c8e8d0;
-  --color-on-tertiary-container: #554020;
-  --color-background: #faf6f0;
+  --color-surface-container-high: #e7eaea;
+  --color-on-tertiary-fixed: #351000;
+  --color-primary-fixed: #ffe0cc;
+  --color-on-tertiary-container: #572000;
+  --color-background: #f1f3f3;
   --color-on-secondary: #ffffff;
-  --color-primary-fixed-dim: #8ecf9e;
+  --color-primary-fixed-dim: #ffb784;
+  --color-footer-background: #1B211A;
 
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
@@ -94,5 +95,48 @@
 
   .material-symbols-outlined.filled {
     font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+  }
+
+  .cms-rich-content > * + * {
+    margin-top: 1.5rem;
+  }
+
+  .cms-rich-content h2 {
+    margin-top: 3rem;
+    font-size: 1.875rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-on-surface);
+  }
+
+  .cms-rich-content h3 {
+    margin-top: 2.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--color-on-surface);
+  }
+
+  .cms-rich-content ul,
+  .cms-rich-content ol {
+    padding-left: 1.5rem;
+  }
+
+  .cms-rich-content ul { list-style: disc; }
+  .cms-rich-content ol { list-style: decimal; }
+
+  .cms-rich-content a {
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .cms-rich-content blockquote {
+    border-left: 4px solid var(--color-primary);
+    background: var(--color-surface-container-low);
+    padding: 1.25rem 1.5rem;
+    font-family: var(--font-literata), serif;
+    font-style: italic;
+    color: var(--color-on-surface);
   }
 }
