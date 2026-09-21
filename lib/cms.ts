@@ -18,36 +18,6 @@ const POCKETBASE_URL = (() => {
 })();
 const REVALIDATE_SECONDS = 60;
 
-async function getPocketBaseAdminToken(): Promise<string> {
-  const email = process.env.PB_SUPERUSER_EMAIL;
-  const password = process.env.PB_SUPERUSER_PASSWORD;
-
-  if (!email || !password) {
-    console.warn("PocketBase superuser credentials are not configured.");
-    return "";
-  }
-
-  try {
-    const response = await fetch(`${POCKETBASE_URL}/api/collections/_superusers/auth-with-password`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ identity: email, password }),
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      console.error(`PocketBase auth failed: ${response.status} ${response.statusText}`);
-      return "";
-    }
-
-    const data = await response.json() as { token?: string };
-    return data.token ?? "";
-  } catch (error) {
-    console.error("PocketBase auth error:", error);
-    return "";
-  }
-}
-
 type PocketBaseRecord = Record<string, unknown> & {
   id: string;
   collectionName: string;
@@ -63,19 +33,10 @@ async function listRecords<T extends PocketBaseRecord>(collection: string, query
   }
 
   try {
-    const token = await getPocketBaseAdminToken();
-    const headers: HeadersInit = { Accept: "application/json" };
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    }
-
-    console.log(`[PB DEBUG] collection=${collection} url=${POCKETBASE_URL} hasToken=${Boolean(token)} tokenPrefix=${token ? token.slice(0, 8) : "none"}`);
     const response = await fetch(`${POCKETBASE_URL}/api/collections/${collection}/records?perPage=200${query}`, {
       next: { revalidate: REVALIDATE_SECONDS, tags: [`pocketbase:${collection}`] },
-      headers,
+      headers: { Accept: "application/json" },
     });
-
-    console.log(`[PB DEBUG] collection=${collection} status=${response.status} statusText=${response.statusText}`);
 
     if (!response.ok) {
       console.error(`PocketBase fetch failed for ${collection}: ${response.status} ${response.statusText}`);
