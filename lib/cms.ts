@@ -6,7 +6,16 @@ import { TESTIMONIALS, type Testimonial } from "@/data/testimonials";
 import { LANDING_HIGHLIGHTS, LANDING_IMAGES, LANDING_STATS } from "@/data/landing";
 import { ARTICLE_CARDS, FEATURED_ARTICLE, type ArticleCard } from "@/data/articles";
 
-const POCKETBASE_URL = (process.env.POCKETBASE_URL ?? "https://kasiservices.ryucode.site").replace(/\/$/, "");
+const POCKETBASE_URL = (() => {
+  const value = process.env.POCKETBASE_URL ?? process.env.NEXT_PUBLIC_POCKETBASE_URL ?? "https://kasiservices.ryucode.site";
+  if (!value) return "";
+
+  try {
+    return new URL(value).origin.replace(/\/$/, "");
+  } catch {
+    return value.replace(/\/$/, "");
+  }
+})();
 const REVALIDATE_SECONDS = 60;
 
 type PocketBaseRecord = Record<string, unknown> & {
@@ -18,17 +27,25 @@ type PocketBaseRecord = Record<string, unknown> & {
 type PocketBaseList<T> = { items: T[] };
 
 async function listRecords<T extends PocketBaseRecord>(collection: string, query = "") {
+  if (!POCKETBASE_URL) {
+    console.warn("PocketBase URL is not configured.");
+    return [] as T[];
+  }
+
   try {
     const response = await fetch(`${POCKETBASE_URL}/api/collections/${collection}/records?perPage=200${query}`, {
       next: { revalidate: REVALIDATE_SECONDS, tags: [`pocketbase:${collection}`] },
+      headers: { Accept: "application/json" },
     });
 
     if (!response.ok) {
+      console.error(`PocketBase fetch failed for ${collection}: ${response.status} ${response.statusText}`);
       return [] as T[];
     }
 
     return (await response.json() as PocketBaseList<T>).items;
-  } catch {
+  } catch (error) {
+    console.error(`PocketBase fetch error for ${collection}:`, error);
     return [] as T[];
   }
 }
