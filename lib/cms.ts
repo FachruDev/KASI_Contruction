@@ -16,6 +16,7 @@ const POCKETBASE_URL = (() => {
     return value.replace(/\/$/, "");
   }
 })();
+const POCKETBASE_ADMIN_TOKEN = process.env.POCKETBASE_ADMIN_TOKEN ?? "";
 const REVALIDATE_SECONDS = 60;
 
 type PocketBaseRecord = Record<string, unknown> & {
@@ -33,10 +34,18 @@ async function listRecords<T extends PocketBaseRecord>(collection: string, query
   }
 
   try {
+    const headers: HeadersInit = { Accept: "application/json" };
+    if (POCKETBASE_ADMIN_TOKEN) {
+      headers.Authorization = `Bearer ${POCKETBASE_ADMIN_TOKEN}`;
+    }
+
+    console.log(`[PB DEBUG] collection=${collection} url=${POCKETBASE_URL} hasToken=${Boolean(POCKETBASE_ADMIN_TOKEN)} tokenPrefix=${POCKETBASE_ADMIN_TOKEN ? POCKETBASE_ADMIN_TOKEN.slice(0, 8) : "none"}`);
     const response = await fetch(`${POCKETBASE_URL}/api/collections/${collection}/records?perPage=200${query}`, {
       next: { revalidate: REVALIDATE_SECONDS, tags: [`pocketbase:${collection}`] },
-      headers: { Accept: "application/json" },
+      headers,
     });
+
+    console.log(`[PB DEBUG] collection=${collection} status=${response.status} statusText=${response.statusText}`);
 
     if (!response.ok) {
       console.error(`PocketBase fetch failed for ${collection}: ${response.status} ${response.statusText}`);
