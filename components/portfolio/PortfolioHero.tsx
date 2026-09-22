@@ -1,5 +1,8 @@
+"use client";
 
-export function PortfolioHero({ filters }: { filters: readonly string[] }) {
+import type { PortfolioCategory } from "@/lib/cms";
+
+export function PortfolioHero({ categories, selectedCategory, onSelect }: { categories: readonly PortfolioCategory[]; selectedCategory: string; onSelect: (category: string) => void }) {
   return (
     <section className="mx-auto max-w-7xl px-6 py-16 text-center md:px-12">
       <h1 className="mb-6 text-4xl font-bold text-primary md:text-5xl lg:text-6xl">
@@ -10,17 +13,25 @@ export function PortfolioHero({ filters }: { filters: readonly string[] }) {
       </p>
 
       <div className="mb-16 flex flex-wrap justify-center gap-3">
-        {filters.map((filter, index) => (
+        <button
+          className={selectedCategory === "all" ? "rounded-full bg-primary px-5 py-2 text-sm font-semibold text-on-primary shadow-[0_4px_20px_rgba(10,10,10,0.12)] transition-transform hover:scale-105" : "rounded-full border border-outline-variant/30 bg-surface-container-high px-5 py-2 text-sm font-semibold text-on-surface-variant transition-colors hover:bg-surface-container-highest"}
+          onClick={() => onSelect("all")}
+          type="button"
+        >
+          Semua
+        </button>
+        {categories.map((category) => (
           <button
-            key={filter}
+            key={category.slug}
             className={
-              index === 0
-                ? "rounded-full bg-primary px-5 py-2 text-sm font-semibold text-on-primary shadow-[0_4px_20px_rgba(46,50,48,0.06)] transition-transform hover:scale-105"
+              selectedCategory === category.slug
+                ? "rounded-full bg-primary px-5 py-2 text-sm font-semibold text-on-primary shadow-[0_4px_20px_rgba(10,10,10,0.12)] transition-transform hover:scale-105"
                 : "rounded-full border border-outline-variant/30 bg-surface-container-high px-5 py-2 text-sm font-semibold text-on-surface-variant transition-colors hover:bg-surface-container-highest"
             }
+            onClick={() => onSelect(category.slug)}
             type="button"
           >
-            {filter}
+            {category.title}
           </button>
         ))}
       </div>

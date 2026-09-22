@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import type { PortfolioProject } from "@/data/portfolio";
 import { ProjectTags } from "@/components/portfolio/ProjectTags";
@@ -5,6 +6,7 @@ import { ProjectTags } from "@/components/portfolio/ProjectTags";
 const shadowClass = "shadow-[0_4px_20px_rgba(46,50,48,0.06)]";
 
 export function ProjectCard({ project }: { project: PortfolioProject }) {
+  const detailHref = project.slug ? `/portfolio/${project.slug}` : undefined;
   if (project.featured === "primary") {
     return (
       <article
@@ -36,14 +38,14 @@ export function ProjectCard({ project }: { project: PortfolioProject }) {
           <p className="mb-6 flex-grow text-sm text-on-surface-variant">{project.description}</p>
           <div className="flex items-center justify-between border-t border-surface-container pt-4 text-sm font-semibold">
             <span className="text-on-surface">Area: {project.area}</span>
-            {project.showDetails ? (
-              <button
+            {detailHref ? (
+              <Link
                 className="flex items-center gap-1 text-primary transition-colors hover:text-primary-fixed-dim"
-                type="button"
+                href={detailHref}
               >
-                View Details
+                Lihat Detail
                 <MaterialIcon className="text-[18px]">arrow_forward</MaterialIcon>
-              </button>
+              </Link>
             ) : null}
           </div>
         </div>
@@ -75,6 +77,7 @@ export function ProjectCard({ project }: { project: PortfolioProject }) {
           <p className="mb-6 flex-grow text-sm text-on-surface-variant">{project.description}</p>
           <div className="flex items-center justify-between border-t border-surface-container pt-4 text-sm font-semibold">
             <span className="text-on-surface-variant">Area: {project.area}</span>
+            {detailHref ? <Link className="flex items-center gap-1 text-primary transition-colors hover:text-primary-fixed-dim" href={detailHref}>Lihat Detail<MaterialIcon className="text-[18px]">arrow_forward</MaterialIcon></Link> : null}
           </div>
         </div>
       </article>
@@ -106,6 +109,7 @@ export function ProjectCard({ project }: { project: PortfolioProject }) {
         <p className="mb-4 line-clamp-2 text-sm text-on-surface-variant">{project.description}</p>
         <div className="mt-auto flex items-center justify-between border-t border-surface-container pt-4 text-sm">
           <span className="text-xs font-semibold text-on-surface-variant">{project.meta}</span>
+          {detailHref ? <Link className="flex items-center gap-1 font-semibold text-primary transition-colors hover:text-primary-fixed-dim" href={detailHref}>Lihat Detail<MaterialIcon className="text-[18px]">arrow_forward</MaterialIcon></Link> : null}
         </div>
       </div>
     </article>

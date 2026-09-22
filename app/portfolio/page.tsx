@@ -3,7 +3,6 @@ import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { PortfolioCta } from "@/components/portfolio/PortfolioCta";
 import { PortfolioGallery } from "@/components/portfolio/PortfolioGallery";
-import { PortfolioHero } from "@/components/portfolio/PortfolioHero";
 import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 import { getPortfolio } from "@/lib/cms";
 
@@ -20,8 +19,7 @@ export default async function PortfolioPage() {
       <Navbar active="portfolio" />
 
       <main className="flex-grow">
-        <PortfolioHero filters={portfolio.filters} />
-        <PortfolioGallery projects={portfolio.projects} />
+        <PortfolioGallery categories={portfolio.categories} projects={portfolio.projects} />
         <PortfolioCta />
       </main>
 

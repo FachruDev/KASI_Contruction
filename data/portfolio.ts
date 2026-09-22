@@ -8,11 +8,13 @@ export const PORTFOLIO_FILTERS = [
 ] as const;
 
 export type PortfolioProject = {
+  slug?: string;
   title: string;
   description: string;
   image: string;
   imageAlt: string;
   categories: readonly string[];
+  categorySlugs?: readonly string[];
   meta?: string;
   location?: string;
   area?: string;

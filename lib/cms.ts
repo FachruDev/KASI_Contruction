@@ -75,6 +75,12 @@ function fileUrl(record: PocketBaseRecord | undefined, field: string, fallback?:
   return `${POCKETBASE_URL}/api/files/${record.collectionName}/${record.id}/${encodeURIComponent(filename)}`;
 }
 
+function fileUrls(record: PocketBaseRecord | undefined, field: string) {
+  const value = record?.[field];
+  const filenames = Array.isArray(value) ? value.filter((item): item is string => typeof item === "string" && Boolean(item.trim())) : typeof value === "string" && value.trim() ? [value] : [];
+  return filenames.map((filename) => `${POCKETBASE_URL}/api/files/${record?.collectionName}/${record?.id}/${encodeURIComponent(filename)}`);
+}
+
 function stripHtml(value: string) {
   return value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
@@ -214,37 +220,91 @@ export const getServices = cache(async (): Promise<readonly ServiceItem[]> => {
   }));
 });
 
-export const getPortfolio = cache(async (): Promise<{ filters: readonly string[]; projects: readonly PortfolioProject[] }> => {
+export type PortfolioCategory = { title: string; slug: string };
+
+export type CmsPortfolio = {
+  slug: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  coverImage: string;
+  coverImageAlt: string;
+  gallery: string[];
+  beforeImage?: string;
+  afterImage?: string;
+  category: PortfolioCategory;
+  location?: string;
+  area?: number;
+  year?: number;
+};
+
+function portfolioCategory(portfolio: PocketBaseRecord): PortfolioCategory {
+  const category = portfolio.expand?.category;
+  const categoryRecord = Array.isArray(category) ? category[0] : category;
+  return { title: text(categoryRecord, "title", "Portfolio"), slug: text(categoryRecord, "slug", "portfolio") };
+}
+
+function toCmsPortfolio(portfolio: PocketBaseRecord): CmsPortfolio {
+  return {
+    slug: text(portfolio, "slug"),
+    title: text(portfolio, "title"),
+    subtitle: text(portfolio, "subtitle"),
+    description: text(portfolio, "description"),
+    coverImage: fileUrl(portfolio, "cover_image") ?? "/assets/images/landing/landing2.jpeg",
+    coverImageAlt: text(portfolio, "cover_image_alt", text(portfolio, "title")),
+    gallery: fileUrls(portfolio, "gallery"),
+    beforeImage: fileUrl(portfolio, "before_image"),
+    afterImage: fileUrl(portfolio, "after_image"),
+    category: portfolioCategory(portfolio),
+    location: text(portfolio, "location") || undefined,
+    area: number(portfolio, "area_m2") || undefined,
+    year: number(portfolio, "year") || undefined,
+  };
+}
+
+export const getPortfolio = cache(async (): Promise<{ categories: readonly PortfolioCategory[]; projects: readonly PortfolioProject[] }> => {
   const [categories, portfolios] = await Promise.all([
     listRecords<PocketBaseRecord>("portfolio_categories", "&sort=sort_order"),
     listRecords<PocketBaseRecord>("portfolios", "&sort=sort_order&expand=category"),
   ]);
 
-  if (!portfolios.length) return { filters: PORTFOLIO_FILTERS, projects: PORTFOLIO_PROJECTS };
+  if (!portfolios.length) {
+    return {
+      categories: PORTFOLIO_FILTERS.slice(1).map((title) => ({ title, slug: title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") })),
+      projects: PORTFOLIO_PROJECTS,
+    };
+  }
 
   return {
-    filters: ["Semua", ...categories.map((category) => text(category, "title"))],
+    categories: categories.map((category) => ({ title: text(category, "title"), slug: text(category, "slug") })),
     projects: portfolios.map((portfolio, index) => {
-      const category = portfolio.expand?.category;
-      const categoryRecord = Array.isArray(category) ? category[0] : category;
-      const area = number(portfolio, "area_m2");
-      const year = number(portfolio, "year");
+      const item = toCmsPortfolio(portfolio);
+      const area = item.area;
+      const year = item.year;
 
       return {
-        title: text(portfolio, "title"),
-        description: stripHtml(text(portfolio, "description", text(portfolio, "subtitle"))),
-        image: fileUrl(portfolio, "cover_image") ?? "/assets/images/landing/landing2.jpeg",
-        imageAlt: text(portfolio, "cover_image_alt", text(portfolio, "title")),
-        categories: [text(categoryRecord, "title", "Portfolio")],
-        location: text(portfolio, "location"),
+        slug: item.slug,
+        title: item.title,
+        description: stripHtml(item.description || item.subtitle),
+        image: item.coverImage,
+        imageAlt: item.coverImageAlt,
+        categories: [item.category.title],
+        categorySlugs: [item.category.slug],
+        location: item.location,
         area: area ? `${area.toLocaleString("id-ID")} m²` : undefined,
         year: year ? String(year) : undefined,
-        beforeAfter: Boolean(text(portfolio, "before_image") && text(portfolio, "after_image")),
+        beforeAfter: Boolean(item.beforeImage && item.afterImage),
         featured: bool(portfolio, "is_featured") && index === 0 ? "primary" : undefined,
         meta: [area ? `${area.toLocaleString("id-ID")} m²` : "", year ? String(year) : ""].filter(Boolean).join(" • "),
       };
     }),
   };
+});
+
+export const getPortfolioBySlug = cache(async (slug: string): Promise<CmsPortfolio | null> => {
+  const records = await listRecords<PocketBaseRecord>("portfolios", `&filter=${encodeURIComponent(`slug = \"${slug.replace(/\"/g, "\\\\\"")}\"`)}&expand=category`);
+  const portfolio = firstRecord(records);
+  return portfolio ? toCmsPortfolio(portfolio) : null;
 });
 
 export const getFaqSections = cache(async (): Promise<FaqSection[]> => {
