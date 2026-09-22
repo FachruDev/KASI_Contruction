@@ -22,11 +22,15 @@ export const MAIN_NAV_ITEMS: readonly NavItem[] = [
 ] as const;
 
 export const FOOTER_LEGAL_ITEMS = [
-  { label: "Privacy Policy", href: "/privacy-policy" },
-  { label: "Terms of Service", href: "/terms-of-service" },
+  { label: "Privacy Policy", href: "/privacy-policy", target: "_blank" },
+  { label: "Terms of Service", href: "/terms-of-service", target: "_blank" },
 ] as const;
 
 export const FOOTER_NAV_ITEMS = [
-  { label: "Accessibility", href: "/accessibility" },
-  { label: "Sitemap", href: "/sitemap" },
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/services" },
+  { label: "Portfolio", href: "/portfolio" },
+  { label: "Testimonials", href: "/testimonials" },
+  { label: "FAQ", href: "/faq" },
+  { label: "Contact", href: "/contact" },
 ] as const;

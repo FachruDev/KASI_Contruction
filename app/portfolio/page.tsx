@@ -18,7 +18,7 @@ export default async function PortfolioPage() {
     <div className="flex min-h-screen flex-col bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container">
       <Navbar active="portfolio" />
 
-      <main className="flex-grow">
+      <main className="grow">
         <PortfolioGallery categories={portfolio.categories} projects={portfolio.projects} />
         <PortfolioCta />
       </main>

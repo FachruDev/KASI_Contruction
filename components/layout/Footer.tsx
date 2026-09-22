@@ -10,7 +10,7 @@ function FooterLinkList({
   items,
 }: {
   title: string;
-  items: ReadonlyArray<{ label: string; href: string }>;
+  items: ReadonlyArray<{ label: string; href: string; target?: string }>;
 }) {
   return (
     <div className="flex flex-col space-y-3 font-body">
@@ -20,6 +20,7 @@ function FooterLinkList({
           key={item.href}
           className="group inline-flex items-center gap-1.5 w-fit text-slate-200 transition-colors hover:text-primary/80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-surface"
           href={item.href}
+          target={item.target}
         >
           <span>{item.label}</span>
           <MaterialIcon className="text-base opacity-0 -translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0">
@@ -43,8 +44,14 @@ export function Footer() {
           </p>
         </div>
 
+        <FooterLinkList items={FOOTER_NAV_ITEMS} title="Navigasi" />
         <FooterLinkList items={FOOTER_LEGAL_ITEMS} title="Legal" />
-        <FooterLinkList items={FOOTER_NAV_ITEMS} title="Navigation" />
+        <div>
+          <label className="mb-2 font-headline font-semibold text-primary">Lokasi Kami</label>
+          <div className="relative h-64 overflow-hidden rounded-xl bg-surface-container shadow-xs">
+            <iframe src={site.mapsEmbedUrl} title="Lokasi KASI" width="400" height="300" loading="lazy" referrerPolicy="strict-origin-when-cross-origin"></iframe>
+          </div>
+        </div>
 
         <div className="border-t border-outline-variant/30 pt-8 text-center font-body text-sm text-primary md:col-span-4 md:text-left">
           {site.copyright}

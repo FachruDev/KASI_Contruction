@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { LegalFooter } from "@/components/legal/LegalFooter";
 import { PrivacyHeader } from "@/components/legal/PrivacyHeader";
 import { PrivacyPolicyContent } from "@/components/legal/PrivacyPolicyContent";
 import { getLegalPage } from "@/lib/cms";
+import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: "Kebijakan Privasi",
@@ -15,7 +15,7 @@ export default async function PrivacyPolicyPage() {
     <div className="flex min-h-screen flex-col bg-background font-body text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container">
       <PrivacyHeader />
       <PrivacyPolicyContent page={page} />
-      <LegalFooter active="privacy" />
+      <Footer />
     </div>
   );
 }
