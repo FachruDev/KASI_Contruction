@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { PrivacyHeader } from "@/components/legal/PrivacyHeader";
-import { PrivacyPolicyContent } from "@/components/legal/PrivacyPolicyContent";
+import { LegalContent } from "@/components/legal/LegalContent";
+import { PRIVACY_SECTIONS } from "@/data/legal";
 import { getLegalPage } from "@/lib/cms";
-import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: "Kebijakan Privasi",
@@ -11,11 +10,5 @@ export const metadata: Metadata = {
 
 export default async function PrivacyPolicyPage() {
   const page = await getLegalPage("privacy-policy");
-  return (
-    <div className="flex min-h-screen flex-col bg-background font-body text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container">
-      <PrivacyHeader />
-      <PrivacyPolicyContent page={page} />
-      <Footer />
-    </div>
-  );
+  return <LegalContent eyebrow="Legal" fallbackSections={PRIVACY_SECTIONS} fallbackTitle="Kebijakan *privasi.*" page={page} />;
 }

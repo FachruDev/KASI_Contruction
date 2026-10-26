@@ -1,33 +1,94 @@
-import Link from "next/link";
-import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import { CalendarBlankIcon, MapPinIcon, RulerIcon } from "@phosphor-icons/react/ssr";
+import type { ReactNode } from "react";
+import { CoverHero } from "@/components/layout/CoverHero";
+import { BeforeAfter } from "@/components/portfolio/BeforeAfter";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { ParallaxImage } from "@/components/motion/ParallaxImage";
+import { Reveal } from "@/components/motion/Reveal";
 import type { CmsPortfolio } from "@/lib/cms";
 
-function DetailItem({ icon, label, value }: { icon: string; label: string; value?: string }) {
+function Fact({ icon, label, value }: { icon: ReactNode; label: string; value?: string }) {
   if (!value) return null;
-  return <div className="flex items-start gap-3"><MaterialIcon className="mt-0.5 text-primary">{icon}</MaterialIcon><div><dt className="text-xs font-bold tracking-wider text-on-surface-variant uppercase">{label}</dt><dd className="font-semibold text-on-surface">{value}</dd></div></div>;
+  return (
+    <div className="flex items-start gap-4 border-t border-ink/10 py-5 first:border-t-0 first:pt-0">
+      <span className="mt-0.5 text-signal-deep">{icon}</span>
+      <div>
+        <dt className="font-mono text-[10px] tracking-[0.2em] text-ink/40 uppercase">{label}</dt>
+        <dd className="mt-1 text-lg font-medium tracking-[-0.02em]">{value}</dd>
+      </div>
+    </div>
+  );
 }
 
 export function PortfolioDetail({ portfolio }: { portfolio: CmsPortfolio }) {
   const gallery = portfolio.gallery.filter((image) => image !== portfolio.coverImage);
+  const area = portfolio.area ? `${portfolio.area.toLocaleString("id-ID")} m²` : undefined;
+
   return (
     <>
-      <Link className="group mb-8 inline-flex items-center gap-2 font-bold text-primary transition-colors hover:text-primary-fixed-dim" href="/portfolio"><MaterialIcon className="transition-transform group-hover:-translate-x-1">arrow_back</MaterialIcon>Kembali ke Portfolio</Link>
-      <header className="mb-12">
-        <span className="mb-4 inline-block rounded-full bg-primary-container/40 px-3 py-1 text-sm font-bold text-primary">{portfolio.category.title}</span>
-        <h1 className="mb-4 font-headline text-4xl leading-tight font-bold text-on-surface md:text-5xl lg:text-6xl">{portfolio.title}</h1>
-        {portfolio.subtitle ? <p className="max-w-3xl text-xl leading-relaxed text-on-surface-variant">{portfolio.subtitle}</p> : null}
-      </header>
+      <CoverHero back={{ href: "/portfolio", label: "Kembali ke portfolio" }} eyebrow={portfolio.category.title} image={portfolio.coverImage} imageAlt={portfolio.coverImageAlt} title={portfolio.title}>
+        {portfolio.subtitle ? (
+          <Reveal className="mt-8 max-w-2xl" delay={0.5} y={20}>
+            <p className="text-lg leading-relaxed text-bone/70">{portfolio.subtitle}</p>
+          </Reveal>
+        ) : null}
+      </CoverHero>
 
-      <figure className="mb-12 overflow-hidden rounded-2xl bg-surface-container-low shadow-[0_12px_32px_rgba(10,10,10,0.10)]"><img alt={portfolio.coverImageAlt} className="h-[280px] w-full object-cover md:h-[540px]" src={portfolio.coverImage} /></figure>
+      <section className="mx-auto grid max-w-[88rem] grid-cols-1 gap-14 px-4 py-24 md:grid-cols-12 md:px-10 md:py-36">
+        <Reveal className="md:col-span-7">
+          <div className="rich-content" dangerouslySetInnerHTML={{ __html: portfolio.description || `<p>${portfolio.subtitle}</p>` }} />
+        </Reveal>
+        <aside className="md:col-span-4 md:col-start-9">
+          <div className="md:sticky md:top-28">
+            <Reveal delay={0.15}>
+              <div className="rounded-[2rem] bg-ink/[0.035] p-1.5 hairline">
+                <div className="rounded-[calc(2rem-0.375rem)] bg-bone p-7 ambient-shadow">
+                  <p className="mb-6 font-mono text-[10px] tracking-[0.22em] text-ink/45 uppercase">Detail proyek</p>
+                  <dl>
+                    <Fact icon={<MapPinIcon size={20} weight="light" />} label="Lokasi" value={portfolio.location} />
+                    <Fact icon={<RulerIcon size={20} weight="light" />} label="Luas area" value={area} />
+                    <Fact icon={<CalendarBlankIcon size={20} weight="light" />} label="Tahun pengerjaan" value={portfolio.year ? String(portfolio.year) : undefined} />
+                  </dl>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </aside>
+      </section>
 
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_280px]">
-        <article className="cms-rich-content text-lg leading-loose text-on-surface-variant" dangerouslySetInnerHTML={{ __html: portfolio.description || `<p>${portfolio.subtitle}</p>` }} />
-        <aside className="h-fit rounded-2xl bg-surface-container-low p-6"><h2 className="mb-6 font-headline text-xl font-bold text-on-surface">Detail Proyek</h2><dl className="space-y-5"><DetailItem icon="location_on" label="Lokasi" value={portfolio.location} /><DetailItem icon="square_foot" label="Luas area" value={portfolio.area ? `${portfolio.area.toLocaleString("id-ID")} m²` : undefined} /><DetailItem icon="calendar_month" label="Tahun pengerjaan" value={portfolio.year ? String(portfolio.year) : undefined} /></dl></aside>
-      </div>
+      {portfolio.beforeImage && portfolio.afterImage ? (
+        <section className="mx-auto max-w-[88rem] px-4 pb-24 md:px-10 md:pb-36">
+          <Reveal className="mb-10" y={20}>
+            <Eyebrow>Sebelum &amp; sesudah</Eyebrow>
+          </Reveal>
+          <Reveal>
+            <BeforeAfter after={portfolio.afterImage} before={portfolio.beforeImage} title={portfolio.title} />
+          </Reveal>
+        </section>
+      ) : null}
 
-      {portfolio.beforeImage && portfolio.afterImage ? <section className="mt-16"><h2 className="mb-6 font-headline text-3xl font-bold text-on-surface">Sebelum &amp; Sesudah</h2><div className="grid gap-6 md:grid-cols-2"><figure><figcaption className="mb-3 font-bold text-on-surface-variant">Sebelum</figcaption><img alt={`Kondisi sebelum proyek ${portfolio.title}`} className="h-72 w-full rounded-xl object-cover" src={portfolio.beforeImage} /></figure><figure><figcaption className="mb-3 font-bold text-on-surface-variant">Sesudah</figcaption><img alt={`Hasil proyek ${portfolio.title}`} className="h-72 w-full rounded-xl object-cover" src={portfolio.afterImage} /></figure></div></section> : null}
-
-      {gallery.length ? <section className="mt-16"><h2 className="mb-6 font-headline text-3xl font-bold text-on-surface">Galeri Proyek</h2><div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{gallery.map((image, index) => <img key={image} alt={`Galeri ${portfolio.title} ${index + 1}`} className="h-64 w-full rounded-xl object-cover" src={image} />)}</div></section> : null}
+      {gallery.length ? (
+        <section className="mx-auto max-w-[88rem] px-4 pb-28 md:px-10 md:pb-40">
+          <Reveal className="mb-10" y={20}>
+            <Eyebrow>Galeri proyek</Eyebrow>
+          </Reveal>
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-12">
+            {gallery.map((image, index) => (
+              <Reveal className={index % 3 === 0 ? "md:col-span-12" : "md:col-span-6"} delay={(index % 3) * 0.08} key={image}>
+                <div className="rounded-[2rem] bg-ink/[0.035] p-1.5 hairline">
+                  <ParallaxImage
+                    alt={`Galeri ${portfolio.title} ${index + 1}`}
+                    className={`rounded-[calc(2rem-0.375rem)] bg-bone-deep ${index % 3 === 0 ? "aspect-[16/9]" : "aspect-[4/3]"}`}
+                    sizes={index % 3 === 0 ? "100vw" : "(min-width: 768px) 50vw, 100vw"}
+                    speed={0.08}
+                    src={image}
+                  />
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      ) : null}
     </>
   );
 }

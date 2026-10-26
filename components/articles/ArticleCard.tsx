@@ -1,64 +1,38 @@
+import Image from "next/image";
 import Link from "next/link";
-import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import { ArrowUpRightIcon } from "@phosphor-icons/react/ssr";
 import type { ArticleCard as ArticleCardData } from "@/data/articles";
-
-const badgeClasses = {
-  primary: "bg-primary-container/20 text-primary",
-  tertiary: "bg-tertiary-container/20 text-tertiary",
-  secondary: "bg-secondary-container/50 text-secondary",
-} as const;
+import { Icon } from "@/components/ui/Icon";
 
 export function ArticleCard({ article }: { article: ArticleCardData }) {
-  const isWide = article.layout === "wide";
-
   return (
-    <article
-      className={`group flex flex-col overflow-hidden rounded-2xl bg-surface-container-low transition-all duration-300 hover:shadow-[0_4px_20px_rgba(46,50,48,0.06)] ${isWide ? "lg:col-span-2 lg:flex-row" : ""}`}
-    >
-      <div
-        className={`relative flex h-56 items-center justify-center overflow-hidden ${isWide ? "lg:h-auto lg:w-1/2" : ""} ${article.icon ? "bg-surface-container-high" : ""}`}
-      >
-        {article.image ? (
-          <img
-            alt={article.imageAlt ?? ""}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-            src={article.image}
-          />
-        ) : (
-          <>
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 opacity-20"
-              style={{
-                backgroundImage: "radial-gradient(#ad4300 1px, transparent 1px)",
-                backgroundSize: "20px 20px",
-              }}
+    <Link className="group flex h-full flex-col" href={article.href}>
+      <div className="rounded-[2rem] bg-ink/[0.035] p-1.5 hairline">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-[calc(2rem-0.375rem)] bg-ink">
+          {article.image ? (
+            <Image
+              alt={article.imageAlt ?? article.title}
+              className="object-cover transition-transform duration-[1.4s] ease-fluid group-hover:scale-[1.05]"
+              fill
+              sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 100vw"
+              src={article.image}
             />
-            <MaterialIcon className="relative z-10 text-6xl text-primary opacity-50">
-              {article.icon ?? "article"}
-            </MaterialIcon>
-          </>
-        )}
+          ) : (
+            <div className="flex h-full items-center justify-center text-signal">
+              <Icon name={article.icon ?? "eco"} size={56} />
+            </div>
+          )}
+        </div>
       </div>
-
-      <div className={`flex flex-grow flex-col p-8 ${isWide ? "justify-center lg:w-1/2" : ""}`}>
-        <span className={`mb-4 inline-block self-start rounded-full px-3 py-1 font-label text-xs tracking-widest uppercase ${badgeClasses[article.tone]}`}>
-          {article.category}
+      <div className="flex flex-1 flex-col px-2 pt-6">
+        <p className="font-mono text-[10px] tracking-[0.22em] text-ink/45 uppercase">{article.category}</p>
+        <h3 className="mt-3 text-[1.6rem] leading-[1.1] font-medium tracking-[-0.04em] transition-colors duration-500 group-hover:text-signal-deep">{article.title}</h3>
+        <p className="mt-3 line-clamp-3 text-[15px] leading-relaxed text-ink/55">{article.description}</p>
+        <span className="mt-auto inline-flex items-center gap-2 pt-6 text-[14px] font-medium">
+          Baca artikel
+          <ArrowUpRightIcon className="transition-transform duration-500 ease-fluid group-hover:translate-x-0.5 group-hover:-translate-y-0.5" size={15} weight="light" />
         </span>
-        <h3 className={`mb-3 font-headline font-bold text-on-surface transition-colors group-hover:text-primary ${isWide ? "text-2xl" : "text-xl"}`}>
-          {article.title}
-        </h3>
-        <p className={`mb-6 font-body leading-relaxed text-on-surface-variant ${isWide ? "" : "line-clamp-3 flex-grow"}`}>
-          {article.description}
-        </p>
-        <Link
-          className={`inline-flex items-center font-bold text-primary transition-colors hover:text-on-primary-fixed-variant ${isWide ? "" : "mt-auto"}`}
-          href={article.href}
-        >
-          Read More
-          <MaterialIcon className="ml-1 text-sm">east</MaterialIcon>
-        </Link>
       </div>
-    </article>
+    </Link>
   );
 }

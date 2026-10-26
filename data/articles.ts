@@ -81,13 +81,3 @@ export const ARTICLE_CARDS: readonly ArticleCard[] = [
     href: "#",
   },
 ] as const;
-
-export const ASPHALT_DRAINAGE_ARTICLE = {
-  slug: "the-importance-of-proper-asphalt-drainage",
-  category: "Maintenance Insights",
-  date: "Oct 14, 2024",
-  title: "The Importance of Proper Asphalt Drainage",
-  image:
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuBIojz-eM9kptCAwF5p-qIb74H3npEHhvTy8WyZJay_FoCYL-IEio6jJ-7sLEybAzJd38r2HixhZqOfibar2v8_RhwVsZ9hquSj6OywMgaoohzE2oSerskT3JH39W2YwZVWFgEPdmhPfGiX_jMv898umx1vThA_MkWp22pNvqRZW0pmBHBRM9BmtQvfDIT86LyIQHqkqUqjuKi56V_iW1uvI_MgGmiHXkW_NcmKj7xfHho6lk2zzp3-",
-  imageAlt: "Freshly paved asphalt surface with clear drainage slope",
-} as const;

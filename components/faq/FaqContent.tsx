@@ -1,67 +1,44 @@
-import Image from "next/image";
-import Link from "next/link";
 import { FaqAccordion } from "@/components/faq/FaqAccordion";
-import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import { Button } from "@/components/ui/Button";
+import { ParallaxImage } from "@/components/motion/ParallaxImage";
+import { Reveal } from "@/components/motion/Reveal";
 import type { FaqSection } from "@/data/faq";
-
-const FAQ_IMAGE =
-  "/assets/images/faq/faq1.jpeg";
 
 export function FaqContent({ sections }: { sections: FaqSection[] }) {
   return (
-    <main className="mx-auto w-full max-w-4xl grow px-6 py-16 md:py-24">
-      <header className="mb-16 text-center">
-        <h1 className="text-5xl leading-tight font-bold tracking-tight text-primary md:text-6xl mb-4">
-          Pertanyaan yang Sering Ditanyakan
-        </h1>
-        <p className="mx-auto max-w-2xl text-lg text-on-surface-variant">
-          Temukan jawaban seputar layanan pengaspalan, harga, proses pengerjaan, dan area layanan KASI. Jika masih ada yang ingin Anda tanyakan, tim kami siap membantu.
-        </p>
-      </header>
-
-      <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-12">
-        <div className="space-y-12 md:col-span-8">
-          {sections.map((section) => (
-            <section key={section.title}>
-              <h2 className="mb-6 border-b border-surface-container-highest pb-2 text-2xl font-semibold text-primary">
-                {section.title}
-              </h2>
-              <FaqAccordion items={section.items} />
-            </section>
-          ))}
-        </div>
-
-        <aside className="space-y-6 md:col-span-4">
-          <div className="relative aspect-4/3 overflow-hidden rounded-xl shadow-[0_4px_20px_rgba(46,50,48,0.06)]">
-            <Image
-              alt="A beautifully paved, smooth asphalt driveway leading up to a welcoming, modern home bathed in warm afternoon sunlight."
-              className="object-cover"
-              fill
-              sizes="(min-width: 768px) 266px, 100vw"
-              src={FAQ_IMAGE}
-              unoptimized
-            />
-          </div>
-
-          <div className="rounded-xl bg-secondary-container p-8 text-center shadow-[0_4px_20px_rgba(46,50,48,0.06)]">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-surface-bright text-primary">
-              <MaterialIcon className="text-3xl" filled>support_agent</MaterialIcon>
+    <section className="mx-auto grid max-w-[88rem] grid-cols-1 gap-16 px-4 pb-28 md:grid-cols-12 md:px-10 md:pb-40">
+      <div className="space-y-20 md:col-span-7">
+        {sections.map((section, index) => (
+          <Reveal key={section.title}>
+            <div className="mb-6 flex items-baseline gap-4">
+              <span className="font-mono text-[11px] tracking-[0.22em] text-signal-deep">0{index + 1}</span>
+              <h2 className="font-mono text-[11px] tracking-[0.22em] text-ink/50 uppercase">{section.title}</h2>
             </div>
-            <h3 className="mb-2 text-xl font-bold text-on-secondary-container">
-              Punya Pertanyaan?
-            </h3>
-            <p className="mb-6 text-sm text-on-secondary-container/80">
-              Konsultasikan kebutuhan pengaspalan Anda langsung dengan tim KASI.
-            </p>
-            <Link
-              className="block w-full rounded-xl bg-primary px-6 py-3 font-label font-semibold text-on-primary transition-colors duration-20 hover:bg-primary/70"
-              href="/contact"
-            >
-              Hubungi Kami
-            </Link>
-          </div>
-        </aside>
+            <FaqAccordion items={section.items} />
+          </Reveal>
+        ))}
       </div>
-    </main>
+
+      <aside className="md:col-span-4 md:col-start-9">
+        <div className="space-y-5 md:sticky md:top-28">
+          <Reveal delay={0.1}>
+            <div className="rounded-[2rem] bg-ink/[0.035] p-1.5 hairline">
+              <ParallaxImage alt="Jalan perumahan yang baru diaspal" className="aspect-[4/3] rounded-[calc(2rem-0.375rem)]" sizes="(min-width: 768px) 30vw, 100vw" src="/assets/images/faq/faq1.jpeg" />
+            </div>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <div className="rounded-[2rem] bg-bone/[0.04] p-1.5 hairline">
+              <div className="rounded-[calc(2rem-0.375rem)] bg-ink p-8 text-bone shadow-[inset_0_1px_1px_rgba(242,238,231,0.08)]">
+                <h3 className="text-2xl font-medium tracking-[-0.035em]">Masih ada pertanyaan?</h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-bone/60">Konsultasikan kebutuhan pengaspalan Anda langsung dengan tim KASI.</p>
+                <Button className="mt-8" href="/contact">
+                  Hubungi kami
+                </Button>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </aside>
+    </section>
   );
 }

@@ -1,149 +1,147 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { CheckCircleIcon, PaperPlaneTiltIcon, WarningCircleIcon } from "@phosphor-icons/react/ssr";
+import { buttonClasses, ButtonIsland } from "@/components/ui/Button";
+import { EASE_FLUID } from "@/components/motion/SmoothScroll";
+
+const REQUIREMENTS = [
+  { value: "road", label: "Pengaspalan jalan" },
+  { value: "housing", label: "Pengaspalan perumahan" },
+  { value: "parking", label: "Area parkir" },
+  { value: "commercial", label: "Kawasan usaha / komersial" },
+  { value: "industrial", label: "Kawasan industri" },
+  { value: "repair", label: "Perbaikan aspal" },
+  { value: "other", label: "Lainnya" },
+] as const;
+
+const inputClass =
+  "w-full rounded-2xl bg-ink/[0.035] px-5 py-4 text-[16px] text-ink outline-none hairline transition-[background-color,box-shadow] duration-500 ease-fluid placeholder:text-ink/30 focus:bg-bone focus:shadow-[inset_0_0_0_1px_var(--color-signal),0_0_0_4px_rgb(251_103_1/0.12)]";
+
+function Field({ label, htmlFor, optional, children }: { label: string; htmlFor: string; optional?: boolean; children: ReactNode }) {
+  return (
+    <div>
+      <label className="mb-2.5 flex items-baseline justify-between px-1 text-[13px] font-medium text-ink/70" htmlFor={htmlFor}>
+        {label}
+        {optional ? <span className="font-mono text-[10px] tracking-[0.15em] text-ink/35 uppercase">Opsional</span> : null}
+      </label>
+      {children}
+    </div>
+  );
+}
+
+type Status = { tone: "success" | "error"; message: string } | null;
 
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState<string | null>(null);
-  const inputClass =
-    "w-full rounded-lg border-none bg-surface-container-low px-4 py-3 text-on-surface outline-none transition-all placeholder:text-outline-variant focus:ring-2 focus:ring-primary/50";
+  const [status, setStatus] = useState<Status>(null);
+
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Keep the element: React clears event.currentTarget once the handler yields at the first await.
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
+    const areaValue = String(form.get("area") ?? "").trim();
+    setIsSubmitting(true);
+    setStatus(null);
+
+    try {
+      const response = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.get("name"),
+          phone: form.get("phone"),
+          location: form.get("location"),
+          requirement: form.get("requirement"),
+          area: areaValue ? Number(areaValue) : 0,
+          detail: form.get("detail"),
+          website: form.get("website"),
+        }),
+      });
+      const result = (await response.json().catch(() => ({}))) as { message?: string };
+      if (!response.ok) throw new Error(result.message ?? "Formulir belum dapat diproses.");
+      formElement.reset();
+      setStatus({ tone: "success", message: "Terima kasih. Permintaan Anda sudah terkirim, tim kami akan segera menghubungi Anda." });
+    } catch (error) {
+      setStatus({ tone: "error", message: error instanceof Error ? error.message : "Formulir belum dapat diproses." });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <div className="rounded-xl border border-outline-variant/30 bg-surface-bright p-8 shadow-[0_4px_20px_rgba(46,50,48,0.06)] sm:p-12">
-      <h2 className="mb-8 text-3xl font-semibold text-primary">Hubungi Kami</h2>
-      <form
-        className="space-y-6"
-        onSubmit={async (event: FormEvent<HTMLFormElement>) => {
-          event.preventDefault();
-          setIsSubmitting(true);
-          setStatus(null);
-          const form = new FormData(event.currentTarget);
-          const areaValue = String(form.get("area") ?? "").trim();
+    <div className="rounded-[2rem] bg-ink/[0.035] p-1.5 hairline">
+      <div className="rounded-[calc(2rem-0.375rem)] bg-bone p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.7)] ambient-shadow sm:p-10">
+        <p className="font-mono text-[10px] tracking-[0.22em] text-ink/45 uppercase">Formulir konsultasi</p>
+        <h2 className="mt-3 mb-10 text-3xl font-medium tracking-[-0.045em] md:text-4xl">Ceritakan proyek Anda.</h2>
 
-          try {
-            const response = await fetch("/api/inquiries", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                name: form.get("name"),
-                phone: form.get("phone"),
-                location: form.get("location"),
-                requirement: form.get("requirement"),
-                area: areaValue ? Number(areaValue) : 0,
-                detail: form.get("detail"),
-                website: form.get("website"),
-              }),
-            });
-            const result = await response.json() as { message?: string };
-            if (!response.ok) throw new Error(result.message ?? "Formulir belum dapat diproses.");
-            event.currentTarget.reset();
-            setStatus("Terima kasih. Permintaan Anda sudah terkirim.");
-          } catch (error) {
-            setStatus(error instanceof Error ? error.message : "Formulir belum dapat diproses.");
-          } finally {
-            setIsSubmitting(false);
-          }
-        }}
-      >
-        <input aria-hidden="true" className="hidden" name="website" tabIndex={-1} type="text" />
-        <div>
-          <label className="mb-2 block font-label text-sm font-bold text-on-surface-variant" htmlFor="full_name">
-            Nama Lengkap
-          </label>
-          <input className={inputClass} id="full_name" name="name" placeholder="Masukkan nama Anda" required type="text" />
-        </div>
+        <form className="space-y-6" onSubmit={onSubmit}>
+          <input aria-hidden="true" autoComplete="off" className="hidden" name="website" tabIndex={-1} type="text" />
 
-        <div>
-          <label className="mb-2 block font-label text-sm font-bold text-on-surface-variant" htmlFor="whatsapp">
-            Nomor WhatsApp
-          </label>
-          <div className="relative">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-outline">
-              <span className="material-symbols-outlined text-xl">phone</span>
-            </span>
-            <input
-              className={`${inputClass} pr-4 pl-12`}
-              id="whatsapp"
-              name="phone"
-              placeholder="08xxxxxxxxxx"
-              type="tel"
-              required
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="mb-2 block font-label text-sm font-bold text-on-surface-variant" htmlFor="location">
-            Lokasi Pekerjaan
-          </label>
-          <div className="relative">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-outline">
-              <span className="material-symbols-outlined text-xl">location_on</span>
-            </span>
-            <input
-              className={`${inputClass} pr-4 pl-12`}
-              id="location"
-              name="location"
-              placeholder="Contoh: Bogor, Jawa Barat"
-              type="text"
-              required
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div>
-            <label className="mb-2 block font-label text-sm font-bold text-on-surface-variant" htmlFor="project_type">
-              Kebutuhan Pengaspalan
-            </label>
-            <select
-              className={`${inputClass} cursor-pointer appearance-none`}
-              defaultValue=""
-              id="project_type"
-              name="requirement"
-              required
-            >
-              <option disabled value="">Pilih kebutuhan pengaspalan</option>
-              <option value="road">Pengaspalan Jalan</option>
-              <option value="housing">Pengaspalan Perumahan</option>
-              <option value="parking">Area Parkir</option>
-              <option value="commercial">Kawasan Usaha / Komersial</option>
-              <option value="industrial">Kawasan Industri</option>
-              <option value="repair">Perbaikan Aspal</option>
-              <option value="other">Lainnya</option>
-            </select>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <Field htmlFor="full_name" label="Nama lengkap">
+              <input autoComplete="name" className={inputClass} id="full_name" name="name" placeholder="Nama Anda" required type="text" />
+            </Field>
+            <Field htmlFor="whatsapp" label="Nomor WhatsApp">
+              <input autoComplete="tel" className={inputClass} id="whatsapp" inputMode="tel" name="phone" placeholder="08xxxxxxxxxx" required type="tel" />
+            </Field>
           </div>
 
-          <div>
-            <label className="mb-2 block font-label text-sm font-bold text-on-surface-variant" htmlFor="area">
-              Perkiraan Luas Area (m²)
-            </label>
-            <input className={inputClass} id="area" min="0" name="area" placeholder="Contoh: 500" type="number" />
+          <Field htmlFor="location" label="Lokasi pekerjaan">
+            <input className={inputClass} id="location" name="location" placeholder="Contoh: Bogor, Jawa Barat" required type="text" />
+          </Field>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <Field htmlFor="project_type" label="Kebutuhan">
+              <select className={`${inputClass} cursor-pointer appearance-none`} defaultValue="" id="project_type" name="requirement" required>
+                <option disabled value="">
+                  Pilih kebutuhan
+                </option>
+                {REQUIREMENTS.map((item) => (
+                  <option key={item.value} value={item.value}>
+                    {item.label}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field htmlFor="area" label="Perkiraan luas (m²)" optional>
+              <input className={inputClass} id="area" inputMode="numeric" min="0" name="area" placeholder="Contoh: 500" type="number" />
+            </Field>
           </div>
-        </div>
 
-        <div>
-          <label className="mb-2 block font-label text-sm font-bold text-on-surface-variant" htmlFor="message">
-            Detail Proyek
-          </label>
-          <textarea
-            className={`${inputClass} resize-y`}
-            id="message"
-            name="detail"
-            placeholder="Ceritakan kondisi atau kebutuhan pengaspalan Anda..."
-            rows={4}
-          />
-        </div>
+          <Field htmlFor="message" label="Detail proyek" optional>
+            <textarea className={`${inputClass} resize-y`} id="message" name="detail" placeholder="Kondisi jalan saat ini, akses lokasi, target waktu…" rows={5} />
+          </Field>
 
-        <button
-          className="mt-4 w-full rounded-xl bg-primary py-4 font-label text-lg font-bold text-on-primary shadow-[0_4px_14px_rgba(251,103,1,0.3)] transition-opacity hover:opacity-90"
-          disabled={isSubmitting}
-          type="submit"
-        >
-          {isSubmitting ? "Mengirim..." : "Ajukan Permintaan"}
-        </button>
-        {status ? <p aria-live="polite" className="text-center text-sm text-on-surface-variant">{status}</p> : null}
-      </form>
+          <div className="flex flex-col gap-5 pt-2 sm:flex-row sm:items-center sm:justify-between">
+            <p className="max-w-xs text-[13px] leading-relaxed text-ink/45">Data Anda hanya dipakai untuk menindaklanjuti permintaan ini.</p>
+            <button className={buttonClasses("ink", "disabled:opacity-60")} disabled={isSubmitting} type="submit">
+              {isSubmitting ? "Mengirim…" : "Kirim permintaan"}
+              <ButtonIsland variant="ink">
+                <PaperPlaneTiltIcon size={17} weight="light" />
+              </ButtonIsland>
+            </button>
+          </div>
+
+          <AnimatePresence>
+            {status ? (
+              <motion.p
+                animate={{ opacity: 1, y: 0 }}
+                aria-live="polite"
+                className={`flex items-start gap-3 rounded-2xl px-5 py-4 text-[14px] leading-relaxed ${status.tone === "success" ? "bg-ink text-bone" : "bg-signal/10 text-signal-deep"}`}
+                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, y: 8 }}
+                transition={{ duration: 0.5, ease: EASE_FLUID }}
+              >
+                {status.tone === "success" ? <CheckCircleIcon className="mt-0.5 shrink-0 text-signal" size={18} weight="light" /> : <WarningCircleIcon className="mt-0.5 shrink-0" size={18} weight="light" />}
+                {status.message}
+              </motion.p>
+            ) : null}
+          </AnimatePresence>
+        </form>
+      </div>
     </div>
   );
 }

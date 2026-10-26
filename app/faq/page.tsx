@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { FaqContent } from "@/components/faq/FaqContent";
-import { Footer } from "@/components/layout/Footer";
-import { Navbar } from "@/components/layout/Navbar";
-import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
+import { PageHero } from "@/components/layout/PageHero";
 import { getFaqSections } from "@/lib/cms";
 
 export const metadata: Metadata = {
@@ -14,11 +12,13 @@ export const metadata: Metadata = {
 export default async function FaqPage() {
   const sections = await getFaqSections();
   return (
-    <div className="flex min-h-screen flex-col bg-background text-on-background antialiased">
-      <Navbar active="faq" />
+    <>
+      <PageHero
+        description="Jawaban seputar layanan, harga, proses pengerjaan, dan area layanan KASI. Jika masih ada yang ingin ditanyakan, tim kami siap membantu."
+        eyebrow="FAQ"
+        title="Pertanyaan yang *sering* muncul."
+      />
       <FaqContent sections={sections} />
-      <WhatsAppFab />
-      <Footer />
-    </div>
+    </>
   );
 }

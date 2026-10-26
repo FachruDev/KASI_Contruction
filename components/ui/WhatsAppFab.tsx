@@ -1,34 +1,39 @@
 "use client";
 
-import Link from "next/link";
-import { MaterialIcon } from "@/components/ui/MaterialIcon";
-import { createWhatsAppUrl } from "@/lib/whatsapp";
+import { useState } from "react";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
+import { WhatsappLogoIcon } from "@phosphor-icons/react/ssr";
 import { useSiteConfig } from "@/components/cms/SiteConfigProvider";
+import { EASE_FLUID } from "@/components/motion/SmoothScroll";
+import { createWhatsAppUrl } from "@/lib/whatsapp";
 
-interface WhatsAppFabProps {
-  href?: string;
-}
-
-export function WhatsAppFab({ href }: WhatsAppFabProps) {
+export function WhatsAppFab() {
   const site = useSiteConfig();
-  const resolvedHref = href ?? createWhatsAppUrl({ phone: site.whatsappPhone, message: site.whatsappMessage });
-  const isExternalLink = resolvedHref.startsWith("http");
+  const { scrollY } = useScroll();
+  const [visible, setVisible] = useState(false);
+
+  useMotionValueEvent(scrollY, "change", (value) => setVisible(value > 480));
 
   return (
-    <div className="fixed right-8 bottom-8 z-50 flex items-center justify-center">
-      <Link
-        aria-label="Quick Contact - Chat with our experts"
-        className="group relative flex h-16 w-16 items-center justify-center rounded-full bg-primary text-on-primary shadow-lg transition-all duration-100 hover:scale-110 hover:shadow-xl focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-primary-fixed"
-        href={resolvedHref}
-        rel={isExternalLink ? "noopener noreferrer" : undefined}
-        target={isExternalLink ? "_blank" : undefined}
-      >
-        <MaterialIcon className="text-3xl">chat</MaterialIcon>
-        <div className="soft-shadow pointer-events-none absolute right-full mr-4 whitespace-nowrap rounded-lg bg-surface-container-high px-4 py-2 font-body text-on-surface opacity-0 transition-opacity group-hover:opacity-100">
-          <p className="font-bold">WhatsApp Inquiry</p>
-          <p className="text-xs text-on-surface-variant">Chat with our experts</p>
-        </div>
-      </Link>
-    </div>
+    <AnimatePresence>
+      {visible ? (
+        <motion.a
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          aria-label="Konsultasi via WhatsApp"
+          className="group fixed right-4 bottom-4 z-40 flex items-center gap-3 rounded-full bg-ink/80 py-1.5 pr-1.5 pl-5 text-[13px] text-bone shadow-[0_24px_60px_-20px_rgba(12,11,9,0.7)] backdrop-blur-xl hairline-dark md:right-8 md:bottom-8"
+          exit={{ opacity: 0, y: 24, scale: 0.96 }}
+          href={createWhatsAppUrl(site.whatsappPhone, site.whatsappMessage)}
+          initial={{ opacity: 0, y: 24, scale: 0.96 }}
+          rel="noopener noreferrer"
+          target="_blank"
+          transition={{ duration: 0.6, ease: EASE_FLUID }}
+        >
+          <span className="hidden sm:inline">Tanya via WhatsApp</span>
+          <span className="flex size-11 items-center justify-center rounded-full bg-signal text-ink transition-transform duration-500 ease-fluid group-hover:scale-105 group-hover:-rotate-6">
+            <WhatsappLogoIcon size={20} weight="light" />
+          </span>
+        </motion.a>
+      ) : null}
+    </AnimatePresence>
   );
 }

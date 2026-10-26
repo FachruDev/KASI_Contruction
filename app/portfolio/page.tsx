@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { Footer } from "@/components/layout/Footer";
-import { Navbar } from "@/components/layout/Navbar";
-import { PortfolioCta } from "@/components/portfolio/PortfolioCta";
+import { CtaBand } from "@/components/layout/CtaBand";
+import { PageHero } from "@/components/layout/PageHero";
 import { PortfolioGallery } from "@/components/portfolio/PortfolioGallery";
-import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
-import { getPortfolio } from "@/lib/cms";
+import { getPortfolio, getSiteConfig } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Portfolio Proyek Pengaspalan Jabodetabek",
@@ -13,18 +11,16 @@ export const metadata: Metadata = {
 };
 
 export default async function PortfolioPage() {
-  const portfolio = await getPortfolio();
+  const [portfolio, site] = await Promise.all([getPortfolio(), getSiteConfig()]);
   return (
-    <div className="flex min-h-screen flex-col bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container">
-      <Navbar active="portfolio" />
-
-      <main className="grow">
-        <PortfolioGallery categories={portfolio.categories} projects={portfolio.projects} />
-        <PortfolioCta />
-      </main>
-
-      <WhatsAppFab />
-      <Footer />
-    </div>
+    <>
+      <PageHero
+        description="Setiap proyek dikerjakan dengan memperhatikan kondisi lokasi, kebutuhan penggunaan, dan kualitas hasil akhir."
+        eyebrow="Portfolio"
+        title="Jalan yang sudah *kami* bangun."
+      />
+      <PortfolioGallery categories={portfolio.categories} projects={portfolio.projects} />
+      <CtaBand site={site} />
+    </>
   );
 }

@@ -1,62 +1,64 @@
-import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import { ArrowUpRightIcon, ClockIcon, EnvelopeSimpleIcon, MapPinIcon, WhatsappLogoIcon } from "@phosphor-icons/react/ssr";
+import type { ReactNode } from "react";
+import { createWhatsAppUrl } from "@/lib/whatsapp";
 import type { SiteConfig } from "@/lib/cms";
 
-export function ContactInfo({ site }: { site: SiteConfig }) {
+function Row({ icon, label, children }: { icon: ReactNode; label: string; children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-10">
-      <div className="rounded-xl border border-outline-variant/20 bg-surface-container-low p-8">
-        <h3 className="mb-6 text-2xl font-semibold text-primary">Informasi Kontak Kami</h3>
-        <ul className="space-y-6">
-          <li className="flex items-start gap-4">
-            <div className="shrink-0 rounded-full bg-primary-container p-3 text-on-primary-container">
-              <MaterialIcon filled>chat</MaterialIcon>
-            </div>
-            <div>
-              <p className="mb-1 text-sm font-bold text-on-surface-variant">WhatsApp / Telepon</p>
-              <p className="text-lg text-on-background">{site.whatsappPhone}</p>
-              <p className="mt-1 text-sm text-outline">Respon cepat, hubungi no kami</p>
-            </div>
-          </li>
-
-          <li className="flex items-start gap-4">
-            <div className="shrink-0 rounded-full bg-secondary-container p-3 text-on-secondary-container">
-              <MaterialIcon filled>mail</MaterialIcon>
-            </div>
-            <div>
-              <p className="mb-1 text-sm font-bold text-on-surface-variant">Email</p>
-              <p className="text-lg text-on-background">{site.email}</p>
-            </div>
-          </li>
-
-          <li className="flex items-start gap-4">
-            <div className="shrink-0 rounded-full bg-tertiary-container p-3 text-on-tertiary-container">
-              <MaterialIcon filled>business</MaterialIcon>
-            </div>
-            <div>
-              <p className="mb-1 text-sm font-bold text-on-surface-variant">Lokasi</p>
-              <p className="text-lg text-on-background">
-                {site.address}</p>
-            </div>
-          </li>
-
-          <li className="flex items-start gap-4">
-            <div className="shrink-0 rounded-full bg-surface-variant p-3 text-on-surface-variant">
-              <MaterialIcon filled>schedule</MaterialIcon>
-            </div>
-            <div>
-              <p className="mb-1 text-sm font-bold text-on-surface-variant">Jam Kerja</p>
-              {site.businessHours.map((hour) => (
-                <p className={hour.openTime === "Tutup" ? "text-outline" : "text-on-background"} key={hour.dayLabel}>
-                  {hour.dayLabel}: {hour.openTime}{hour.closeTime ? ` - ${hour.closeTime}` : ""}
-                </p>
-              ))}
-            </div>
-          </li>
-        </ul>
+    <li className="flex gap-5 border-t border-ink/10 py-6">
+      <span className="mt-0.5 text-signal-deep">{icon}</span>
+      <div className="min-w-0 flex-1">
+        <p className="font-mono text-[10px] tracking-[0.22em] text-ink/40 uppercase">{label}</p>
+        <div className="mt-2 text-[17px] leading-relaxed">{children}</div>
       </div>
+    </li>
+  );
+}
 
-      <div className="relative h-64 overflow-hidden rounded-xl bg-surface-container shadow-xs">
-        <iframe src={site.mapsEmbedUrl} title="Lokasi KASI" width="600" height="450" loading="lazy" referrerPolicy="strict-origin-when-cross-origin"></iframe>
+export function ContactInfo({ site }: { site: SiteConfig }) {
+  const phone = site.whatsappPhone.replace(/\D/g, "").replace(/^0/, "62");
+
+  return (
+    <div className="space-y-10">
+      <ul>
+        <Row icon={<WhatsappLogoIcon size={22} weight="light" />} label="WhatsApp / telepon">
+          <a className="group inline-flex items-center gap-2 transition-colors hover:text-signal-deep" href={createWhatsAppUrl(site.whatsappPhone, site.whatsappMessage)} rel="noopener noreferrer" target="_blank">
+            +{phone}
+            <ArrowUpRightIcon className="transition-transform duration-500 ease-fluid group-hover:translate-x-0.5 group-hover:-translate-y-0.5" size={15} weight="light" />
+          </a>
+          <p className="text-[14px] text-ink/45">Respon cepat di jam kerja.</p>
+        </Row>
+        <Row icon={<EnvelopeSimpleIcon size={22} weight="light" />} label="Email">
+          <a className="break-all transition-colors hover:text-signal-deep" href={`mailto:${site.email}`}>
+            {site.email}
+          </a>
+        </Row>
+        <Row icon={<MapPinIcon size={22} weight="light" />} label="Kantor">
+          <p className="text-ink/75">{site.address}</p>
+        </Row>
+        <Row icon={<ClockIcon size={22} weight="light" />} label="Jam kerja">
+          <ul className="space-y-1 text-[15px]">
+            {site.businessHours.map((hour) => (
+              <li className={`flex justify-between gap-6 ${hour.openTime === "Tutup" ? "text-ink/35" : "text-ink/75"}`} key={hour.dayLabel}>
+                <span>{hour.dayLabel}</span>
+                <span className="font-mono text-[13px]">
+                  {hour.openTime}
+                  {hour.closeTime ? ` — ${hour.closeTime}` : ""}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Row>
+      </ul>
+
+      <div className="rounded-[2rem] bg-ink/[0.035] p-1.5 hairline">
+        <iframe
+          className="block h-72 w-full rounded-[calc(2rem-0.375rem)] grayscale-[0.6] contrast-[1.05]"
+          loading="lazy"
+          referrerPolicy="strict-origin-when-cross-origin"
+          src={site.mapsEmbedUrl}
+          title={`Lokasi ${site.companyName}`}
+        />
       </div>
     </div>
   );

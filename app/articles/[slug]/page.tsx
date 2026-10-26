@@ -1,12 +1,25 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 import { CmsArticleDetail } from "@/components/articles/CmsArticleDetail";
-import { getArticleBySlug } from "@/lib/cms";
+import { CtaBand } from "@/components/layout/CtaBand";
+import { getArticleBySlug, getSiteConfig } from "@/lib/cms";
 
-export default async function CmsArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+type Props = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
+  return article ? { title: article.title, description: article.excerpt || undefined, openGraph: article.image ? { images: [article.image] } : undefined } : {};
+}
+
+export default async function CmsArticlePage({ params }: Props) {
+  const { slug } = await params;
+  const [article, site] = await Promise.all([getArticleBySlug(slug), getSiteConfig()]);
   if (!article) notFound();
-  return <div className="flex min-h-screen flex-col font-body text-on-surface"><Navbar /><main className="mx-auto w-full max-w-4xl flex-grow px-6 pt-32 pb-24 selection:bg-primary-container selection:text-on-primary-container md:px-8"><CmsArticleDetail article={article} /></main><Footer /></div>;
+  return (
+    <>
+      <CmsArticleDetail article={article} />
+      <CtaBand site={site} title="Butuh jalan yang *awet?*" />
+    </>
+  );
 }

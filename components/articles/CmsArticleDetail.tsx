@@ -1,19 +1,35 @@
-import Link from "next/link";
-import { MaterialIcon } from "@/components/ui/MaterialIcon";
 import { ArticleShare } from "@/components/articles/ArticleShare";
-import { ArticleDetailCta } from "@/components/articles/ArticleDetailCta";
+import { CoverHero } from "@/components/layout/CoverHero";
+import { Reveal } from "@/components/motion/Reveal";
 import { formatDate, type CmsArticle } from "@/lib/cms";
 
 export function CmsArticleDetail({ article }: { article: CmsArticle }) {
-  return <>
-    <Link className="group mb-8 inline-flex items-center gap-2 font-bold text-primary transition-colors hover:text-on-primary-fixed-variant" href="/articles"><MaterialIcon className="transition-transform group-hover:-translate-x-1">arrow_back</MaterialIcon>Back to Articles</Link>
-    <header className="mb-12">
-      <div className="mb-4 flex items-center gap-3 text-sm font-bold tracking-wider text-tertiary uppercase"><span>{article.category}</span>{article.publishedAt ? <><span className="h-1.5 w-1.5 rounded-full bg-tertiary-fixed-dim" /><span>{formatDate(article.publishedAt)}</span></> : null}</div>
-      <h1 className="mb-8 font-headline text-4xl leading-tight font-bold text-on-surface md:text-5xl lg:text-6xl">{article.title}</h1>
-      {article.image ? <figure className="group relative h-[400px] w-full overflow-hidden rounded-xl shadow-[0_4px_20px_rgba(46,50,48,0.06)] md:h-[500px]"><img alt={article.imageAlt} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" src={article.image} /><div className="pointer-events-none absolute inset-0 bg-tertiary-fixed/10 mix-blend-overlay" /></figure> : null}
-    </header>
-    <article className="cms-rich-content mx-auto max-w-[70ch] font-body text-lg leading-loose text-on-surface-variant" dangerouslySetInnerHTML={{ __html: article.content }} />
-    <ArticleShare />
-    <ArticleDetailCta />
-  </>;
+  const date = formatDate(article.publishedAt);
+
+  return (
+    <>
+      <CoverHero
+        back={{ href: "/articles", label: "Kembali ke artikel" }}
+        eyebrow={date ? `${article.category} · ${date}` : article.category}
+        image={article.image}
+        imageAlt={article.imageAlt}
+        title={article.title}
+      >
+        {article.excerpt ? (
+          <Reveal className="mt-8 max-w-2xl" delay={0.5} y={20}>
+            <p className="text-lg leading-relaxed text-bone/70">{article.excerpt}</p>
+          </Reveal>
+        ) : null}
+      </CoverHero>
+
+      <article className="mx-auto max-w-[44rem] px-4 py-24 md:py-32">
+        <Reveal>
+          <div className="rich-content" dangerouslySetInnerHTML={{ __html: article.content }} />
+        </Reveal>
+        <div className="mt-20">
+          <ArticleShare title={article.title} />
+        </div>
+      </article>
+    </>
+  );
 }

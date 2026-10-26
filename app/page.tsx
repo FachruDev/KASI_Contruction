@@ -1,27 +1,23 @@
-import { FinalCtaSection } from "@/components/landing/FinalCtaSection";
+import { CtaBand } from "@/components/layout/CtaBand";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { HighlightsSection } from "@/components/landing/HighlightsSection";
 import { IntroSection } from "@/components/landing/IntroSection";
+import { ServicesRail } from "@/components/landing/ServicesRail";
 import { StatsSection } from "@/components/landing/StatsSection";
-import { Footer } from "@/components/layout/Footer";
-import { Navbar } from "@/components/layout/Navbar";
-import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
-import { getHomeData, getSiteConfig } from "@/lib/cms";
+import { WorkShowcase } from "@/components/landing/WorkShowcase";
+import { getHomeData, getPortfolio, getServices, getSiteConfig } from "@/lib/cms";
 
 export default async function HomePage() {
-  const [home, site] = await Promise.all([getHomeData(), getSiteConfig()]);
+  const [home, site, services, portfolio] = await Promise.all([getHomeData(), getSiteConfig(), getServices(), getPortfolio()]);
   return (
     <>
-      <Navbar active="home" />
-      <main className="grow">
-        <HeroSection hero={home.hero} site={site} />
-        <StatsSection stats={home.stats} />
-        <IntroSection />
-        <HighlightsSection features={home.features} />
-        <FinalCtaSection cta={home.cta} site={site} />
-      </main>
-      <Footer />
-      <WhatsAppFab />
+      <HeroSection hero={home.hero} highlight={home.stats[0]} site={site} />
+      <IntroSection />
+      <StatsSection stats={home.stats} />
+      <ServicesRail services={services} />
+      <HighlightsSection features={home.features} />
+      <WorkShowcase projects={portfolio.projects} />
+      <CtaBand ctaLabel={home.cta.ctaLabel} ctaMessage={home.cta.ctaMessage} site={site} subtitle={home.cta.subtitle} title={home.cta.title} />
     </>
   );
 }

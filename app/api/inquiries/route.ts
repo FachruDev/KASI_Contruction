@@ -1,15 +1,5 @@
 import { NextResponse } from "next/server";
-
-const POCKETBASE_URL = (() => {
-  const value = process.env.POCKETBASE_URL ?? process.env.NEXT_PUBLIC_POCKETBASE_URL ?? "https://kasiservices.ryucode.site";
-  if (!value) return "";
-
-  try {
-    return new URL(value).origin.replace(/\/$/, "");
-  } catch {
-    return value.replace(/\/$/, "");
-  }
-})();
+import { POCKETBASE_URL } from "@/lib/cms";
 
 function asText(value: unknown, maxLength: number) {
   return typeof value === "string" ? value.trim().slice(0, maxLength) : "";

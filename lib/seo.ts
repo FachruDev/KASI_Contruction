@@ -1,4 +1,4 @@
-export const SITE_URL = "https://kasi.com";
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://kasi.com").replace(/\/$/, "");
 export const SITE_NAME = "KASI";
 
 export const SITE_DESCRIPTION =

@@ -1,17 +1,15 @@
-import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import { StarHalfIcon, StarIcon } from "@phosphor-icons/react/ssr";
 
-export function TestimonialRating({ rating }: { rating: number }) {
+export function TestimonialRating({ rating, className = "" }: { rating: number; className?: string }) {
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating % 1 !== 0;
 
   return (
-    <div className="mb-4 flex space-x-1 text-tertiary" aria-label={`${rating} out of 5 stars`}>
+    <div aria-label={`${rating} dari 5 bintang`} className={`flex gap-0.5 text-signal ${className}`} role="img">
       {Array.from({ length: fullStars }, (_, index) => (
-        <MaterialIcon key={`star-${index}`} filled>
-          star
-        </MaterialIcon>
+        <StarIcon aria-hidden="true" key={index} size={16} weight="fill" />
       ))}
-      {hasHalfStar ? <MaterialIcon filled>star_half</MaterialIcon> : null}
+      {hasHalfStar ? <StarHalfIcon aria-hidden="true" size={16} weight="fill" /> : null}
     </div>
   );
 }

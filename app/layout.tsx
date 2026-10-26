@@ -1,22 +1,22 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Manrope, Sora } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
 import { SiteConfigProvider } from "@/components/cms/SiteConfigProvider";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 import { getSiteConfig } from "@/lib/cms";
 import "./globals.css";
 
-const sora = Sora({
-  subsets: ["latin"],
-  variable: "--font-Inter",
-  display: "swap",
-});
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
+const instrument = Instrument_Serif({ subsets: ["latin"], weight: "400", style: ["normal", "italic"], variable: "--font-instrument", display: "swap" });
 
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-Montserrat",
-  display: "swap",
-});
+export const viewport: Viewport = {
+  themeColor: "#0c0b09",
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const site = await getSiteConfig();
@@ -35,17 +35,18 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   const site = await getSiteConfig();
   return (
-    <html lang="id" className="light">
-      <head>
-        <link href="https://fonts.googleapis.com" rel="preconnect" />
-        <link href="https://fonts.gstatic.com" rel="preconnect" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className={`${sora.variable} ${manrope.variable} flex min-h-screen flex-col bg-background text-on-background`}>
-        <SiteConfigProvider config={site}>{children}</SiteConfigProvider>
+    <html className={`${geist.variable} ${geistMono.variable} ${instrument.variable}`} lang="id">
+      <body className="grain flex min-h-[100dvh] flex-col">
+        <SiteConfigProvider config={site}>
+          <SmoothScroll>
+            <Navbar />
+            <main className="relative z-10 flex-1 bg-bone" id="main">
+              {children}
+            </main>
+            <Footer site={site} />
+            <WhatsAppFab />
+          </SmoothScroll>
+        </SiteConfigProvider>
       </body>
     </html>
   );

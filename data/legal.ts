@@ -1,4 +1,5 @@
-export type TermsSection = {
+// Bundled fallbacks shown only while the CMS `legal_pages` records are unavailable.
+export type LegalSection = {
   id: string;
   title: string;
   paragraphs: readonly string[];
@@ -6,54 +7,91 @@ export type TermsSection = {
   emphasizedParagraph?: string;
 };
 
-export const TERMS_SECTIONS: readonly TermsSection[] = [
+export const TERMS_SECTIONS: readonly LegalSection[] = [
   {
-    id: "acceptance",
-    title: "1. Acceptance of Terms",
+    id: "persetujuan",
+    title: "Persetujuan atas ketentuan",
     paragraphs: [
-      "By engaging Terra Paving for services, requesting a quote, or utilizing our website, you expressly agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you must refrain from using our services and website.",
-      "We reserve the right to modify these terms at any time. Any changes will be effective immediately upon posting on our website. Your continued use of our services following the posting of revised terms means that you accept and agree to the changes.",
+      "Dengan menggunakan layanan KASI, meminta penawaran, atau mengakses website ini, Anda menyetujui syarat dan ketentuan berikut. Jika Anda tidak menyetujui sebagian dari ketentuan ini, mohon untuk tidak menggunakan layanan maupun website kami.",
+      "Kami dapat memperbarui ketentuan ini sewaktu-waktu. Perubahan berlaku sejak dipublikasikan di website ini, dan penggunaan layanan setelahnya berarti Anda menerima perubahan tersebut.",
     ],
   },
   {
-    id: "services",
-    title: "2. Service Descriptions",
+    id: "layanan",
+    title: "Deskripsi layanan",
     paragraphs: [
-      "Terra Paving provides professional paving, hardscaping, and related foundational services. While we strive to present accurate descriptions, timelines, and material specifications, all project details are subject to site conditions, weather permitting, and material availability.",
-      "Quotes provided are estimates based on initial assessments. Final costs may vary if unforeseen structural or geological issues arise once excavation or work commences. Any substantial deviations from the original estimate will be communicated and must be approved via a written change order before proceeding.",
+      "KASI menyediakan jasa pengaspalan dan pekerjaan pendukungnya. Rincian proyek, jadwal, dan spesifikasi material menyesuaikan kondisi lokasi, cuaca, dan ketersediaan material.",
+      "Penawaran yang kami berikan merupakan estimasi berdasarkan survei awal. Biaya akhir dapat berubah apabila ditemukan kondisi struktur atau tanah yang tidak terduga. Setiap perubahan signifikan akan dikomunikasikan dan harus disetujui secara tertulis sebelum pekerjaan dilanjutkan.",
     ],
   },
   {
-    id: "responsibilities",
-    title: "3. User Responsibilities",
-    paragraphs: ["As a client of Terra Paving, you are responsible for:"],
+    id: "tanggung-jawab",
+    title: "Tanggung jawab pelanggan",
+    paragraphs: ["Sebagai pelanggan KASI, Anda bertanggung jawab untuk:"],
     bullets: [
-      "Ensuring clear access to the work site for our crew and heavy machinery.",
-      "Obtaining necessary permissions from neighbors or Homeowner Associations if the work impacts shared boundaries or common aesthetic guidelines.",
-      "Disclosing any known underground utilities, sprinkler systems, or structural hazards prior to the commencement of digging or paving.",
-      "Providing timely payments according to the agreed-upon schedule outlined in your specific contract.",
+      "Menyediakan akses lokasi yang memadai bagi tim dan alat berat kami.",
+      "Mengurus izin yang diperlukan dari lingkungan atau pengelola kawasan apabila pekerjaan berdampak pada area bersama.",
+      "Menginformasikan utilitas bawah tanah atau potensi bahaya yang diketahui sebelum pekerjaan dimulai.",
+      "Melakukan pembayaran tepat waktu sesuai jadwal yang tercantum dalam kesepakatan.",
     ],
   },
   {
-    id: "liability",
-    title: "4. Limitation of Liability",
+    id: "batasan",
+    title: "Batasan tanggung jawab",
     paragraphs: [
-      "To the fullest extent permitted by applicable law, Terra Paving shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, use, goodwill, or other intangible losses, resulting from:",
+      "Sejauh diizinkan oleh hukum yang berlaku, KASI tidak bertanggung jawab atas kerugian tidak langsung yang timbul dari:",
     ],
     bullets: [
-      "Your access to or use of or inability to access or use the services.",
-      "Any conduct or content of any third party regarding the services.",
-      "Pre-existing geological instability, soil subsidence, or sinkholes that were not reasonably detectable prior to project commencement.",
+      "Ketidakmampuan mengakses atau menggunakan layanan.",
+      "Tindakan atau konten pihak ketiga yang berkaitan dengan layanan.",
+      "Kondisi tanah, penurunan permukaan, atau ketidakstabilan geologis yang tidak dapat dideteksi secara wajar sebelum proyek dimulai.",
     ],
-    emphasizedParagraph:
-      "In no event shall Terra Paving's total liability to you for all damages, losses, and causes of action exceed the amount paid by you, if any, for accessing or receiving the specific services in dispute.",
+    emphasizedParagraph: "Total tanggung jawab KASI tidak melebihi nilai yang Anda bayarkan untuk layanan yang dipersengketakan.",
   },
   {
-    id: "governing",
-    title: "5. Governing Law",
+    id: "hukum",
+    title: "Hukum yang berlaku",
     paragraphs: [
-      "These Terms shall be governed and construed in accordance with the laws of the jurisdiction in which Terra Paving operates, without regard to its conflict of law provisions.",
-      "Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions of these Terms will remain in effect. These Terms constitute the entire agreement between us regarding our Service, and supersede and replace any prior agreements we might have had between us regarding the Service.",
+      "Ketentuan ini diatur dan ditafsirkan berdasarkan hukum Republik Indonesia.",
+      "Apabila salah satu ketentuan dinyatakan tidak berlaku, ketentuan lainnya tetap berlaku sepenuhnya. Ketentuan ini merupakan keseluruhan kesepakatan antara Anda dan KASI terkait penggunaan layanan.",
     ],
   },
-] as const;
+];
+
+export const PRIVACY_SECTIONS: readonly LegalSection[] = [
+  {
+    id: "pengumpulan",
+    title: "Informasi yang kami kumpulkan",
+    paragraphs: ["Kami mengumpulkan informasi yang Anda berikan secara sukarela saat meminta penawaran atau menghubungi kami, antara lain:"],
+    bullets: ["Data kontak seperti nama, nomor WhatsApp, dan alamat lokasi pekerjaan.", "Rincian kebutuhan dan kondisi lokasi proyek.", "Riwayat komunikasi dengan tim kami."],
+  },
+  {
+    id: "penggunaan",
+    title: "Penggunaan data",
+    paragraphs: ["Data Anda kami gunakan untuk:"],
+    bullets: [
+      "Menyusun estimasi dan menjadwalkan survei lokasi.",
+      "Memberikan dukungan dan informasi perkembangan pekerjaan.",
+      "Menyampaikan informasi administratif terkait layanan.",
+      "Meningkatkan kualitas website melalui analitik anonim.",
+    ],
+  },
+  {
+    id: "cookie",
+    title: "Cookie",
+    paragraphs: ["Website ini dapat menggunakan cookie untuk memahami cara pengunjung berinteraksi dengan halaman kami. Anda dapat menonaktifkan cookie melalui pengaturan browser."],
+  },
+  {
+    id: "berbagi",
+    title: "Berbagi dengan pihak ketiga",
+    paragraphs: [
+      "Kami hanya membagikan data dengan persetujuan Anda, untuk memenuhi kewajiban hukum, atau kepada mitra tepercaya yang membantu kami menjalankan layanan.",
+    ],
+    emphasizedParagraph: "Kami tidak menjual data pribadi Anda kepada pihak mana pun.",
+  },
+  {
+    id: "kontak",
+    title: "Hubungi kami",
+    paragraphs: ["Jika Anda memiliki pertanyaan tentang kebijakan ini, silakan hubungi kami melalui email atau WhatsApp yang tercantum di halaman kontak."],
+  },
+];

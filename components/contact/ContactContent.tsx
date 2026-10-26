@@ -1,24 +1,25 @@
 import { ContactForm } from "@/components/contact/ContactForm";
 import { ContactInfo } from "@/components/contact/ContactInfo";
+import { PageHero } from "@/components/layout/PageHero";
+import { Reveal } from "@/components/motion/Reveal";
 import type { SiteConfig } from "@/lib/cms";
 
 export function ContactContent({ site }: { site: SiteConfig }) {
   return (
-    <main className="mx-auto w-full max-w-7xl grow px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mb-16 text-center">
-        <h1 className="text-5xl leading-tight font-bold tracking-tight text-primary md:text-6xl mb-4">
-          Konsultasikan Kebutuhan <br />
-          Pengaspalan Anda
-        </h1>
-        <p className="mx-auto max-w-3xl text-lg text-on-surface-variant">
-          Punya rencana pengaspalan untuk jalan, area parkir, perumahan, atau kawasan usaha? Ceritakan kebutuhan proyek Anda kepada KASI dan dapatkan informasi serta penawaran yang sesuai untuk wilayah Jabodetabek.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-24">
-        <ContactForm />
-        <ContactInfo site={site} />
-      </div>
-    </main>
+    <>
+      <PageHero
+        description="Rencana pengaspalan untuk jalan, area parkir, perumahan, atau kawasan usaha? Ceritakan kebutuhan Anda dan dapatkan penawaran yang sesuai untuk Jabodetabek."
+        eyebrow="Kontak"
+        title="Mari mulai dari *percakapan.*"
+      />
+      <section className="mx-auto grid max-w-[88rem] grid-cols-1 gap-14 px-4 pb-28 md:px-10 md:pb-40 lg:grid-cols-12">
+        <Reveal className="lg:col-span-7">
+          <ContactForm />
+        </Reveal>
+        <Reveal className="lg:col-span-4 lg:col-start-9" delay={0.15}>
+          <ContactInfo site={site} />
+        </Reveal>
+      </section>
+    </>
   );
 }

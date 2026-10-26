@@ -6,7 +6,7 @@ import { TESTIMONIALS, type Testimonial } from "@/data/testimonials";
 import { LANDING_HIGHLIGHTS, LANDING_IMAGES, LANDING_STATS } from "@/data/landing";
 import { ARTICLE_CARDS, FEATURED_ARTICLE, type ArticleCard } from "@/data/articles";
 
-const POCKETBASE_URL = (() => {
+export const POCKETBASE_URL = (() => {
   const value = process.env.POCKETBASE_URL ?? process.env.NEXT_PUBLIC_POCKETBASE_URL ?? "https://kasiservices.ryucode.site";
   if (!value) return "";
 
@@ -36,6 +36,8 @@ async function listRecords<T extends PocketBaseRecord>(collection: string, query
     const response = await fetch(`${POCKETBASE_URL}/api/collections/${collection}/records?perPage=200${query}`, {
       next: { revalidate: REVALIDATE_SECONDS, tags: [`pocketbase:${collection}`] },
       headers: { Accept: "application/json" },
+      // A stalled CMS must not hold the whole page hostage; fall back to bundled content instead.
+      signal: AbortSignal.timeout(6000),
     });
 
     if (!response.ok) {
@@ -423,9 +425,16 @@ export const getLegalPage = cache(async (slug: string): Promise<CmsLegalPage | n
   return page ? { title: text(page, "title"), slug: text(page, "slug"), content: text(page, "content") } : null;
 });
 
-export { formatDate };
+export const getContentSlugs = cache(async () => {
+  const [portfolios, articles] = await Promise.all([
+    listRecords<PocketBaseRecord>("portfolios", "&fields=slug"),
+    listRecords<PocketBaseRecord>("articles", "&fields=slug"),
+  ]);
+  return {
+    portfolios: portfolios.map((item) => text(item, "slug")).filter(Boolean),
+    articles: articles.map((item) => text(item, "slug")).filter(Boolean),
+  };
+});
 
-export function createWhatsAppUrl(phone: string, message: string) {
-  const normalizedPhone = phone.replace(/\D/g, "").replace(/^0/, "62");
-  return `https://wa.me/${normalizedPhone}?text=${encodeURIComponent(message)}`;
-}
+export { formatDate };
+export { createWhatsAppUrl } from "@/lib/whatsapp";

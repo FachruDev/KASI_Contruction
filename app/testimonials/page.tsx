@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
+import { CtaBand } from "@/components/layout/CtaBand";
+import { PageHero } from "@/components/layout/PageHero";
 import { TestimonialsGrid } from "@/components/testimonials/TestimonialsGrid";
-import { TestimonialsHero } from "@/components/testimonials/TestimonialsHero";
-import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
-import { getTestimonials } from "@/lib/cms";
+import { getSiteConfig, getTestimonials } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Testimoni Pelanggan",
@@ -13,18 +11,16 @@ export const metadata: Metadata = {
 };
 
 export default async function TestimonialsPage() {
-  const testimonials = await getTestimonials();
+  const [testimonials, site] = await Promise.all([getTestimonials(), getSiteConfig()]);
   return (
-    <div className="bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container">
-      <Navbar active="testimonials" />
-
-      <main className="w-full">
-        <TestimonialsHero />
-        <TestimonialsGrid testimonials={testimonials} />
-      </main>
-
-      <Footer />
-      <WhatsAppFab />
-    </div>
+    <>
+      <PageHero
+        description="Kepercayaan pelanggan adalah bagian penting dari pekerjaan kami. Ini pengalaman mereka setelah menggunakan layanan KASI di Jabodetabek."
+        eyebrow="Testimoni"
+        title="Kata mereka yang *sudah* merasakan."
+      />
+      <TestimonialsGrid testimonials={testimonials} />
+      <CtaBand site={site} />
+    </>
   );
 }

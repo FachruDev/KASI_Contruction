@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
-import { ServiceHeader } from "@/components/services/ServiceHeader";
-import { ServicesGrid } from "@/components/services/ServicesGrid";
-import { ServiceCta } from "@/components/services/ServiceCta";
-import { getServices } from "@/lib/cms";
+import { CtaBand } from "@/components/layout/CtaBand";
+import { PageHero } from "@/components/layout/PageHero";
+import { ProcessSteps } from "@/components/services/ProcessSteps";
+import { ServiceCard } from "@/components/services/ServiceCard";
+import { getServices, getSiteConfig } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Jasa Pengaspalan & Aspal Hotmix Jabodetabek",
@@ -14,19 +12,26 @@ export const metadata: Metadata = {
 };
 
 export default async function ServicesPage() {
-  const services = await getServices();
+  const [services, site] = await Promise.all([getServices(), getSiteConfig()]);
   return (
-    <div className="flex min-h-screen flex-col bg-background text-on-background antialiased">
-      <Navbar active="services" />
-
-      <main className="mx-auto w-full max-w-7xl flex-grow px-4 py-16 sm:px-8">
-        <ServiceHeader />
-        <ServicesGrid services={services} />
-        <ServiceCta />
-      </main>
-
-      <WhatsAppFab />
-      <Footer />
-    </div>
+    <>
+      <PageHero
+        aside={
+          <p className="max-w-md border-l border-signal pl-4 text-[13px] leading-relaxed text-ink/50">
+            Harga dapat berbeda tergantung luas area, ketebalan aspal, jenis pekerjaan, dan kondisi lokasi.
+          </p>
+        }
+        description="Solusi pengaspalan untuk jalan perumahan, area parkir, kawasan usaha, hingga industri. Material berkualitas, hasil rapi, kuat, dan tahan lama."
+        eyebrow="Layanan"
+        title="Pengaspalan untuk *setiap* kebutuhan."
+      />
+      <div className="mx-auto max-w-[88rem] px-4 pb-16 md:px-10 md:pb-28">
+        {services.map((service, index) => (
+          <ServiceCard index={index} key={service.title} service={service} />
+        ))}
+      </div>
+      <ProcessSteps />
+      <CtaBand image="/assets/images/services/services2.jpeg" site={site} />
+    </>
   );
 }

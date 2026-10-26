@@ -1,117 +1,38 @@
+import Image from "next/image";
 import Link from "next/link";
-import { MaterialIcon } from "@/components/ui/MaterialIcon";
+import { ArrowUpRightIcon } from "@phosphor-icons/react/ssr";
 import type { PortfolioProject } from "@/data/portfolio";
-import { ProjectTags } from "@/components/portfolio/ProjectTags";
 
-const shadowClass = "shadow-[0_4px_20px_rgba(46,50,48,0.06)]";
-
-export function ProjectCard({ project }: { project: PortfolioProject }) {
-  const detailHref = project.slug ? `/portfolio/${project.slug}` : undefined;
-  if (project.featured === "primary") {
-    return (
-      <article
-        className={`group col-span-1 flex flex-col overflow-hidden rounded-xl border border-surface-container-highest/50 bg-surface ${shadowClass} md:col-span-2 md:flex-row lg:col-span-2`}
-      >
-        <div className="relative h-72 overflow-hidden md:h-auto md:w-3/5">
-          <img
-            alt={project.imageAlt}
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            src={project.image}
-          />
-          {project.beforeAfter ? (
-            <div className="absolute top-4 left-4 flex items-center gap-1 rounded-full bg-tertiary-container px-3 py-1 text-xs font-bold text-on-tertiary-container shadow-xs">
-              <MaterialIcon className="text-[16px]">flip_camera_android</MaterialIcon>
-              Before &amp; After Available
-            </div>
-          ) : null}
-        </div>
-
-        <div className="flex flex-col justify-center p-8 md:w-2/5">
-          <ProjectTags categories={project.categories} year={project.year} />
-          <h2 className="mb-2 text-2xl font-bold text-on-background">{project.title}</h2>
-          {project.location ? (
-            <div className="mb-4 flex items-center gap-1 text-sm text-on-surface-variant">
-              <MaterialIcon className="text-[16px]">location_on</MaterialIcon>
-              {project.location}
-            </div>
-          ) : null}
-          <p className="mb-6 flex-grow text-sm text-on-surface-variant">{project.description}</p>
-          <div className="flex items-center justify-between border-t border-surface-container pt-4 text-sm font-semibold">
-            <span className="text-on-surface">Area: {project.area}</span>
-            {detailHref ? (
-              <Link
-                className="flex items-center gap-1 text-primary transition-colors hover:text-primary-fixed-dim"
-                href={detailHref}
-              >
-                Lihat Detail
-                <MaterialIcon className="text-[18px]">arrow_forward</MaterialIcon>
-              </Link>
-            ) : null}
-          </div>
-        </div>
-      </article>
-    );
-  }
-
-  if (project.featured === "secondary") {
-    return (
-      <article
-        className={`group col-span-1 flex flex-col overflow-hidden rounded-xl border border-surface-container-highest/50 bg-surface ${shadowClass} md:col-span-2 md:flex-row-reverse lg:col-span-2`}
-      >
-        <div className="relative h-64 overflow-hidden md:h-auto md:w-1/2">
-          <img
-            alt={project.imageAlt}
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            src={project.image}
-          />
-        </div>
-        <div className="flex flex-col justify-center bg-surface-container-low p-8 md:w-1/2">
-          <ProjectTags categories={project.categories} />
-          <h2 className="mb-2 text-2xl font-bold text-on-background">{project.title}</h2>
-          {project.location ? (
-            <div className="mb-4 flex items-center gap-1 text-sm text-on-surface-variant">
-              <MaterialIcon className="text-[16px]">location_on</MaterialIcon>
-              {project.location}
-            </div>
-          ) : null}
-          <p className="mb-6 flex-grow text-sm text-on-surface-variant">{project.description}</p>
-          <div className="flex items-center justify-between border-t border-surface-container pt-4 text-sm font-semibold">
-            <span className="text-on-surface-variant">Area: {project.area}</span>
-            {detailHref ? <Link className="flex items-center gap-1 text-primary transition-colors hover:text-primary-fixed-dim" href={detailHref}>Lihat Detail<MaterialIcon className="text-[18px]">arrow_forward</MaterialIcon></Link> : null}
-          </div>
-        </div>
-      </article>
-    );
-  }
+export function ProjectCard({ project, tall }: { project: PortfolioProject; tall?: boolean }) {
+  const details = [project.location, project.area, project.year].filter(Boolean).join(" · ") || project.meta;
 
   return (
-    <article
-      className={`group flex flex-col overflow-hidden rounded-xl border border-surface-container-highest/50 bg-surface ${shadowClass}`}
-    >
-      <div className="relative h-56 overflow-hidden">
-        <img
-          alt={project.imageAlt}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-          src={project.image}
-        />
-        {project.beforeAfter ? (
-          <div
-            className="absolute top-3 left-3 rounded-full bg-tertiary-container p-1.5 text-on-tertiary-container shadow-xs"
-            title="Before/After Available"
-          >
-            <MaterialIcon className="block text-[16px]">flip_camera_android</MaterialIcon>
-          </div>
-        ) : null}
-      </div>
-      <div className="flex flex-grow flex-col p-6">
-        <ProjectTags categories={project.categories} />
-        <h3 className="mb-1 font-headline text-xl font-bold text-on-background">{project.title}</h3>
-        <p className="mb-4 line-clamp-2 text-sm text-on-surface-variant">{project.description}</p>
-        <div className="mt-auto flex items-center justify-between border-t border-surface-container pt-4 text-sm">
-          <span className="text-xs font-semibold text-on-surface-variant">{project.meta}</span>
-          {detailHref ? <Link className="flex items-center gap-1 font-semibold text-primary transition-colors hover:text-primary-fixed-dim" href={detailHref}>Lihat Detail<MaterialIcon className="text-[18px]">arrow_forward</MaterialIcon></Link> : null}
+    <Link className="group block h-full" href={project.slug ? `/portfolio/${project.slug}` : "/portfolio"}>
+      <div className="rounded-[2rem] bg-ink/[0.035] p-1.5 hairline">
+        <div className={`relative overflow-hidden rounded-[calc(2rem-0.375rem)] bg-bone-deep ${tall ? "aspect-[4/5] md:aspect-[5/6]" : "aspect-[4/3]"}`}>
+          <Image
+            alt={project.imageAlt}
+            className="object-cover transition-transform duration-[1.4s] ease-fluid group-hover:scale-[1.05]"
+            fill
+            sizes="(min-width: 768px) 50vw, 100vw"
+            src={project.image}
+          />
+          <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-ink/50 via-transparent to-transparent opacity-0 transition-opacity duration-700 ease-fluid group-hover:opacity-100" />
+          <span className="absolute top-4 right-4 flex size-11 translate-y-2 items-center justify-center rounded-full bg-bone text-ink opacity-0 transition-all duration-700 ease-fluid group-hover:translate-y-0 group-hover:opacity-100">
+            <ArrowUpRightIcon size={18} weight="light" />
+          </span>
+          {project.beforeAfter ? (
+            <span className="absolute top-4 left-4 rounded-full bg-ink/60 px-3 py-1 font-mono text-[10px] tracking-[0.18em] text-bone uppercase backdrop-blur-md">
+              Sebelum / sesudah
+            </span>
+          ) : null}
         </div>
       </div>
-    </article>
+      <div className="mt-5 px-2">
+        <p className="font-mono text-[10px] tracking-[0.22em] text-ink/45 uppercase">{project.categories.join(" · ")}</p>
+        <h3 className="mt-2 text-2xl font-medium tracking-[-0.035em] transition-colors duration-500 group-hover:text-signal-deep">{project.title}</h3>
+        {details ? <p className="mt-1 text-[14px] text-ink/50">{details}</p> : null}
+      </div>
+    </Link>
   );
 }
