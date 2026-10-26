@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { fontVariables } from "@/app/fonts";
 import { SITE_NAME, SITE_URL } from "@/lib/seo";
 import { SiteConfigProvider } from "@/components/cms/SiteConfigProvider";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
@@ -9,10 +9,6 @@ import { Footer } from "@/components/layout/Footer";
 import { WhatsAppFab } from "@/components/ui/WhatsAppFab";
 import { getSiteConfig } from "@/lib/cms";
 import "./globals.css";
-
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono", display: "swap" });
-const instrument = Instrument_Serif({ subsets: ["latin"], weight: "400", style: ["normal", "italic"], variable: "--font-instrument", display: "swap" });
 
 // Pages are static; CMS edits refresh them on demand, and this is a safety net if a refresh is missed.
 export const revalidate = 3600;
@@ -38,7 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   const site = await getSiteConfig();
   return (
-    <html className={`${geist.variable} ${geistMono.variable} ${instrument.variable}`} lang="id">
+    <html className={fontVariables} lang="id">
       <body className="grain flex min-h-[100dvh] flex-col">
         <SiteConfigProvider config={site}>
           <SmoothScroll>

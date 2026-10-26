@@ -48,11 +48,29 @@ Commit file migrasi yang dihasilkan bersama perubahan skemanya.
 
 ## Deploy ke Vercel
 
-- Build command: `bun run ci` (menjalankan `payload migrate` lalu `next build`).
-- Environment variables: semua isi `.env.example`, untuk Production dan Preview.
-- Gunakan branch database Neon terpisah untuk Preview agar migrasi preview tidak menyentuh data production.
+`vercel.json` sudah mengatur build command `bun run ci` (migrasi database lalu `next build`), dan `package.json` mengunci Node 24.
+
+Checklist sebelum go-live:
+
+1. **Buat akun admin pertama** di `/admin` (lokal atau preview) sebelum domain production dibuka. Selama belum ada user, siapa pun yang membuka `/admin` bisa mendaftar sebagai admin.
+2. **Environment variables di Vercel** (Production dan Preview): `DATABASE_URL`, `PAYLOAD_SECRET`, `AWS_*`, `S3_BUCKET`, `NEXT_PUBLIC_SITE_URL`, serta SMTP bila email dipakai.
+3. **Database Preview terpisah**: pakai integrasi Neon di Vercel agar setiap preview mendapat branch database sendiri, supaya migrasi preview tidak menyentuh production.
+4. **CORS bucket** untuk upload langsung dari browser: setelah `NEXT_PUBLIC_SITE_URL` berisi domain production, jalankan `bun run storage:cors`.
+5. **Domain**: arahkan domain ke Vercel, lalu cek `/sitemap.xml` dan `/robots.txt`.
+
+## Migrasi konten dari PocketBase
+
+```bash
+bun run migrate:pocketbase dry-run        # lihat apa yang akan diimpor
+bun run migrate:pocketbase                # impor layanan, portfolio, testimoni, FAQ, artikel, halaman legal
+bun run migrate:pocketbase with-inquiries # ikut salin data inquiry (butuh PB_SUPERUSER_*)
+```
+
+Aman dijalankan ulang: data dicocokkan berdasarkan slug/nama, dan file hanya diunggah sekali. Pengaturan situs dan teks Beranda tidak diimpor karena sudah dikurasi ulang di Payload.
 
 ## Catatan
 
 - Perintah Payload memakai `--use-swc` karena loader `tsx` bawaannya bermasalah di Windows.
-- Setiap konten disimpan dari admin, seluruh halaman website diperbarui otomatis (revalidasi on-demand).
+- Setiap konten disimpan dari admin, seluruh halaman website diperbarui otomatis (revalidasi on-demand), dengan revalidasi per jam sebagai cadangan.
+- Login admin terkunci 15 menit setelah 5 kali salah password.
+- Upload gambar langsung dari browser ke bucket (melewati batas 4,5 MB Vercel); server tetap mengecilkan dan mengonversi ke WebP.

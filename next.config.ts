@@ -12,6 +12,8 @@ const nextConfig: NextConfig = {
     localPatterns: [{ pathname: "/api/media/file/**" }, { pathname: "/assets/**" }],
   },
   turbopack: { root: dirname },
+  // The site and the admin each have their own root layout, so unmatched URLs need a standalone 404.
+  experimental: { globalNotFound: true },
 };
 
 export default withPayload(nextConfig, { devBundleServerPackages: false });

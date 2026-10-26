@@ -416,7 +416,7 @@ export interface Inquiry {
 export interface User {
   id: number;
   name: string;
-  role: 'admin' | 'editor';
+  role?: ('admin' | 'editor') | null;
   updatedAt: string;
   createdAt: string;
   email: string;

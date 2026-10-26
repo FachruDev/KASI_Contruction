@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { adminOnly, loggedIn } from "@/cms/access";
+import { notifyInquiry } from "@/cms/hooks/notifyInquiry";
 import { REQUIREMENT_OPTIONS } from "@/cms/options";
 
 /** Leads from the contact form. Nobody can create these over the API; the site's server action writes them. */
@@ -14,6 +15,7 @@ export const Inquiries: CollectionConfig = {
     listSearchableFields: ["name", "phone", "location"],
   },
   access: { read: loggedIn, create: () => false, update: loggedIn, delete: adminOnly },
+  hooks: { afterChange: [notifyInquiry] },
   fields: [
     {
       type: "row",

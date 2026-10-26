@@ -41,7 +41,9 @@ function image(value: number | Media | null | undefined): Img | undefined;
 function image(value: number | Media | null | undefined, fallback?: Img) {
   if (!value || typeof value === "number" || !value.url) return fallback;
   const position = value.focalX != null && value.focalY != null ? `${value.focalX}% ${value.focalY}%` : undefined;
-  return { src: value.url, alt: value.alt, position };
+  // Payload prefixes serverURL when it is configured; keep files same-origin so next/image treats them as local.
+  const { pathname, search } = new URL(value.url, "http://local");
+  return { src: pathname + search, alt: value.alt, position };
 }
 
 function category(value: number | ProjectCategory | ArticleCategory | null | undefined, fallback: Category): Category {
