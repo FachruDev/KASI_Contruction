@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
 
+/** Editorial section label: a short signal rule leading into plain sentence-case text. */
 export function Eyebrow({ children, tone = "light", className = "" }: { children: ReactNode; tone?: "light" | "dark"; className?: string }) {
-  const toneClass = tone === "dark" ? "bg-bone/[0.06] text-bone/70 hairline-dark" : "bg-ink/[0.04] text-ink/60 hairline";
+  const toneClass = tone === "dark" ? "text-bone/65" : "text-ink/55";
   return (
-    <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 font-mono text-[10px] font-medium tracking-[0.22em] uppercase ${toneClass} ${className}`}>
-      <span aria-hidden="true" className="size-1.5 rounded-full bg-signal" />
+    <span className={`inline-flex items-center gap-3 text-[13px] font-medium tracking-[-0.01em] ${toneClass} ${className}`}>
+      <span aria-hidden="true" className="h-px w-8 bg-signal" />
       {children}
     </span>
   );
