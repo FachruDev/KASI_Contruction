@@ -3,8 +3,9 @@ import { ArrowUpRightIcon, WhatsappLogoIcon } from "@phosphor-icons/react/ssr";
 import { FOOTER_LEGAL_ITEMS, FOOTER_NAV_ITEMS, type NavItem } from "@/data/navigation";
 import { FooterReveal } from "@/components/layout/FooterReveal";
 import { Button } from "@/components/ui/Button";
+import { hoursLabel } from "@/lib/format";
 import { createWhatsAppUrl } from "@/lib/whatsapp";
-import type { SiteConfig } from "@/lib/cms";
+import type { SiteConfig } from "@/lib/types";
 
 function LinkColumn({ title, items }: { title: string; items: readonly NavItem[] }) {
   return (
@@ -51,7 +52,7 @@ export function Footer({ site }: { site: SiteConfig }) {
                 <span aria-hidden="true" className="size-2 rounded-full bg-signal" />
                 {site.companyName}
               </p>
-              <p className="mt-4 max-w-xs text-[15px] leading-relaxed text-bone/55">{site.footerSubtitle}</p>
+              <p className="mt-4 max-w-xs text-[15px] leading-relaxed text-bone/55">{site.footerTagline}</p>
             </div>
             <div className="md:col-span-2">
               <LinkColumn items={FOOTER_NAV_ITEMS} title="Navigasi" />
@@ -67,12 +68,9 @@ export function Footer({ site }: { site: SiteConfig }) {
               </a>
               <ul className="space-y-1 text-bone/55">
                 {site.businessHours.map((hour) => (
-                  <li className="flex justify-between gap-6 border-b border-bone/[0.06] pb-1" key={hour.dayLabel}>
-                    <span>{hour.dayLabel}</span>
-                    <span className="font-mono text-[13px]">
-                      {hour.openTime}
-                      {hour.closeTime ? ` — ${hour.closeTime}` : ""}
-                    </span>
+                  <li className="flex justify-between gap-6 border-b border-bone/[0.06] pb-1" key={hour.label}>
+                    <span>{hour.label}</span>
+                    <span className="font-mono text-[13px]">{hoursLabel(hour)}</span>
                   </li>
                 ))}
               </ul>

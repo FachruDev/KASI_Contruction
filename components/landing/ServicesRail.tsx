@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealHeading } from "@/components/motion/RevealHeading";
 import { useMediaQuery } from "@/components/motion/useMediaQuery";
-import type { ServiceItem } from "@/data/services";
+import type { SectionHeading, ServiceItem } from "@/lib/types";
 
 function ServiceSlide({ service, index }: { service: ServiceItem; index: number }) {
   return (
@@ -19,11 +19,12 @@ function ServiceSlide({ service, index }: { service: ServiceItem; index: number 
     >
       <article className="relative flex h-[68vh] min-h-[30rem] flex-col justify-between overflow-hidden rounded-[calc(2rem-0.375rem)] bg-ink-soft p-7 shadow-[inset_0_1px_1px_rgba(242,238,231,0.08)] lg:h-[62vh]">
         <Image
-          alt={service.imageAlt}
+          alt={service.image.alt}
           className="object-cover opacity-55 transition-[transform,opacity] duration-[1.4s] ease-fluid group-hover:scale-[1.06] group-hover:opacity-70"
           fill
           sizes="(min-width: 1024px) 36vw, 82vw"
-          src={service.image}
+          src={service.image.src}
+          style={service.image.position ? { objectPosition: service.image.position } : undefined}
         />
         <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-ink via-ink/40 to-ink/10" />
         <div className="relative flex items-start justify-between">
@@ -34,12 +35,12 @@ function ServiceSlide({ service, index }: { service: ServiceItem; index: number 
         </div>
         <div className="relative">
           <h3 className="text-[clamp(1.75rem,2.6vw,2.6rem)] leading-[1.02] font-medium tracking-[-0.045em]">{service.title}</h3>
-          <p className="mt-4 line-clamp-3 max-w-md text-[15px] leading-relaxed text-bone/65">{service.description}</p>
+          <p className="mt-4 line-clamp-3 max-w-md text-[15px] leading-relaxed text-bone/65">{service.summary}</p>
           <div className="mt-6 flex items-end justify-between border-t border-bone/15 pt-5">
-            <p className="font-mono text-[10px] tracking-[0.2em] text-bone/45 uppercase">Mulai dari</p>
+            <p className="font-mono text-[10px] tracking-[0.2em] text-bone/45 uppercase">{service.price ? "Mulai dari" : "Harga"}</p>
             <p className="text-2xl font-medium tracking-[-0.04em]">
-              {service.price}
-              <span className="text-sm text-bone/50">/m²</span>
+              {service.price ?? "Sesuai penawaran"}
+              {service.priceUnit ? <span className="text-sm text-bone/50">{service.priceUnit}</span> : null}
             </p>
           </div>
         </div>
@@ -49,7 +50,7 @@ function ServiceSlide({ service, index }: { service: ServiceItem; index: number 
 }
 
 /** Pinned horizontal rail on desktop; a native snap carousel on touch screens. */
-export function ServicesRail({ services }: { services: readonly ServiceItem[] }) {
+export function ServicesRail({ services, heading }: { services: readonly ServiceItem[]; heading: SectionHeading }) {
   const pinned = useMediaQuery("(min-width: 1024px)");
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -74,8 +75,8 @@ export function ServicesRail({ services }: { services: readonly ServiceItem[] })
   const header = (
     <div className="mx-auto flex w-full max-w-[88rem] flex-col gap-8 px-4 md:px-10 lg:flex-row lg:items-end lg:justify-between">
       <div>
-        <Eyebrow tone="dark">Layanan</Eyebrow>
-        <RevealHeading className="mt-6 max-w-3xl text-[clamp(2.5rem,5.5vw,5.5rem)] leading-[0.92] font-medium tracking-[-0.055em]" text="Setiap jalan punya *kebutuhan* sendiri." />
+        <Eyebrow tone="dark">{heading.eyebrow}</Eyebrow>
+        <RevealHeading className="mt-6 max-w-3xl text-[clamp(2.5rem,5.5vw,5.5rem)] leading-[0.92] font-medium tracking-[-0.055em]" text={heading.heading} />
       </div>
       <Button className="self-start lg:self-auto" href="/services" variant="ghost-dark">
         Semua layanan
@@ -83,7 +84,7 @@ export function ServicesRail({ services }: { services: readonly ServiceItem[] })
     </div>
   );
 
-  const slides = services.map((service, index) => <ServiceSlide index={index} key={service.title} service={service} />);
+  const slides = services.map((service, index) => <ServiceSlide index={index} key={service.slug || service.title} service={service} />);
 
   if (!pinned) {
     return (

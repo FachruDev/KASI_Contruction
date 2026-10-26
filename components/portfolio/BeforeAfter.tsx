@@ -3,9 +3,10 @@
 import Image from "next/image";
 import { useRef, useState, type PointerEvent } from "react";
 import { ArrowsHorizontalIcon } from "@phosphor-icons/react/ssr";
+import type { Img } from "@/lib/types";
 
 /** Drag (or use arrow keys) to wipe between the before and after photographs. */
-export function BeforeAfter({ before, after, title }: { before: string; after: string; title: string }) {
+export function BeforeAfter({ before, after, title }: { before: Img; after: Img; title: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState(50);
   const [dragging, setDragging] = useState(false);
@@ -31,9 +32,9 @@ export function BeforeAfter({ before, after, title }: { before: string; after: s
         onPointerUp={() => setDragging(false)}
         ref={ref}
       >
-        <Image alt={`Hasil proyek ${title}`} className="object-cover" draggable={false} fill sizes="(min-width: 768px) 80vw, 100vw" src={after} />
+        <Image alt={after.alt || `Hasil proyek ${title}`} className="object-cover" draggable={false} fill sizes="(min-width: 768px) 80vw, 100vw" src={after.src} style={after.position ? { objectPosition: after.position } : undefined} />
         <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}>
-          <Image alt={`Kondisi sebelum proyek ${title}`} className="object-cover" draggable={false} fill sizes="(min-width: 768px) 80vw, 100vw" src={before} />
+          <Image alt={before.alt || `Kondisi sebelum proyek ${title}`} className="object-cover" draggable={false} fill sizes="(min-width: 768px) 80vw, 100vw" src={before.src} style={before.position ? { objectPosition: before.position } : undefined} />
         </div>
 
         <span className="absolute top-5 left-5 rounded-full bg-ink/60 px-3 py-1 font-mono text-[10px] tracking-[0.2em] text-bone uppercase backdrop-blur-md">Sebelum</span>

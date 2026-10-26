@@ -2,12 +2,13 @@ import { FaqAccordion } from "@/components/faq/FaqAccordion";
 import { Button } from "@/components/ui/Button";
 import { ParallaxImage } from "@/components/motion/ParallaxImage";
 import { Reveal } from "@/components/motion/Reveal";
-import type { FaqSection } from "@/data/faq";
+import type { FaqSection } from "@/lib/types";
 
-export function FaqContent({ sections }: { sections: FaqSection[] }) {
+export function FaqContent({ sections, support }: { sections: FaqSection[]; support: { title: string; text: string } }) {
   return (
     <section className="mx-auto grid max-w-[88rem] grid-cols-1 gap-16 px-4 pb-28 md:grid-cols-12 md:px-10 md:pb-40">
       <div className="space-y-20 md:col-span-7">
+        {sections.length ? null : <p className="border-t border-ink/10 pt-8 text-ink/50">Belum ada pertanyaan yang dipublikasikan.</p>}
         {sections.map((section, index) => (
           <Reveal key={section.title}>
             <div className="mb-6 flex items-baseline gap-4">
@@ -29,8 +30,8 @@ export function FaqContent({ sections }: { sections: FaqSection[] }) {
           <Reveal delay={0.2}>
             <div className="rounded-[2rem] bg-bone/[0.04] p-1.5 hairline">
               <div className="rounded-[calc(2rem-0.375rem)] bg-ink p-8 text-bone shadow-[inset_0_1px_1px_rgba(242,238,231,0.08)]">
-                <h3 className="text-2xl font-medium tracking-[-0.035em]">Masih ada pertanyaan?</h3>
-                <p className="mt-3 text-[15px] leading-relaxed text-bone/60">Konsultasikan kebutuhan pengaspalan Anda langsung dengan tim KASI.</p>
+                <h3 className="text-2xl font-medium tracking-[-0.035em]">{support.title}</h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-bone/60">{support.text}</p>
                 <Button className="mt-8" href="/contact">
                   Hubungi kami
                 </Button>

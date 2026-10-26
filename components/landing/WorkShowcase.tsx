@@ -9,34 +9,35 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealHeading } from "@/components/motion/RevealHeading";
 import { useMediaQuery } from "@/components/motion/useMediaQuery";
-import type { PortfolioProject } from "@/data/portfolio";
+import type { ProjectSummary, SectionHeading } from "@/lib/types";
 
-function WorkCard({ project, tall }: { project: PortfolioProject; tall?: boolean }) {
+function WorkCard({ project, tall }: { project: ProjectSummary; tall?: boolean }) {
   return (
     <Link className="group block" href={project.slug ? `/portfolio/${project.slug}` : "/portfolio"}>
       <div className="rounded-[2rem] bg-ink/[0.035] p-1.5 hairline">
         <div className={`relative overflow-hidden rounded-[calc(2rem-0.375rem)] bg-bone-deep ${tall ? "aspect-[4/5]" : "aspect-[5/4]"}`}>
           <Image
-            alt={project.imageAlt}
+            alt={project.image.alt}
             className="object-cover transition-transform duration-[1.4s] ease-fluid group-hover:scale-[1.05]"
             fill
             sizes="(min-width: 768px) 44vw, 100vw"
-            src={project.image}
+            src={project.image.src}
+            style={project.image.position ? { objectPosition: project.image.position } : undefined}
           />
         </div>
       </div>
       <div className="mt-5 flex items-start justify-between gap-6 px-2">
         <div>
-          <p className="font-mono text-[10px] tracking-[0.22em] text-ink/45 uppercase">{project.categories.join(" · ")}</p>
+          <p className="font-mono text-[10px] tracking-[0.22em] text-ink/45 uppercase">{project.category.title}</p>
           <h3 className="mt-2 text-2xl font-medium tracking-[-0.035em] transition-colors duration-500 group-hover:text-signal-deep">{project.title}</h3>
         </div>
-        {project.meta || project.year ? <p className="shrink-0 pt-6 font-mono text-[11px] text-ink/45">{project.meta || project.year}</p> : null}
+        {project.area || project.year ? <p className="shrink-0 pt-6 font-mono text-[11px] text-ink/45">{[project.area, project.year].filter(Boolean).join(" · ")}</p> : null}
       </div>
     </Link>
   );
 }
 
-export function WorkShowcase({ projects }: { projects: readonly PortfolioProject[] }) {
+export function WorkShowcase({ projects, heading }: { projects: readonly ProjectSummary[]; heading: SectionHeading }) {
   const ref = useRef<HTMLDivElement>(null);
   const wide = useMediaQuery("(min-width: 768px)");
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
@@ -50,9 +51,9 @@ export function WorkShowcase({ projects }: { projects: readonly PortfolioProject
       <div className="mb-16 flex flex-col gap-8 md:mb-24 md:flex-row md:items-end md:justify-between">
         <div>
           <Reveal y={20}>
-            <Eyebrow>Portfolio</Eyebrow>
+            <Eyebrow>{heading.eyebrow}</Eyebrow>
           </Reveal>
-          <RevealHeading className="mt-6 max-w-3xl text-[clamp(2.5rem,5.5vw,5.5rem)] leading-[0.92] font-medium tracking-[-0.055em]" text="Hasil kerja yang *bicara* sendiri." />
+          <RevealHeading className="mt-6 max-w-3xl text-[clamp(2.5rem,5.5vw,5.5rem)] leading-[0.92] font-medium tracking-[-0.055em]" text={heading.heading} />
         </div>
         <Reveal delay={0.2} y={20}>
           <Button href="/portfolio" variant="ghost-light">

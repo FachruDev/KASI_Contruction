@@ -9,7 +9,7 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { RevealHeading } from "@/components/motion/RevealHeading";
 import { EASE_CINE } from "@/components/motion/SmoothScroll";
 import { createWhatsAppUrl } from "@/lib/whatsapp";
-import type { HomeData, SiteConfig } from "@/lib/cms";
+import type { HomeData, SiteConfig } from "@/lib/types";
 
 type HeroProps = {
   hero: HomeData["hero"];
@@ -25,7 +25,7 @@ export function HeroSection({ hero, site, highlight }: HeroProps) {
   const shade = useTransform(scrollYProgress, [0, 0.7], [0, 0.75]);
   const copyY = useTransform(scrollYProgress, [0, 0.55], [0, -140]);
   const copyOpacity = useTransform(scrollYProgress, [0, 0.45], [1, 0]);
-  // CMS titles carry no markup; set the closing word in the serif accent unless the editor chose one.
+  // Without an editor-chosen accent, set the closing word in the serif accent.
   const title = hero.title.includes("*") ? hero.title : hero.title.replace(/(\S+)$/, "*$1*");
 
   return (
@@ -39,7 +39,7 @@ export function HeroSection({ hero, site, highlight }: HeroProps) {
         >
           <motion.div className="absolute inset-0 will-change-transform" style={{ scale: imageScale, y: imageY }}>
             <motion.div animate={{ scale: 1 }} className="absolute inset-0" initial={{ scale: 1.35 }} transition={{ duration: 2.4, ease: EASE_CINE }}>
-              <Image alt={hero.imageAlt} className="object-cover" fill preload quality={85} sizes="100vw" src={hero.image} />
+              <Image alt={hero.image.alt} className="object-cover" fill preload quality={85} sizes="100vw" src={hero.image.src} style={hero.image.position ? { objectPosition: hero.image.position } : undefined} />
             </motion.div>
           </motion.div>
           <div aria-hidden="true" className="absolute inset-0 bg-linear-to-b from-ink/70 via-ink/10 to-ink/95" />
@@ -69,7 +69,7 @@ export function HeroSection({ hero, site, highlight }: HeroProps) {
             <p className="max-w-xl text-base leading-relaxed text-bone/70 md:col-span-6 md:text-lg">{hero.subtitle}</p>
             <div className="flex flex-wrap gap-3 md:col-span-6 md:justify-end">
               <Button href="/contact">{hero.ctaLabel}</Button>
-              <Button href={createWhatsAppUrl(site.whatsappPhone, hero.ctaMessage || site.whatsappMessage)} icon={<WhatsappLogoIcon size={18} weight="light" />} variant="ghost-dark">
+              <Button href={createWhatsAppUrl(site.whatsappPhone, hero.whatsappMessage || site.whatsappMessage)} icon={<WhatsappLogoIcon size={18} weight="light" />} variant="ghost-dark">
                 WhatsApp
               </Button>
             </div>

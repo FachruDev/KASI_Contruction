@@ -3,7 +3,7 @@
 import { useId, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { EASE_FLUID } from "@/components/motion/SmoothScroll";
-import type { FaqItem } from "@/data/faq";
+import type { FaqItem } from "@/lib/types";
 
 export function FaqAccordion({ items }: { items: FaqItem[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);

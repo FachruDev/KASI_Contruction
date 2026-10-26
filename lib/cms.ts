@@ -1,440 +1,317 @@
+import "server-only";
+import config from "@payload-config";
+import { getPayload, type Where } from "payload";
 import { cache } from "react";
-import { SERVICES, type ServiceItem } from "@/data/services";
-import { PORTFOLIO_FILTERS, PORTFOLIO_PROJECTS, type PortfolioProject } from "@/data/portfolio";
-import { FAQ_SECTIONS, type FaqSection } from "@/data/faq";
-import { TESTIMONIALS, type Testimonial } from "@/data/testimonials";
-import { LANDING_HIGHLIGHTS, LANDING_IMAGES, LANDING_STATS } from "@/data/landing";
-import { ARTICLE_CARDS, FEATURED_ARTICLE, type ArticleCard } from "@/data/articles";
+import { HOME_DEFAULTS, PAGE_DEFAULTS, SITE_DEFAULTS } from "@/cms/defaults";
+import { PUBLISHED } from "@/cms/access";
+import type { Article, ArticleCategory, FaqCategory, Media, Project, ProjectCategory } from "@/payload-types";
+import type {
+  ArticleDetail,
+  ArticleSummary,
+  Category,
+  CtaContent,
+  FaqSection,
+  HomeData,
+  Img,
+  LegalPage,
+  PageContent,
+  ProjectDetail,
+  ProjectSummary,
+  ServiceItem,
+  SiteConfig,
+  Testimonial,
+} from "@/lib/types";
 
-export const POCKETBASE_URL = (() => {
-  const value = process.env.POCKETBASE_URL ?? process.env.NEXT_PUBLIC_POCKETBASE_URL ?? "https://kasiservices.ryucode.site";
-  if (!value) return "";
+export { createWhatsAppUrl } from "@/lib/whatsapp";
+export type * from "@/lib/types";
 
-  try {
-    return new URL(value).origin.replace(/\/$/, "");
-  } catch {
-    return value.replace(/\/$/, "");
-  }
-})();
-const REVALIDATE_SECONDS = 60;
+/** Local photos used until an editor uploads replacements in the admin. */
+const STOCK = {
+  hero: { src: "/assets/images/landing/landing1.jpeg", alt: "Alat pemadat menggilas aspal baru di jalan perumahan" },
+  roller: { src: "/assets/images/landing/landing2.jpeg", alt: "Alat pemadat KASI di jalan perumahan yang baru diaspal" },
+  crew: { src: "/assets/images/services/services3.jpeg", alt: "Tim KASI meratakan lapisan aspal hotmix" },
+} satisfies Record<string, Img>;
 
-type PocketBaseRecord = Record<string, unknown> & {
-  id: string;
-  collectionName: string;
-  expand?: Record<string, PocketBaseRecord | PocketBaseRecord[]>;
-};
+const payload = cache(() => getPayload({ config }));
 
-type PocketBaseList<T> = { items: T[] };
+// ── Mapping helpers ──────────────────────────────────────────────────────────
 
-async function listRecords<T extends PocketBaseRecord>(collection: string, query = "") {
-  if (!POCKETBASE_URL) {
-    console.warn("PocketBase URL is not configured.");
-    return [] as T[];
-  }
-
-  try {
-    const response = await fetch(`${POCKETBASE_URL}/api/collections/${collection}/records?perPage=200${query}`, {
-      next: { revalidate: REVALIDATE_SECONDS, tags: [`pocketbase:${collection}`] },
-      headers: { Accept: "application/json" },
-      // A stalled CMS must not hold the whole page hostage; fall back to bundled content instead.
-      signal: AbortSignal.timeout(6000),
-    });
-
-    if (!response.ok) {
-      console.error(`PocketBase fetch failed for ${collection}: ${response.status} ${response.statusText}`);
-      return [] as T[];
-    }
-
-    return (await response.json() as PocketBaseList<T>).items;
-  } catch (error) {
-    console.error(`PocketBase fetch error for ${collection}:`, error);
-    return [] as T[];
-  }
+function image(value: number | Media | null | undefined, fallback: Img): Img;
+function image(value: number | Media | null | undefined): Img | undefined;
+function image(value: number | Media | null | undefined, fallback?: Img) {
+  if (!value || typeof value === "number" || !value.url) return fallback;
+  const position = value.focalX != null && value.focalY != null ? `${value.focalX}% ${value.focalY}%` : undefined;
+  return { src: value.url, alt: value.alt, position };
 }
 
-function firstRecord<T extends PocketBaseRecord>(records: T[]) {
-  return records[0];
+function category(value: number | ProjectCategory | ArticleCategory | null | undefined, fallback: Category): Category {
+  return value && typeof value === "object" ? { title: value.title, slug: value.slug ?? "" } : fallback;
 }
 
-function text(record: PocketBaseRecord | undefined, field: string, fallback = "") {
-  const value = record?.[field];
-  return typeof value === "string" && value.trim() ? value : fallback;
+/** Treats empty strings from the admin like missing values so defaults still apply. */
+function or(value: string | null | undefined, fallback: string) {
+  return value?.trim() ? value : fallback;
 }
 
-function number(record: PocketBaseRecord | undefined, field: string, fallback = 0) {
-  const value = record?.[field];
-  return typeof value === "number" && Number.isFinite(value) ? value : fallback;
+function rupiah(amount: number) {
+  return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(amount);
 }
 
-function bool(record: PocketBaseRecord | undefined, field: string) {
-  return record?.[field] === true;
+function initials(name: string) {
+  return name.split(/\s+/).filter(Boolean).map((part) => part[0]).join("").slice(0, 2).toUpperCase();
 }
 
-function fileUrl(record: PocketBaseRecord | undefined, field: string, fallback?: string) {
-  const filename = text(record, field);
-  if (!record || !filename) return fallback;
-
-  return `${POCKETBASE_URL}/api/files/${record.collectionName}/${record.id}/${encodeURIComponent(filename)}`;
+export function formatDate(value?: string) {
+  if (!value) return undefined;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric" }).format(date);
 }
 
-function fileUrls(record: PocketBaseRecord | undefined, field: string) {
-  const value = record?.[field];
-  const filenames = Array.isArray(value) ? value.filter((item): item is string => typeof item === "string" && Boolean(item.trim())) : typeof value === "string" && value.trim() ? [value] : [];
-  return filenames.map((filename) => `${POCKETBASE_URL}/api/files/${record?.collectionName}/${record?.id}/${encodeURIComponent(filename)}`);
-}
-
-function stripHtml(value: string) {
-  return value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-}
-
-function formatRupiah(value: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
-export type SiteConfig = {
-  companyName: string;
-  siteTitle: string;
-  siteDescription: string;
-  footerSubtitle: string;
-  copyright: string;
-  logoUrl?: string;
-  faviconUrl?: string;
-  seoImageUrl?: string;
-  whatsappPhone: string;
-  whatsappMessage: string;
-  email: string;
-  address: string;
-  mapsEmbedUrl: string;
-  businessHours: Array<{ dayLabel: string; openTime: string; closeTime: string }>;
-};
-
-const fallbackSiteConfig: SiteConfig = {
-  companyName: "KASI",
-  siteTitle: "KASI | Jasa Pengaspalan Profesional Jabodetabek",
-  siteDescription: "Jasa pengaspalan profesional untuk jalan, perumahan, dan area usaha di Jabodetabek.",
-  footerSubtitle: "Solusi pengaspalan yang rapi, kuat, dan dapat diandalkan.",
-  copyright: "© 2026 KASI. All rights reserved.",
-  whatsappPhone: "6282123927180",
-  whatsappMessage: "Halo, saya ingin konsultasi terkait jasa pengaspalan. Mohon informasinya.",
-  email: "customerservice@kasi.com",
-  address: "Jl. H Appandi kp. Kaum Pandak RT 002/01, Kabupaten Bogor, Jawa Barat No. rumah 49, 16913",
-  mapsEmbedUrl: "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d115450.87145564539!2d106.815021!3d-6.5244088!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xa49178e0b914f503%3A0x7c84bd8b82250d61!2sJasa%20Pengaspalan%20Bogor!5e1!3m2!1sid!2sid!4v1787557793233!5m2!1sid!2sid",
-  businessHours: [
-    { dayLabel: "Senin - Jumat", openTime: "07:00", closeTime: "19:00" },
-    { dayLabel: "Sabtu", openTime: "08:00", closeTime: "19:00" },
-    { dayLabel: "Minggu", openTime: "Tutup", closeTime: "" },
-  ],
-};
+// ── Globals ──────────────────────────────────────────────────────────────────
 
 export const getSiteConfig = cache(async (): Promise<SiteConfig> => {
-  const [profiles, contacts, businessHours] = await Promise.all([
-    listRecords<PocketBaseRecord>("site_profile"),
-    listRecords<PocketBaseRecord>("contact_info"),
-    listRecords<PocketBaseRecord>("business_hours", "&sort=sort_order"),
-  ]);
-  const profile = firstRecord(profiles);
-  const contact = firstRecord(contacts);
-
+  const doc = await (await payload()).findGlobal({ slug: "site-settings", depth: 1 });
   return {
-    companyName: text(profile, "company_name", fallbackSiteConfig.companyName),
-    siteTitle: text(profile, "site_title", fallbackSiteConfig.siteTitle),
-    siteDescription: text(profile, "site_description", fallbackSiteConfig.siteDescription),
-    footerSubtitle: text(profile, "footer_subtitle", fallbackSiteConfig.footerSubtitle),
-    copyright: text(profile, "copyright", fallbackSiteConfig.copyright),
-    logoUrl: fileUrl(profile, "logo"),
-    faviconUrl: fileUrl(profile, "favicon"),
-    seoImageUrl: fileUrl(profile, "seo_image"),
-    whatsappPhone: text(contact, "whatsapp_phone", fallbackSiteConfig.whatsappPhone),
-    whatsappMessage: text(contact, "whatsapp_message", fallbackSiteConfig.whatsappMessage),
-    email: text(contact, "email", fallbackSiteConfig.email),
-    address: text(contact, "address", fallbackSiteConfig.address),
-    mapsEmbedUrl: text(contact, "maps_embed_url", fallbackSiteConfig.mapsEmbedUrl),
-    businessHours: businessHours.length
-      ? businessHours.map((item) => ({
-          dayLabel: text(item, "day_label"),
-          openTime: text(item, "open_time"),
-          closeTime: text(item, "close_time"),
-        }))
-      : fallbackSiteConfig.businessHours,
+    companyName: or(doc.companyName, SITE_DEFAULTS.companyName),
+    legalName: or(doc.legalName, SITE_DEFAULTS.legalName),
+    footerTagline: or(doc.footerTagline, SITE_DEFAULTS.footerTagline),
+    copyright: or(doc.copyright, SITE_DEFAULTS.copyright),
+    metaTitle: or(doc.metaTitle, SITE_DEFAULTS.metaTitle),
+    metaDescription: or(doc.metaDescription, SITE_DEFAULTS.metaDescription),
+    ogImage: image(doc.ogImage)?.src,
+    favicon: image(doc.favicon)?.src,
+    whatsappPhone: or(doc.whatsappPhone, SITE_DEFAULTS.whatsappPhone),
+    whatsappMessage: or(doc.whatsappMessage, SITE_DEFAULTS.whatsappMessage),
+    email: or(doc.email, SITE_DEFAULTS.email),
+    address: or(doc.address, SITE_DEFAULTS.address),
+    mapsEmbedUrl: or(doc.mapsEmbedUrl, SITE_DEFAULTS.mapsEmbedUrl),
+    businessHours: doc.businessHours?.length
+      ? doc.businessHours.map((row) => ({ label: row.label, open: row.open ?? "", close: row.close ?? "", closed: Boolean(row.closed) }))
+      : SITE_DEFAULTS.businessHours,
   };
 });
-
-export type HomeData = {
-  hero: { eyebrow: string; title: string; subtitle: string; image: string; imageAlt: string; ctaLabel: string; ctaMessage: string };
-  stats: Array<{ value: string; label: string }>;
-  features: Array<{ icon: string; title: string; description: string }>;
-  cta: { title: string; subtitle: string; ctaLabel: string; ctaMessage: string };
-};
 
 export const getHomeData = cache(async (): Promise<HomeData> => {
-  const [heroes, stats, features, ctas] = await Promise.all([
-    listRecords<PocketBaseRecord>("home_hero"),
-    listRecords<PocketBaseRecord>("home_stats", "&sort=sort_order"),
-    listRecords<PocketBaseRecord>("home_features", "&sort=sort_order"),
-    listRecords<PocketBaseRecord>("home_cta"),
-  ]);
-  const hero = firstRecord(heroes);
-  const cta = firstRecord(ctas);
-
+  const doc = await (await payload()).findGlobal({ slug: "home-page", depth: 1 });
+  const d = HOME_DEFAULTS;
   return {
     hero: {
-      eyebrow: text(hero, "eyebrow"),
-      title: text(hero, "title", "Jasa Pengaspalan Profesional Jabodetabek"),
-      subtitle: text(hero, "subtitle", "Solusi pengaspalan untuk jalan lingkungan, perumahan, hingga kebutuhan industri. KASI - Kaum Aspal Solusi Indonesia hadir dengan pengerjaan yang rapi, material berkualitas, dan proses kerja yang dapat dipercaya."),
-      image: fileUrl(hero, "image", LANDING_IMAGES.hero) ?? LANDING_IMAGES.hero,
-      imageAlt: text(hero, "image_alt", "Pekerjaan pengaspalan KASI"),
-      ctaLabel: text(hero, "cta_label", "Konsultasi Gratis"),
-      ctaMessage: text(hero, "cta_message", fallbackSiteConfig.whatsappMessage),
+      eyebrow: or(doc.hero?.eyebrow, d.hero.eyebrow),
+      title: or(doc.hero?.title, d.hero.title),
+      subtitle: or(doc.hero?.subtitle, d.hero.subtitle),
+      image: image(doc.hero?.image, STOCK.hero),
+      ctaLabel: or(doc.hero?.ctaLabel, d.hero.ctaLabel),
+      whatsappMessage: doc.hero?.whatsappMessage ?? "",
     },
-    stats: stats.length ? stats.map((item) => ({ value: text(item, "value"), label: text(item, "label") })) : [...LANDING_STATS],
-    features: features.length
-      ? features.map((item) => ({ icon: text(item, "icon", "verified"), title: text(item, "title"), description: text(item, "description") }))
-      : Object.values(LANDING_HIGHLIGHTS).map((item) => ({ ...item })),
+    stats: doc.stats?.length ? doc.stats.map(({ value, label }) => ({ value, label })) : d.stats,
+    about: {
+      eyebrow: or(doc.about?.eyebrow, d.about.eyebrow),
+      note: or(doc.about?.note, d.about.note),
+      statement: or(doc.about?.statement, d.about.statement),
+      primaryImage: image(doc.about?.primaryImage, STOCK.roller),
+      secondaryImage: image(doc.about?.secondaryImage, STOCK.crew),
+      caption: or(doc.about?.caption, d.about.caption),
+    },
+    services: { eyebrow: or(doc.services?.eyebrow, d.services.eyebrow), heading: or(doc.services?.heading, d.services.heading) },
+    highlights: {
+      eyebrow: or(doc.highlights?.eyebrow, d.highlights.eyebrow),
+      heading: or(doc.highlights?.heading, d.highlights.heading),
+      description: or(doc.highlights?.description, d.highlights.description),
+      image: image(doc.highlights?.image, STOCK.hero),
+      imageCaption: or(doc.highlights?.imageCaption, d.highlights.imageCaption),
+      items: doc.highlights?.items?.length
+        ? doc.highlights.items.map((item) => ({ icon: item.icon ?? "verified", title: item.title, description: item.description }))
+        : d.highlights.items,
+    },
+    portfolio: { eyebrow: or(doc.portfolio?.eyebrow, d.portfolio.eyebrow), heading: or(doc.portfolio?.heading, d.portfolio.heading) },
     cta: {
-      title: text(cta, "title", "Siap Mulai Proyek Pengaspalan Anda?"),
-      subtitle: text(cta, "subtitle", "Ceritakan kebutuhan pengaspalan Anda kepada kami. Tim KASI siap membantu memberikan konsultasi yang sesuai dengan kebutuhan proyek Anda."),
-      ctaLabel: text(cta, "cta_label", "Konsultasi via WhatsApp"),
-      ctaMessage: text(cta, "cta_message", fallbackSiteConfig.whatsappMessage),
+      title: or(doc.cta?.title, d.cta.title),
+      subtitle: or(doc.cta?.subtitle, d.cta.subtitle),
+      buttonLabel: or(doc.cta?.buttonLabel, d.cta.buttonLabel),
+      whatsappMessage: doc.cta?.whatsappMessage ?? undefined,
+      image: image(doc.cta?.image, STOCK.roller),
     },
   };
 });
 
-export const getServices = cache(async (): Promise<readonly ServiceItem[]> => {
-  const [services, benefits] = await Promise.all([
-    listRecords<PocketBaseRecord>("services", "&sort=sort_order"),
-    listRecords<PocketBaseRecord>("service_benefits", "&sort=sort_order"),
-  ]);
+export const getPageContent = cache(async (): Promise<PageContent> => {
+  const doc = await (await payload()).findGlobal({ slug: "page-content", depth: 1 });
+  const d = PAGE_DEFAULTS;
+  const header = (value: { eyebrow?: string | null; title?: string | null; description?: string | null } | undefined, fallback: { eyebrow: string; title: string; description: string }) => ({
+    eyebrow: or(value?.eyebrow, fallback.eyebrow),
+    title: or(value?.title, fallback.title),
+    description: or(value?.description, fallback.description),
+  });
+  const cta: CtaContent = {
+    title: or(doc.cta?.title, d.cta.title),
+    subtitle: or(doc.cta?.subtitle, d.cta.subtitle),
+    buttonLabel: or(doc.cta?.buttonLabel, d.cta.buttonLabel),
+    image: image(doc.cta?.image, STOCK.roller),
+  };
 
-  if (!services.length) return SERVICES;
-
-  return services.map((service) => ({
-    title: text(service, "title"),
-    description: text(service, "description"),
-    image: fileUrl(service, "image") ?? "/assets/images/services/services1.jpeg",
-    imageAlt: text(service, "image_alt", text(service, "title")),
-    benefits: benefits.filter((benefit) => benefit.service === service.id).map((benefit) => text(benefit, "title")),
-    idealFor: text(service, "ideal_for"),
-    price: formatRupiah(number(service, "price")),
-  }));
+  return {
+    services: {
+      ...header(doc.services, d.services),
+      priceNote: or(doc.services?.priceNote, d.services.priceNote),
+      processEyebrow: or(doc.services?.processEyebrow, d.services.processEyebrow),
+      processHeading: or(doc.services?.processHeading, d.services.processHeading),
+      processSteps: doc.services?.processSteps?.length ? doc.services.processSteps.map(({ title, description }) => ({ title, description })) : d.services.processSteps,
+    },
+    portfolio: header(doc.portfolio, d.portfolio),
+    testimonials: header(doc.testimonials, d.testimonials),
+    articles: header(doc.articles, d.articles),
+    faq: {
+      ...header(doc.faq, d.faq),
+      supportTitle: or(doc.faq?.supportTitle, d.faq.supportTitle),
+      supportText: or(doc.faq?.supportText, d.faq.supportText),
+    },
+    contact: header(doc.contact, d.contact),
+    cta,
+  };
 });
 
-export type PortfolioCategory = { title: string; slug: string };
+// ── Collections ──────────────────────────────────────────────────────────────
 
-export type CmsPortfolio = {
-  slug: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  coverImage: string;
-  coverImageAlt: string;
-  gallery: string[];
-  beforeImage?: string;
-  afterImage?: string;
-  category: PortfolioCategory;
-  location?: string;
-  area?: number;
-  year?: number;
-};
+const UNIT_LABEL: Record<string, string> = { m2: "/m²", project: "/proyek" };
 
-function portfolioCategory(portfolio: PocketBaseRecord): PortfolioCategory {
-  const category = portfolio.expand?.category;
-  const categoryRecord = Array.isArray(category) ? category[0] : category;
-  return { title: text(categoryRecord, "title", "Portfolio"), slug: text(categoryRecord, "slug", "portfolio") };
-}
-
-function toCmsPortfolio(portfolio: PocketBaseRecord): CmsPortfolio {
-  return {
-    slug: text(portfolio, "slug"),
-    title: text(portfolio, "title"),
-    subtitle: text(portfolio, "subtitle"),
-    description: text(portfolio, "description"),
-    coverImage: fileUrl(portfolio, "cover_image") ?? "/assets/images/landing/landing2.jpeg",
-    coverImageAlt: text(portfolio, "cover_image_alt", text(portfolio, "title")),
-    gallery: fileUrls(portfolio, "gallery"),
-    beforeImage: fileUrl(portfolio, "before_image"),
-    afterImage: fileUrl(portfolio, "after_image"),
-    category: portfolioCategory(portfolio),
-    location: text(portfolio, "location") || undefined,
-    area: number(portfolio, "area_m2") || undefined,
-    year: number(portfolio, "year") || undefined,
-  };
-}
-
-export const getPortfolio = cache(async (): Promise<{ categories: readonly PortfolioCategory[]; projects: readonly PortfolioProject[] }> => {
-  const [categories, portfolios] = await Promise.all([
-    listRecords<PocketBaseRecord>("portfolio_categories", "&sort=sort_order"),
-    listRecords<PocketBaseRecord>("portfolios", "&sort=sort_order&expand=category"),
-  ]);
-
-  if (!portfolios.length) {
+export const getServices = cache(async (): Promise<ServiceItem[]> => {
+  const { docs } = await (await payload()).find({ collection: "services", where: PUBLISHED, sort: "_order", depth: 1, limit: 50, draft: false });
+  return docs.map((doc) => {
+    const quoted = doc.price?.unit === "quote" || doc.price?.amount == null;
     return {
-      categories: PORTFOLIO_FILTERS.slice(1).map((title) => ({ title, slug: title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") })),
-      projects: PORTFOLIO_PROJECTS,
+      slug: doc.slug ?? "",
+      title: doc.title,
+      summary: doc.summary,
+      image: image(doc.image, STOCK.crew),
+      benefits: doc.benefits?.map((benefit) => benefit.text) ?? [],
+      idealFor: doc.idealFor ?? "",
+      price: quoted ? undefined : rupiah(doc.price!.amount!),
+      priceUnit: quoted ? undefined : UNIT_LABEL[doc.price?.unit ?? "m2"],
+      featured: Boolean(doc.featured),
     };
-  }
+  });
+});
 
+function toProjectSummary(doc: Project): ProjectSummary {
   return {
-    categories: categories.map((category) => ({ title: text(category, "title"), slug: text(category, "slug") })),
-    projects: portfolios.map((portfolio, index) => {
-      const item = toCmsPortfolio(portfolio);
-      const area = item.area;
-      const year = item.year;
+    slug: doc.slug ?? "",
+    title: doc.title,
+    summary: doc.summary,
+    image: image(doc.cover, STOCK.roller),
+    category: category(doc.category, { title: "Portfolio", slug: "portfolio" }),
+    location: doc.location ?? undefined,
+    area: doc.areaM2 ? `${doc.areaM2.toLocaleString("id-ID")} m²` : undefined,
+    year: doc.year ? String(doc.year) : undefined,
+    beforeAfter: Boolean(doc.beforeAfter?.before && doc.beforeAfter?.after),
+  };
+}
 
-      return {
-        slug: item.slug,
-        title: item.title,
-        description: stripHtml(item.description || item.subtitle),
-        image: item.coverImage,
-        imageAlt: item.coverImageAlt,
-        categories: [item.category.title],
-        categorySlugs: [item.category.slug],
-        location: item.location,
-        area: area ? `${area.toLocaleString("id-ID")} m²` : undefined,
-        year: year ? String(year) : undefined,
-        beforeAfter: Boolean(item.beforeImage && item.afterImage),
-        featured: bool(portfolio, "is_featured") && index === 0 ? "primary" : undefined,
-        meta: [area ? `${area.toLocaleString("id-ID")} m²` : "", year ? String(year) : ""].filter(Boolean).join(" • "),
-      };
-    }),
+export const getPortfolio = cache(async (): Promise<{ categories: Category[]; projects: ProjectSummary[] }> => {
+  const client = await payload();
+  const [categories, projects] = await Promise.all([
+    client.find({ collection: "project-categories", sort: "_order", limit: 50 }),
+    client.find({ collection: "projects", where: PUBLISHED, sort: "_order", depth: 1, limit: 200, draft: false }),
+  ]);
+  const used = new Set(projects.docs.map((doc) => (typeof doc.category === "object" ? doc.category?.id : doc.category)));
+  return {
+    // Hide categories with nothing published so visitors never land on an empty filter.
+    categories: categories.docs.filter((doc) => used.has(doc.id)).map((doc) => ({ title: doc.title, slug: doc.slug ?? "" })),
+    projects: projects.docs.map(toProjectSummary),
   };
 });
 
-export const getPortfolioBySlug = cache(async (slug: string): Promise<CmsPortfolio | null> => {
-  const records = await listRecords<PocketBaseRecord>("portfolios", `&filter=${encodeURIComponent(`slug = \"${slug.replace(/\"/g, "\\\\\"")}\"`)}&expand=category`);
-  const portfolio = firstRecord(records);
-  return portfolio ? toCmsPortfolio(portfolio) : null;
+/** Featured projects first, topped up with the rest so the home page always shows a full set. */
+export const getShowcaseProjects = cache(async (count = 4): Promise<ProjectSummary[]> => {
+  const { projects } = await getPortfolio();
+  const featuredSlugs = new Set(
+    (await (await payload()).find({ collection: "projects", where: { and: [PUBLISHED, { featured: { equals: true } }] }, sort: "_order", limit: count, depth: 0, draft: false })).docs.map(
+      (doc) => doc.slug,
+    ),
+  );
+  return [...projects.filter((project) => featuredSlugs.has(project.slug)), ...projects.filter((project) => !featuredSlugs.has(project.slug))].slice(0, count);
+});
+
+export const getProjectBySlug = cache(async (slug: string): Promise<ProjectDetail | null> => {
+  const { docs } = await (await payload()).find({ collection: "projects", where: { and: [PUBLISHED, { slug: { equals: slug } }] }, depth: 1, limit: 1, draft: false });
+  const doc = docs[0];
+  if (!doc) return null;
+  return {
+    ...toProjectSummary(doc),
+    body: (doc.body as ProjectDetail["body"]) ?? null,
+    gallery: (doc.gallery ?? []).map((item) => image(item)).filter((item): item is Img => Boolean(item)),
+    before: image(doc.beforeAfter?.before),
+    after: image(doc.beforeAfter?.after),
+  };
+});
+
+export const getTestimonials = cache(async (): Promise<Testimonial[]> => {
+  const { docs } = await (await payload()).find({ collection: "testimonials", where: PUBLISHED, sort: "_order", depth: 1, limit: 100, draft: false });
+  return docs.map((doc) => ({
+    name: doc.name,
+    role: doc.role ?? "",
+    service: doc.service ?? doc.role ?? "",
+    rating: doc.rating,
+    quote: doc.quote,
+    initials: initials(doc.name),
+    avatar: image(doc.avatar),
+    projectImage: image(doc.projectImage),
+  }));
 });
 
 export const getFaqSections = cache(async (): Promise<FaqSection[]> => {
+  const client = await payload();
   const [categories, faqs] = await Promise.all([
-    listRecords<PocketBaseRecord>("faq_categories", "&sort=sort_order"),
-    listRecords<PocketBaseRecord>("faqs", "&sort=sort_order&expand=category"),
+    client.find({ collection: "faq-categories", sort: "_order", limit: 50 }),
+    client.find({ collection: "faqs", where: PUBLISHED, sort: "_order", depth: 0, limit: 500, draft: false }),
   ]);
-  if (!categories.length || !faqs.length) return FAQ_SECTIONS;
-
-  return categories.map((category) => ({
-    title: text(category, "title"),
-    items: faqs
-      .filter((faq) => faq.category === category.id)
-      .map((faq) => ({ question: text(faq, "title"), answer: stripHtml(text(faq, "description")) })),
-  })).filter((section) => section.items.length);
+  return categories.docs
+    .map((cat: FaqCategory) => ({
+      title: cat.title,
+      items: faqs.docs.filter((faq) => (typeof faq.category === "object" ? faq.category.id : faq.category) === cat.id).map(({ question, answer }) => ({ question, answer })),
+    }))
+    .filter((section) => section.items.length);
 });
 
-export const getTestimonials = cache(async (): Promise<readonly Testimonial[]> => {
-  const testimonials = await listRecords<PocketBaseRecord>("testimonials", "&sort=sort_order");
-  if (!testimonials.length) return TESTIMONIALS;
-
-  return testimonials.map((testimonial) => ({
-    name: text(testimonial, "name"),
-    service: text(testimonial, "service_label", text(testimonial, "company_name")),
-    rating: Number(text(testimonial, "rating", "5")),
-    quote: text(testimonial, "message"),
-    avatar: fileUrl(testimonial, "profile_image")
-      ? { src: fileUrl(testimonial, "profile_image")!, alt: text(testimonial, "name") }
-      : undefined,
-    initials: text(testimonial, "name").split(" ").map((part) => part[0]).join("").slice(0, 2),
-    projectImage: fileUrl(testimonial, "testimonial_image")
-      ? { src: fileUrl(testimonial, "testimonial_image")!, alt: `Testimoni ${text(testimonial, "name")}` }
-      : undefined,
-  }));
-});
-
-export type CmsArticle = {
-  title: string;
-  slug: string;
-  category: string;
-  excerpt: string;
-  content: string;
-  image?: string;
-  imageAlt: string;
-  publishedAt?: string;
-  featured: boolean;
-};
-
-function articleCategory(article: PocketBaseRecord) {
-  const category = article.expand?.category;
-  const categoryRecord = Array.isArray(category) ? category[0] : category;
-  return text(categoryRecord, "title", "Artikel");
-}
-
-function toCmsArticle(article: PocketBaseRecord): CmsArticle {
+function toArticleSummary(doc: Article): ArticleSummary {
   return {
-    title: text(article, "title"),
-    slug: text(article, "slug"),
-    category: articleCategory(article),
-    excerpt: text(article, "excerpt"),
-    content: text(article, "content"),
-    image: fileUrl(article, "cover_image"),
-    imageAlt: text(article, "cover_image_alt", text(article, "title")),
-    publishedAt: text(article, "published_at") || undefined,
-    featured: bool(article, "is_featured"),
+    slug: doc.slug ?? "",
+    href: `/articles/${doc.slug}`,
+    title: doc.title,
+    category: category(doc.category, { title: "Artikel", slug: "artikel" }).title,
+    excerpt: doc.excerpt,
+    image: image(doc.cover),
+    publishedAt: doc.publishedAt ?? undefined,
   };
 }
 
-function formatDate(value?: string) {
-  if (!value) return undefined;
-  const date = new Date(value);
-  return Number.isNaN(date.getTime())
-    ? undefined
-    : new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short", year: "numeric" }).format(date);
-}
-
-function toArticleCard(article: CmsArticle, index: number): ArticleCard {
-  const tones: ArticleCard["tone"][] = ["primary", "tertiary", "secondary"];
+export const getArticles = cache(async (): Promise<{ featured: ArticleSummary | null; articles: ArticleSummary[] }> => {
+  const { docs } = await (await payload()).find({ collection: "articles", where: PUBLISHED, sort: "-publishedAt", depth: 1, limit: 200, draft: false });
+  if (!docs.length) return { featured: null, articles: [] };
+  const featuredIndex = Math.max(0, docs.findIndex((doc) => doc.featured));
   return {
-    title: article.title,
-    category: article.category,
-    description: article.excerpt,
-    image: article.image,
-    imageAlt: article.imageAlt,
-    tone: tones[index % tones.length],
-    href: `/articles/${article.slug}`,
-  };
-}
-
-export const getArticles = cache(async (): Promise<{ featured: ArticleCard; articles: readonly ArticleCard[] }> => {
-  const records = await listRecords<PocketBaseRecord>("articles", "&sort=-published_at&expand=category");
-  if (!records.length) return { featured: FEATURED_ARTICLE, articles: ARTICLE_CARDS };
-
-  const articles = records.map(toCmsArticle);
-  const featuredIndex = articles.findIndex((article) => article.featured);
-  const selectedIndex = featuredIndex >= 0 ? featuredIndex : 0;
-  const featured = toArticleCard(articles[selectedIndex], selectedIndex);
-
-  return {
-    featured,
-    articles: articles.filter((_, index) => index !== selectedIndex).map(toArticleCard),
+    featured: toArticleSummary(docs[featuredIndex]),
+    articles: docs.filter((_, index) => index !== featuredIndex).map(toArticleSummary),
   };
 });
 
-export const getArticleBySlug = cache(async (slug: string): Promise<CmsArticle | null> => {
-  const records = await listRecords<PocketBaseRecord>("articles", `&filter=${encodeURIComponent(`slug = \"${slug.replace(/\"/g, "\\\\\"")}\"`)}&expand=category`);
-  const article = firstRecord(records);
-  return article ? toCmsArticle(article) : null;
+export const getArticleBySlug = cache(async (slug: string): Promise<ArticleDetail | null> => {
+  const { docs } = await (await payload()).find({ collection: "articles", where: { and: [PUBLISHED, { slug: { equals: slug } }] }, depth: 1, limit: 1, draft: false });
+  const doc = docs[0];
+  return doc ? { ...toArticleSummary(doc), content: doc.content as ArticleDetail["content"] } : null;
 });
 
-export type CmsLegalPage = { title: string; slug: string; content: string };
-
-export const getLegalPage = cache(async (slug: string): Promise<CmsLegalPage | null> => {
-  const records = await listRecords<PocketBaseRecord>("legal_pages", `&filter=${encodeURIComponent(`slug = \"${slug.replace(/\"/g, "\\\\\"")}\"`)}`);
-  const page = firstRecord(records);
-  return page ? { title: text(page, "title"), slug: text(page, "slug"), content: text(page, "content") } : null;
+export const getLegalPage = cache(async (page: "privacy-policy" | "terms-of-service"): Promise<LegalPage | null> => {
+  const { docs } = await (await payload()).find({ collection: "legal-pages", where: { and: [PUBLISHED, { page: { equals: page } }] }, limit: 1, draft: false });
+  const doc = docs[0];
+  return doc ? { title: doc.title, content: doc.content as LegalPage["content"] } : null;
 });
 
 export const getContentSlugs = cache(async () => {
-  const [portfolios, articles] = await Promise.all([
-    listRecords<PocketBaseRecord>("portfolios", "&fields=slug"),
-    listRecords<PocketBaseRecord>("articles", "&fields=slug"),
-  ]);
+  const client = await payload();
+  const select = { where: PUBLISHED as Where, depth: 0, limit: 1000, draft: false, select: { slug: true } } as const;
+  const [projects, articles] = await Promise.all([client.find({ collection: "projects", ...select }), client.find({ collection: "articles", ...select })]);
   return {
-    portfolios: portfolios.map((item) => text(item, "slug")).filter(Boolean),
-    articles: articles.map((item) => text(item, "slug")).filter(Boolean),
+    projects: projects.docs.map((doc) => doc.slug).filter((slug): slug is string => Boolean(slug)),
+    articles: articles.docs.map((doc) => doc.slug).filter((slug): slug is string => Boolean(slug)),
   };
 });
-
-export { formatDate };
-export { createWhatsAppUrl } from "@/lib/whatsapp";

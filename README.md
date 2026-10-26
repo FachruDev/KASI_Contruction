@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# KASI — Website & CMS
 
-## Getting Started
+Website KASI (Kaum Aspal Solusi Indonesia) dan panel admin kontennya dalam satu aplikasi Next.js 16 + [Payload CMS 3](https://payloadcms.com).
 
-First, run the development server:
+- Website: `/`
+- Panel admin: `/admin`
+- Database: Neon Postgres
+- File & gambar: Neon Object Storage (S3-compatible), disajikan lewat `/api/media/file/…`
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Setup lokal
+
+1. Node.js **24.22.1+** dan Bun.
+2. Salin `.env.example` ke `.env`, lalu isi kredensial Neon dan `PAYLOAD_SECRET`.
+3. Instal dependensi, jalankan migrasi, dan isi konten awal:
+
+   ```bash
+   bun install
+   bun run migrate
+   bun run seed
+   bun run dev
+   ```
+
+4. Buka `http://localhost:3000/admin` dan buat akun pertama. Akun pertama otomatis menjadi **Admin**.
+
+## Struktur
+
+```
+app/(site)/        halaman website
+app/(payload)/     route admin & REST API Payload (file generated, jangan diubah manual)
+cms/collections/   skema konten: Layanan, Portfolio, Artikel, Testimoni, FAQ, Halaman Legal, Media, Inquiry, Pengguna
+cms/globals/       Pengaturan Situs, Beranda, Halaman Lainnya
+cms/migrations/    migrasi database (di-commit)
+lib/cms.ts         semua query konten untuk halaman (Local API Payload)
+lib/types.ts       tipe data yang dipakai komponen
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Mengubah skema
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Skema tidak di-push otomatis ke database. Setelah mengubah file di `cms/`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+bun run generate:types
+bun run migrate:create nama-perubahan
+bun run migrate
+```
 
-## Learn More
+Commit file migrasi yang dihasilkan bersama perubahan skemanya.
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy ke Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Build command: `bun run ci` (menjalankan `payload migrate` lalu `next build`).
+- Environment variables: semua isi `.env.example`, untuk Production dan Preview.
+- Gunakan branch database Neon terpisah untuk Preview agar migrasi preview tidak menyentuh data production.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Catatan
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Perintah Payload memakai `--use-swc` karena loader `tsx` bawaannya bermasalah di Windows.
+- Setiap konten disimpan dari admin, seluruh halaman website diperbarui otomatis (revalidasi on-demand).

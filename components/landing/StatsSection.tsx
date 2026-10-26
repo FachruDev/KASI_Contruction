@@ -1,6 +1,6 @@
 import { CountUp } from "@/components/motion/CountUp";
 import { Reveal } from "@/components/motion/Reveal";
-import type { HomeData } from "@/lib/cms";
+import type { HomeData } from "@/lib/types";
 
 export function StatsSection({ stats }: { stats: HomeData["stats"] }) {
   return (

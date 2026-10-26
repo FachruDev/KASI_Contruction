@@ -4,21 +4,21 @@ import { Icon } from "@/components/ui/Icon";
 import { ParallaxImage } from "@/components/motion/ParallaxImage";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealHeading } from "@/components/motion/RevealHeading";
-import type { HomeData } from "@/lib/cms";
+import type { HomeData } from "@/lib/types";
 
-export function HighlightsSection({ features }: { features: HomeData["features"] }) {
+export function HighlightsSection({ highlights }: { highlights: HomeData["highlights"] }) {
   return (
     <section className="mx-auto max-w-[88rem] px-4 py-28 md:px-10 md:py-44">
       <div className="mb-16 grid gap-8 md:mb-24 md:grid-cols-12 md:items-end">
         <div className="md:col-span-8">
           <Reveal y={20}>
-            <Eyebrow>Kenapa KASI</Eyebrow>
+            <Eyebrow>{highlights.eyebrow}</Eyebrow>
           </Reveal>
-          <RevealHeading className="mt-6 text-[clamp(2.5rem,5.5vw,5.5rem)] leading-[0.92] font-medium tracking-[-0.055em]" text="Dikerjakan dengan *standar* yang bisa Anda cek." />
+          <RevealHeading className="mt-6 text-[clamp(2.5rem,5.5vw,5.5rem)] leading-[0.92] font-medium tracking-[-0.055em]" text={highlights.heading} />
         </div>
         <Reveal className="md:col-span-4" delay={0.2} y={24}>
           <p className="max-w-sm text-lg leading-relaxed text-ink/60">
-            Dari survei lokasi sampai pemadatan terakhir, setiap tahap kami kerjakan terencana, transparan, dan rapi.
+            {highlights.description}
           </p>
         </Reveal>
       </div>
@@ -27,23 +27,24 @@ export function HighlightsSection({ features }: { features: HomeData["features"]
         <Reveal className="md:col-span-7 md:row-span-3">
           <Bezel className="h-full" innerClassName="relative min-h-[28rem]">
             <ParallaxImage
-              alt="Pekerja KASI menyebarkan material aspal"
+              alt={highlights.image.alt}
               className="absolute inset-0"
+              position={highlights.image.position}
               sizes="(min-width: 768px) 58vw, 100vw"
               speed={0.1}
-              src="/assets/images/landing/landing1.jpeg"
+              src={highlights.image.src}
             />
             <div aria-hidden="true" className="absolute inset-0 bg-linear-to-t from-ink/85 via-ink/10 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-7 text-bone md:p-10">
               <p className="font-mono text-[10px] tracking-[0.22em] text-bone/60 uppercase">Di lapangan</p>
               <p className="mt-3 max-w-md text-[clamp(1.5rem,2.4vw,2.25rem)] leading-[1.1] font-medium tracking-[-0.04em]">
-                Alat pemadat, tenaga terlatih, dan material yang disesuaikan tiap proyek.
+                {highlights.imageCaption}
               </p>
             </div>
           </Bezel>
         </Reveal>
 
-        {features.map((feature, index) => (
+        {highlights.items.map((feature, index) => (
           <Reveal className="md:col-span-5" delay={0.1 + index * 0.1} key={feature.title}>
             <Bezel className="h-full" innerClassName="flex h-full flex-col gap-8 p-7 md:p-8">
               <div className="flex items-center justify-between">

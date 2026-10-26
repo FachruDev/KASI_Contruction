@@ -1,4 +1,4 @@
-import type { Testimonial } from "@/data/testimonials";
+import type { Testimonial } from "@/lib/types";
 import { TestimonialCard } from "@/components/testimonials/TestimonialCard";
 import { TestimonialRating } from "@/components/testimonials/TestimonialRating";
 import { Reveal } from "@/components/motion/Reveal";
@@ -20,7 +20,7 @@ export function TestimonialsGrid({ testimonials }: { testimonials: readonly Test
           <Reveal className="mt-12 flex items-center gap-4" y={20}>
             <span aria-hidden="true" className="h-px w-12 bg-signal" />
             <p className="text-bone/80">
-              {featured.name} <span className="text-bone/40">— {featured.service}</span>
+              {featured.name} {featured.role || featured.service ? <span className="text-bone/40">— {featured.role || featured.service}</span> : null}
             </p>
           </Reveal>
         </div>

@@ -1,5 +1,5 @@
 import { CheckIcon } from "@phosphor-icons/react/ssr";
-import type { ServiceItem } from "@/data/services";
+import type { ServiceItem } from "@/lib/types";
 import { Button } from "@/components/ui/Button";
 import { ParallaxImage } from "@/components/motion/ParallaxImage";
 import { Reveal } from "@/components/motion/Reveal";
@@ -13,18 +13,22 @@ export function ServiceCard({ service, index }: { service: ServiceItem; index: n
       <Reveal className={`md:col-span-7 ${flipped ? "md:order-2" : ""}`}>
         <div className="rounded-[2rem] bg-ink/[0.035] p-1.5 hairline">
           <ParallaxImage
-            alt={service.imageAlt}
+            alt={service.image.alt}
             className="aspect-[4/3] rounded-[calc(2rem-0.375rem)] bg-bone-deep"
+            position={service.image.position}
             sizes="(min-width: 768px) 58vw, 100vw"
-            src={service.image}
+            src={service.image.src}
           />
         </div>
       </Reveal>
 
       <Reveal className={`flex flex-col md:col-span-5 ${flipped ? "md:order-1" : ""}`} delay={0.15}>
-        <span className="font-mono text-[11px] tracking-[0.22em] text-ink/40">0{index + 1} / Layanan</span>
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-[11px] tracking-[0.22em] text-ink/40">0{index + 1} / Layanan</span>
+          {service.featured ? <span className="rounded-full bg-signal px-2.5 py-0.5 text-[12px] font-medium text-ink">Rekomendasi</span> : null}
+        </div>
         <h2 className="mt-5 text-[clamp(2rem,3.6vw,3.25rem)] leading-[0.98] font-medium tracking-[-0.05em]">{service.title}</h2>
-        <p className="mt-5 text-lg leading-relaxed text-ink/60">{service.description}</p>
+        <p className="mt-5 text-lg leading-relaxed text-ink/60">{service.summary}</p>
 
         {service.benefits.length ? (
           <ul className="mt-8 space-y-3">
@@ -48,10 +52,10 @@ export function ServiceCard({ service, index }: { service: ServiceItem; index: n
 
         <div className="mt-auto flex flex-wrap items-end justify-between gap-6 pt-10">
           <div>
-            <p className="font-mono text-[10px] tracking-[0.2em] text-ink/40 uppercase">Mulai dari</p>
+            <p className="font-mono text-[10px] tracking-[0.2em] text-ink/40 uppercase">{service.price ? "Mulai dari" : "Harga"}</p>
             <p className="mt-1 text-4xl font-medium tracking-[-0.05em]">
-              {service.price}
-              <span className="text-base text-ink/45">/m²</span>
+              {service.price ?? "Sesuai penawaran"}
+              {service.priceUnit ? <span className="text-base text-ink/45">{service.priceUnit}</span> : null}
             </p>
           </div>
           <Button href="/contact" variant="ink">

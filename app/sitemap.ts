@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { getContentSlugs } from "@/lib/cms";
 import { SITE_URL } from "@/lib/seo";
 
+export const revalidate = 3600;
+
 const routes = [
   { path: "/", changeFrequency: "monthly", priority: 1 },
   { path: "/services", changeFrequency: "monthly", priority: 0.9 },
@@ -25,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: route.changeFrequency,
       priority: route.priority,
     })),
-    ...slugs.portfolios.map((slug) => ({ url: `${SITE_URL}/portfolio/${slug}`, lastModified, changeFrequency: "monthly" as const, priority: 0.6 })),
+    ...slugs.projects.map((slug) => ({ url: `${SITE_URL}/portfolio/${slug}`, lastModified, changeFrequency: "monthly" as const, priority: 0.6 })),
     ...slugs.articles.map((slug) => ({ url: `${SITE_URL}/articles/${slug}`, lastModified, changeFrequency: "monthly" as const, priority: 0.5 })),
   ];
 }

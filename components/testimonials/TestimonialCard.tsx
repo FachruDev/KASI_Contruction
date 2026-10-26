@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { Testimonial } from "@/data/testimonials";
+import type { Testimonial } from "@/lib/types";
 import { TestimonialRating } from "@/components/testimonials/TestimonialRating";
 
 export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
@@ -8,7 +8,7 @@ export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
       <div className="overflow-hidden rounded-[calc(2rem-0.375rem)] bg-bone shadow-[inset_0_1px_1px_rgba(255,255,255,0.7)] ambient-shadow">
         {testimonial.projectImage ? (
           <div className="relative aspect-[16/10] bg-bone-deep">
-            <Image alt={testimonial.projectImage.alt} className="object-cover" fill sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 100vw" src={testimonial.projectImage.src} />
+            <Image alt={testimonial.projectImage.alt} className="object-cover" fill sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 100vw" src={testimonial.projectImage.src} style={testimonial.projectImage.position ? { objectPosition: testimonial.projectImage.position } : undefined} />
           </div>
         ) : null}
         <div className="p-7 md:p-8">
@@ -24,7 +24,7 @@ export function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
             )}
             <div>
               <p className="font-medium tracking-[-0.02em]">{testimonial.name}</p>
-              <p className="text-[13px] text-ink/50">{testimonial.service}</p>
+              <p className="text-[13px] text-ink/50">{[...new Set([testimonial.role, testimonial.service].filter(Boolean))].join(" · ")}</p>
             </div>
           </figcaption>
         </div>

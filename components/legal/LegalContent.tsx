@@ -1,10 +1,11 @@
 import type { LegalSection } from "@/data/legal";
-import type { CmsLegalPage } from "@/lib/cms";
+import { RichText } from "@/components/ui/RichText";
+import type { LegalPage } from "@/lib/types";
 import { PageHero } from "@/components/layout/PageHero";
 import { Reveal } from "@/components/motion/Reveal";
 
 type LegalContentProps = {
-  page: CmsLegalPage | null;
+  page: LegalPage | null;
   eyebrow: string;
   fallbackTitle: string;
   fallbackSections: readonly LegalSection[];
@@ -18,7 +19,7 @@ export function LegalContent({ page, eyebrow, fallbackTitle, fallbackSections }:
       <section className="mx-auto grid max-w-[88rem] grid-cols-1 gap-14 px-4 pb-28 md:grid-cols-12 md:px-10 md:pb-40">
         {page ? (
           <Reveal className="md:col-span-8 md:col-start-3">
-            <div className="rich-content" dangerouslySetInnerHTML={{ __html: page.content }} />
+            <RichText data={page.content} />
           </Reveal>
         ) : (
           <>

@@ -2,7 +2,7 @@
 
 import { createContext, useContext } from "react";
 import type { ReactNode } from "react";
-import type { SiteConfig } from "@/lib/cms";
+import type { SiteConfig } from "@/lib/types";
 
 const SiteConfigContext = createContext<SiteConfig | null>(null);
 

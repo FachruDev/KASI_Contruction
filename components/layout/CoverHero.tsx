@@ -5,10 +5,10 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { ParallaxImage } from "@/components/motion/ParallaxImage";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealHeading } from "@/components/motion/RevealHeading";
+import type { Img } from "@/lib/types";
 
 type CoverHeroProps = {
-  image?: string;
-  imageAlt: string;
+  image?: Img;
   eyebrow: string;
   title: string;
   back: { href: string; label: string };
@@ -16,10 +16,10 @@ type CoverHeroProps = {
 };
 
 /** Full-bleed photographic opener for detail pages; falls back to a solid ink field without a cover. */
-export function CoverHero({ image, imageAlt, eyebrow, title, back, children }: CoverHeroProps) {
+export function CoverHero({ image, eyebrow, title, back, children }: CoverHeroProps) {
   return (
     <section className="relative isolate flex min-h-[92dvh] flex-col justify-end overflow-hidden bg-ink text-bone">
-      {image ? <ParallaxImage alt={imageAlt} className="absolute inset-0 -z-10" preload sizes="100vw" speed={0.2} src={image} /> : null}
+      {image ? <ParallaxImage alt={image.alt} className="absolute inset-0 -z-10" position={image.position} preload sizes="100vw" speed={0.2} src={image.src} /> : null}
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-linear-to-t from-ink via-ink/45 to-ink/30" />
 
       <div className="mx-auto w-full max-w-[88rem] px-4 pt-36 pb-12 md:px-10 md:pb-16">

@@ -1,7 +1,8 @@
 import { ArrowUpRightIcon, ClockIcon, EnvelopeSimpleIcon, MapPinIcon, WhatsappLogoIcon } from "@phosphor-icons/react/ssr";
 import type { ReactNode } from "react";
+import { hoursLabel } from "@/lib/format";
 import { createWhatsAppUrl } from "@/lib/whatsapp";
-import type { SiteConfig } from "@/lib/cms";
+import type { SiteConfig } from "@/lib/types";
 
 function Row({ icon, label, children }: { icon: ReactNode; label: string; children: ReactNode }) {
   return (
@@ -39,12 +40,9 @@ export function ContactInfo({ site }: { site: SiteConfig }) {
         <Row icon={<ClockIcon size={22} weight="light" />} label="Jam kerja">
           <ul className="space-y-1 text-[15px]">
             {site.businessHours.map((hour) => (
-              <li className={`flex justify-between gap-6 ${hour.openTime === "Tutup" ? "text-ink/35" : "text-ink/75"}`} key={hour.dayLabel}>
-                <span>{hour.dayLabel}</span>
-                <span className="font-mono text-[13px]">
-                  {hour.openTime}
-                  {hour.closeTime ? ` — ${hour.closeTime}` : ""}
-                </span>
+              <li className={`flex justify-between gap-6 ${hour.closed ? "text-ink/35" : "text-ink/75"}`} key={hour.label}>
+                <span>{hour.label}</span>
+                <span className="font-mono text-[13px]">{hoursLabel(hour)}</span>
               </li>
             ))}
           </ul>

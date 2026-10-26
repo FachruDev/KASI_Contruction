@@ -1,15 +1,17 @@
+import path from "path";
+import { fileURLToPath } from "url";
+import { withPayload } from "@payloadcms/next/withPayload";
 import type { NextConfig } from "next";
 
-const cmsOrigin = new URL(process.env.POCKETBASE_URL ?? process.env.NEXT_PUBLIC_POCKETBASE_URL ?? "https://kasiservices.ryucode.site");
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
   images: {
     qualities: [75, 85],
-    remotePatterns: [
-      { protocol: cmsOrigin.protocol.replace(":", "") as "http" | "https", hostname: cmsOrigin.hostname, pathname: "/api/files/**" },
-      { protocol: "https", hostname: "lh3.googleusercontent.com" },
-    ],
+    // Uploads are streamed through Payload's own file route, so every image is same-origin.
+    localPatterns: [{ pathname: "/api/media/file/**" }, { pathname: "/assets/**" }],
   },
+  turbopack: { root: dirname },
 };
 
-export default nextConfig;
+export default withPayload(nextConfig, { devBundleServerPackages: false });

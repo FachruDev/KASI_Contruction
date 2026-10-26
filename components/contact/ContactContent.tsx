@@ -2,16 +2,12 @@ import { ContactForm } from "@/components/contact/ContactForm";
 import { ContactInfo } from "@/components/contact/ContactInfo";
 import { PageHero } from "@/components/layout/PageHero";
 import { Reveal } from "@/components/motion/Reveal";
-import type { SiteConfig } from "@/lib/cms";
+import type { PageHeader, SiteConfig } from "@/lib/types";
 
-export function ContactContent({ site }: { site: SiteConfig }) {
+export function ContactContent({ site, header }: { site: SiteConfig; header: PageHeader }) {
   return (
     <>
-      <PageHero
-        description="Rencana pengaspalan untuk jalan, area parkir, perumahan, atau kawasan usaha? Ceritakan kebutuhan Anda dan dapatkan penawaran yang sesuai untuk Jabodetabek."
-        eyebrow="Kontak"
-        title="Mari mulai dari *percakapan.*"
-      />
+      <PageHero description={header.description} eyebrow={header.eyebrow} title={header.title} />
       <section className="mx-auto grid max-w-[88rem] grid-cols-1 gap-14 px-4 pb-28 md:px-10 md:pb-40 lg:grid-cols-12">
         <Reveal className="lg:col-span-7">
           <ContactForm />

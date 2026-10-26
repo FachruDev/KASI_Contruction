@@ -6,12 +6,6 @@
       "runtimeExecutable": "bun",
       "runtimeArgs": ["run", "dev"],
       "port": 3000
-    },
-    {
-      "name": "kasi-dev-offline-cms",
-      "runtimeExecutable": "cmd",
-      "runtimeArgs": ["/c", "set POCKETBASE_URL=http://127.0.0.1:9&& bun run dev"],
-      "port": 3000
     }
   ]
 }

@@ -3,18 +3,10 @@
 import { useState, type FormEvent, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { CheckCircleIcon, PaperPlaneTiltIcon, WarningCircleIcon } from "@phosphor-icons/react/ssr";
+import { submitInquiry } from "@/app/(site)/contact/actions";
+import { REQUIREMENT_OPTIONS } from "@/cms/options";
 import { buttonClasses, ButtonIsland } from "@/components/ui/Button";
 import { EASE_FLUID } from "@/components/motion/SmoothScroll";
-
-const REQUIREMENTS = [
-  { value: "road", label: "Pengaspalan jalan" },
-  { value: "housing", label: "Pengaspalan perumahan" },
-  { value: "parking", label: "Area parkir" },
-  { value: "commercial", label: "Kawasan usaha / komersial" },
-  { value: "industrial", label: "Kawasan industri" },
-  { value: "repair", label: "Perbaikan aspal" },
-  { value: "other", label: "Lainnya" },
-] as const;
 
 const inputClass =
   "w-full rounded-2xl bg-ink/[0.035] px-5 py-4 text-[16px] text-ink outline-none hairline transition-[background-color,box-shadow] duration-500 ease-fluid placeholder:text-ink/30 focus:bg-bone focus:shadow-[inset_0_0_0_1px_var(--color-signal),0_0_0_4px_rgb(251_103_1/0.12)]";
@@ -47,21 +39,16 @@ export function ContactForm() {
     setStatus(null);
 
     try {
-      const response = await fetch("/api/inquiries", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.get("name"),
-          phone: form.get("phone"),
-          location: form.get("location"),
-          requirement: form.get("requirement"),
-          area: areaValue ? Number(areaValue) : 0,
-          detail: form.get("detail"),
-          website: form.get("website"),
-        }),
+      const result = await submitInquiry({
+        name: String(form.get("name") ?? ""),
+        phone: String(form.get("phone") ?? ""),
+        location: String(form.get("location") ?? ""),
+        requirement: String(form.get("requirement") ?? ""),
+        area: areaValue ? Number(areaValue) : 0,
+        detail: String(form.get("detail") ?? ""),
+        website: String(form.get("website") ?? ""),
       });
-      const result = (await response.json().catch(() => ({}))) as { message?: string };
-      if (!response.ok) throw new Error(result.message ?? "Formulir belum dapat diproses.");
+      if (!result.ok) throw new Error(result.message);
       formElement.reset();
       setStatus({ tone: "success", message: "Terima kasih. Permintaan Anda sudah terkirim, tim kami akan segera menghubungi Anda." });
     } catch (error) {
@@ -99,7 +86,7 @@ export function ContactForm() {
                 <option disabled value="">
                   Pilih kebutuhan
                 </option>
-                {REQUIREMENTS.map((item) => (
+                {REQUIREMENT_OPTIONS.map((item) => (
                   <option key={item.value} value={item.value}>
                     {item.label}
                   </option>
